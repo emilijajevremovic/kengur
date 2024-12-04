@@ -1,26 +1,32 @@
 <div class="register-container">
-    <div class="register-form">
-      <img id="logo" src="../../../assets/images/logoFinal.png" alt="K" />
-      <form>
-        <div class="form-group">
-          <input type="email" id="email" placeholder="Unesi email" />
-        </div>
-        <div class="form-group">
-          <input [type]="passwordFieldType" id="password" placeholder="Unesi šifru" />
-          <span class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
-          </span>
-        </div>
-        <div class="form-group">
-          <input [type]="passwordFieldType" id="confirmPassword" placeholder="Potvrdi šifru" />
-          <span class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
-          </span>
-        </div>
-        <div class="popup"></div>
-        <button type="submit">Registruj se</button>
-        <span class="link">Već imate nalog? <span id="link" (click)="navigateToLogin()">Prijavite se</span></span>
-      </form>
-    </div>
+  <div class="register-form">
+    <img id="logo" src="../../../assets/images/logoFinal.png" alt="K" />
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <input type="email" formControlName="email" id="email" placeholder="Unesi email" />
+      </div>
+
+      <div class="form-group">
+        <input [type]="passwordFieldType" formControlName="password" id="password" placeholder="Unesi šifru" />
+        <span class="toggle-password" (click)="togglePasswordVisibility()">
+          <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <input [type]="passwordFieldType" formControlName="confirmPassword" id="confirmPassword" placeholder="Potvrdi šifru" />
+        <span class="toggle-password" (click)="togglePasswordVisibility()">
+          <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
+        </span>
+      </div>
+
+      <div *ngIf="message" class="form-group" style="color: rgb(177, 16, 16);">
+        <small>{{ message }}</small>
+      </div>
+
+      <button type="submit">Registruj se</button>
+      <span class="link">Već imate nalog? <span id="link" (click)="navigateToLogin()">Prijavite se</span></span>
+    </form>
   </div>
-  
+</div>
