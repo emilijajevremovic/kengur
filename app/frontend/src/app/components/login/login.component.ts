@@ -1,17 +1,43 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   passwordFieldType: string = 'password';
+  loginForm!: FormGroup;
+  message: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private fb: FormBuilder) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]], 
+      password: ['', [Validators.required, Validators.minLength(8)]] 
+    });
+  }
+
+  onSubmit() {
+    this.message = '';
+    if (this.loginForm.value.email) {
+      if (this.loginForm.get('email')?.valid) { 
+        // provera lozinke
+        if (this.loginForm.value.password && this.loginForm.value.password.length < 8) this.message = "*Šifra mora imati 8 karaktera."
+        else if (this.loginForm.value.password.length >= 8) {this.message = "*OK."}
+        else this.message = "*Šifra je obavezna."
+      } 
+      else { this.message = "*Email nije validan."; }
+    } 
+    else {
+      // nije unet email
+      this.message = "*Email je obavezan."
+    }
+  }
 
   togglePasswordVisibility() {
     this.passwordFieldType =
