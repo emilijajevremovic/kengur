@@ -4,12 +4,16 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Email input sa validacijom -->
       <div class="form-group">
-        <input type="email" id="email" placeholder="Unesi email" formControlName="email" />       
+        <input type="email" id="email" placeholder="Unesi email" formControlName="email" [ngClass]="{ 'error-input': (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) || (message1 == '*Email je obavezan.')}" />       
+      </div>
+
+      <div *ngIf="message1" class="form-group" style="color: rgb(177, 16, 16);">
+        <small>{{ message1 }}</small>
       </div>
 
       <!-- Password input sa vidljivošću toggle-a i validacijom -->
       <div class="form-group">
-        <input [type]="passwordFieldType" id="password" placeholder="Unesi šifru" formControlName="password" />
+        <input [type]="passwordFieldType" id="password" placeholder="Unesi šifru" formControlName="password" [ngClass]="{ 'error-input': (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) || (message2 == '*Šifra je obavezna.')}" />
         <span class="toggle-password" (click)="togglePasswordVisibility()">
           <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
         </span>
@@ -17,8 +21,8 @@
         </div>
       </div>
 
-      <div class="form-group" style="color: rgb(177, 16, 16);">
-        <small>{{ message }}</small>
+      <div *ngIf="message2" class="form-group" style="color: rgb(177, 16, 16);">
+        <small>{{ message2 }}</small>
       </div>
       <button type="submit">Prijavi se</button>
 

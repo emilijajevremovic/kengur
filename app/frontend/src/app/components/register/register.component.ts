@@ -11,15 +11,17 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  passwordFieldType: string = 'password';
-  message: string = '';
+  passwordFieldType1: string = 'password';
+  passwordFieldType2: string = 'password';
+  message1: string = '';
+  message2: string = '';
   registerForm!: FormGroup;
 
   constructor(private router: Router, private fb: FormBuilder) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]], 
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]] 
+      confirmPassword: ['', [Validators.required, Validators.minLength(8)]] 
     }, {
       validators: this.passwordsMatchValidator 
     });
@@ -32,34 +34,39 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    this.message = '';
+    this.message1 = '';
+    this.message2 = '';
     if (this.registerForm.value.email) {
       if (this.registerForm.get('email')?.valid) { 
         // Provera lozinke
         if (this.registerForm.value.password && this.registerForm.value.password.length < 8) {
-          this.message = "*Šifra mora imati najmanje 8 karaktera.";
+          this.message2 = "*Šifra mora imati najmanje 8 karaktera.";
         } else if (this.registerForm.value.password.length >= 8) {
           if (this.registerForm.valid) {
-            this.message = "*Registracija uspešna!";
-            // slanje na backend
+            // slanje na backend poziv serivsa
           } else {
-            this.message = "*Šifre se ne poklapaju.";
+            this.message2 = "*Šifre se ne poklapaju.";
           }
         } else {
-          this.message = "*Šifra je obavezna.";
+          this.message2 = "*Šifra je obavezna.";
         }
       } else { 
-        this.message = "*Email nije validan."; 
+        this.message1 = "*Email nije validan."; 
       }
     } else {
       // Ako email nije unet
-      this.message = "*Email je obavezan.";
+      this.message1 = "*Email je obavezan.";
     }
   }
 
-  togglePasswordVisibility() {
-    this.passwordFieldType =
-      this.passwordFieldType === 'password' ? 'text' : 'password';
+  togglePasswordVisibility1() {
+    this.passwordFieldType1 =
+      this.passwordFieldType1 === 'password' ? 'text' : 'password';
+  }
+
+  togglePasswordVisibility2() {
+    this.passwordFieldType2 =
+      this.passwordFieldType2 === 'password' ? 'text' : 'password';
   }
 
   navigateToLogin() { this.router.navigate(['/login']); }

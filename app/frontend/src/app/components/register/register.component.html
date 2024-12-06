@@ -4,25 +4,29 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       
       <div class="form-group">
-        <input type="email" formControlName="email" id="email" placeholder="Unesi email" />
+        <input type="email" formControlName="email" id="email" placeholder="Unesi email" [ngClass]="{ 'error-input': (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) || (message1 == '*Email je obavezan.')}" />
+      </div>
+
+      <div *ngIf="message1" class="form-group" style="color: rgb(177, 16, 16);">
+        <small>{{ message1 }}</small>
       </div>
 
       <div class="form-group">
-        <input [type]="passwordFieldType" formControlName="password" id="password" placeholder="Unesi šifru" />
-        <span class="toggle-password" (click)="togglePasswordVisibility()">
-          <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
+        <input [type]="passwordFieldType1" formControlName="password" id="password" placeholder="Unesi šifru" [ngClass]="{ 'error-input': (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) || (message2 != '' && registerForm.get('password')?.invalid) || (message2 == '*Šifre se ne poklapaju.')}" />
+        <span class="toggle-password" (click)="togglePasswordVisibility1()">
+          <i [class]="passwordFieldType1 === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
         </span>
       </div>
 
       <div class="form-group">
-        <input [type]="passwordFieldType" formControlName="confirmPassword" id="confirmPassword" placeholder="Potvrdi šifru" />
-        <span class="toggle-password" (click)="togglePasswordVisibility()">
-          <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
+        <input [type]="passwordFieldType2" formControlName="confirmPassword" id="confirmPassword" placeholder="Potvrdi šifru" [ngClass]="{ 'error-input': (registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) || (message2 != ''  && registerForm.get('confirmPassword')?.invalid) || (message2 == '*Šifre se ne poklapaju.')}" />
+        <span class="toggle-password" (click)="togglePasswordVisibility2()">
+          <i [class]="passwordFieldType2 === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
         </span>
       </div>
 
-      <div *ngIf="message" class="form-group" style="color: rgb(177, 16, 16);">
-        <small>{{ message }}</small>
+      <div *ngIf="message2" class="form-group" style="color: rgb(177, 16, 16);">
+        <small>{{ message2 }}</small>
       </div>
 
       <button type="submit">Registruj se</button>

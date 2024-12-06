@@ -119,4 +119,14 @@
   .toggle-password:hover {
     color: #303f9f; 
   }
+
+  .error-input {
+    border: 1px solid rgb(177, 16, 16); /* Crvena boja za okvir */
+    background-color: #ffe6e6; /* Svetlo crvena pozadina */
+  }
+  
+  .error-input:focus {
+    outline: none; /* Uklanja plavi okvir na fokusu */
+    box-shadow: 0 0 5px rgb(177, 16, 16); /* Crvena senka */
+  }
   
