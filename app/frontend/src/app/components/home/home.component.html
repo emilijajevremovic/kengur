@@ -1,0 +1,49 @@
+<div class="home-container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1>Dobrodošli na Mečeve</h1>
+    </div>
+  
+    <!-- User List Section -->
+    <div class="user-list">
+      <h2>Prijatelji Online</h2>
+      <div class="friend-list">
+        <div *ngFor="let user of users" class="user-card" (click)="challengeUser(user)">
+          <div class="user-info">
+            <img [src]="user.profileImage || 'assets/default-profile.png'" alt="Profilna slika" class="profile-img" />
+            <div class="user-details">
+              <p>{{ user.name }}</p>
+              <span [ngClass]="{'online': user.status === 'online', 'offline': user.status === 'offline'}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Challenge Section -->
+    <div class="challenge-section">
+      <h3>Izaberi Razred i Predmet</h3>
+      <form (ngSubmit)="sendChallenge()">
+        <div class="form-group">
+          <label for="grade">Razred</label>
+          <select id="grade" [(ngModel)]="selectedGrade" name="grade">
+            <option value="1">1. Razred</option>
+            <option value="2">2. Razred</option>
+            <option value="3">3. Razred</option>
+            <!-- Dodaj sve razrede koje želiš -->
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Predmet</label>
+          <select id="subject" [(ngModel)]="selectedSubject" name="subject">
+            <option value="mathematics">Matematika</option>
+            <option value="informatics">Informatika</option>
+          </select>
+        </div>
+  
+        <button type="submit" [disabled]="!selectedUser || !selectedGrade || !selectedSubject">Pošaljite izazov</button>
+      </form>
+    </div>
+  </div>
+  
