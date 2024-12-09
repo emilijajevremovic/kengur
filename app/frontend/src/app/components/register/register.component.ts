@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PopupOkComponent } from '../popup-ok/popup-ok.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, PopupOkComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -16,6 +17,16 @@ export class RegisterComponent {
   message1: string = '';
   message2: string = '';
   registerForm!: FormGroup;
+  showPopup: boolean = false;
+  popupMessage: string = 'Ovo je univerzalni popup!';
+
+  openPopup() {
+    this.showPopup = true;
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
 
   constructor(private router: Router, private fb: FormBuilder) {
     this.registerForm = this.fb.group({

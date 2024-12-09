@@ -34,3 +34,5 @@
     </form>
   </div>
 </div>
+
+<app-popup-ok *ngIf="showPopup" [message]="popupMessage" (close)="closePopup()"></app-popup-ok>
