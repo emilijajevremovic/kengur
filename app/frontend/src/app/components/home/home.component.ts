@@ -12,9 +12,37 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent {
   users = [
-    { name: 'Ana', status: 'online', profileImage: '' },
-    { name: 'Marko', status: 'offline', profileImage: '' },
-    { name: 'Ivana', status: 'online', profileImage: '' },
+    {
+      username: 'Marko123',
+      profilePicture: 'assets/images/logo.png', // Putanja do slike
+      online: true
+    },
+    {
+      username: 'Ana456',
+      profilePicture: 'assets/images/logo.png',
+      online: false
+    },
+    {
+      username: 'Jovan789',
+      profilePicture: 'assets/images/logo.png',
+      online: true
+    },
+    {
+      username: 'Milica101',
+      profilePicture: 'assets/images/logo.png',
+      online: false
+    }
+  ];
+
+  friendRequests = [
+    {
+      username: 'PetarPetrovic',
+      profilePicture: 'assets/images/logo.png'
+    },
+    {
+      username: 'IvanaIvanovic',
+      profilePicture: 'assets/images/logo.png'
+    }
   ];
 
   selectedUser: any = null;

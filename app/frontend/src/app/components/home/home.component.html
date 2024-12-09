@@ -1,49 +1,56 @@
 <div class="home-container">
-    <!-- Header Section -->
-    <div class="header">
-      <h1>Dobrodošli na Mečeve</h1>
+  <!-- Leva sekcija: Lista prijatelja -->
+  <div class="friends-list">
+    <h2>ODABERI PROTIVNIKA</h2>
+    <div class="friend-card" *ngFor="let user of users">
+      <img [src]="user.profilePicture" alt="Profilna slika" class="profile-img" />
+      <div class="friend-info">
+        <span>{{ user.username }}</span>
+        <span class="status" [class.online]="user.online" [class.offline]="!user.online"></span>
+      </div>
     </div>
-  
-    <!-- User List Section -->
-    <div class="user-list">
-      <h2>Prijatelji Online</h2>
-      <div class="friend-list">
-        <div *ngFor="let user of users" class="user-card" (click)="challengeUser(user)">
-          <div class="user-info">
-            <img [src]="user.profileImage || 'assets/default-profile.png'" alt="Profilna slika" class="profile-img" />
-            <div class="user-details">
-              <p>{{ user.name }}</p>
-              <span [ngClass]="{'online': user.status === 'online', 'offline': user.status === 'offline'}"></span>
-            </div>
-          </div>
+    <button class="add-friend-btn">+ DODAJ PRIJATELJA</button>
+  </div>
+
+  <!-- Centralna sekcija: Izazivanje protivnika -->
+  <div class="challenge-panel">
+    <h2>TVOJ IZAZOV</h2>
+    <div class="challenge-box">
+      <div class="add-opponent">
+        <span class="plus-icon">+</span>
+        <span class="opponent-name">USERNAME PROTIVNIKA</span>
+      </div>
+      <div class="challenge-options">
+        <div class="dropdown">
+          <label for="subject">ODABERI PREDMET</label>
+          <select id="subject" [(ngModel)]="selectedSubject">
+            <option value="math">MATEMATIKA</option>
+            <option value="informatics">INFORMATIKA</option>
+          </select>
+        </div>
+        <div class="dropdown">
+          <label for="grade">ODABERI RAZRED</label>
+          <select id="grade" [(ngModel)]="selectedGrade">
+            <option value="1">PRVI</option>
+            <option value="2">DRUGI</option>
+            <option value="3">TREĆI</option>
+          </select>
         </div>
       </div>
     </div>
-  
-    <!-- Challenge Section -->
-    <div class="challenge-section">
-      <h3>Izaberi Razred i Predmet</h3>
-      <form (ngSubmit)="sendChallenge()">
-        <div class="form-group">
-          <label for="grade">Razred</label>
-          <select id="grade" [(ngModel)]="selectedGrade" name="grade">
-            <option value="1">1. Razred</option>
-            <option value="2">2. Razred</option>
-            <option value="3">3. Razred</option>
-            <!-- Dodaj sve razrede koje želiš -->
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="subject">Predmet</label>
-          <select id="subject" [(ngModel)]="selectedSubject" name="subject">
-            <option value="mathematics">Matematika</option>
-            <option value="informatics">Informatika</option>
-          </select>
-        </div>
-  
-        <button type="submit" [disabled]="!selectedUser || !selectedGrade || !selectedSubject">Pošaljite izazov</button>
-      </form>
+    <button class="send-challenge-btn">POŠALJI ZAHTEV ZA IGRU</button>
+  </div>
+
+  <!-- Desna sekcija: Zahtjevi za prijateljstvo -->
+  <div class="friend-requests">
+    <h2>ZAHTEVI ZA PRIJATELJSTVO</h2>
+    <div class="request-card" *ngFor="let request of friendRequests">
+      <img [src]="request.profilePicture" alt="Profilna slika" class="profile-img" />
+      <span>{{ request.username }}</span>
+      <div class="request-actions">
+        <button class="accept-btn">PRIHVATI</button>
+        <button class="decline-btn">ODBIJ</button>
+      </div>
     </div>
   </div>
-  
+</div>
