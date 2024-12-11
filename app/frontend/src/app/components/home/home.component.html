@@ -1,5 +1,6 @@
 <div class="home-container">
   <!-- Leva sekcija: Lista prijatelja -->
+
   <div class="friends-list">
     <h2>ODABERI PROTIVNIKA</h2>
     <div class="friend-card" *ngFor="let user of users">
@@ -12,45 +13,56 @@
     <button class="add-friend-btn">+ DODAJ PRIJATELJA</button>
   </div>
 
-  <!-- Centralna sekcija: Izazivanje protivnika -->
-  <div class="challenge-panel">
-    <h2>TVOJ IZAZOV</h2>
-    <div class="challenge-box">
-      <div class="add-opponent">
-        <span class="plus-icon">+</span>
-        <span class="opponent-name">USERNAME PROTIVNIKA</span>
-      </div>
-      <div class="challenge-options">
-        <div class="dropdown">
-          <label for="subject">ODABERI PREDMET</label>
-          <select id="subject" [(ngModel)]="selectedSubject">
-            <option value="math">MATEMATIKA</option>
-            <option value="informatics">INFORMATIKA</option>
-          </select>
-        </div>
-        <div class="dropdown">
-          <label for="grade">ODABERI RAZRED</label>
-          <select id="grade" [(ngModel)]="selectedGrade">
-            <option value="1">PRVI</option>
-            <option value="2">DRUGI</option>
-            <option value="3">TREĆI</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <button class="send-challenge-btn">POŠALJI ZAHTEV ZA IGRU</button>
-  </div>
 
-  <!-- Desna sekcija: Zahtjevi za prijateljstvo -->
-  <div class="friend-requests">
-    <h2>ZAHTEVI ZA PRIJATELJSTVO</h2>
-    <div class="request-card" *ngFor="let request of friendRequests">
-      <img [src]="request.profilePicture" alt="Profilna slika" class="profile-img" />
-      <span>{{ request.username }}</span>
-      <div class="request-actions">
-        <button class="accept-btn">PRIHVATI</button>
-        <button class="decline-btn">ODBIJ</button>
+  <!-- Desna sekcija: Tvoj izazov i Zahtevi za prijateljstvo -->
+  <div class="right-panel">
+    <!-- Tvoj izazov -->
+    <div class="challenge-panel">
+      <h2>TVOJ IZAZOV</h2>
+      <div class="challenge-box">
+        <div class="add-opponent">
+          <span class="plus-icon">+</span>
+          <span class="opponent-name">USERNAME PROTIVNIKA</span>
+        </div>
+        <div class="challenge-options">
+          <div class="dropdown">
+            <label for="subject">ODABERI PREDMET</label>
+            <select id="subject" [(ngModel)]="selectedSubject">
+              <option value="math">MATEMATIKA</option>
+              <option value="informatics">INFORMATIKA</option>
+            </select>
+          </div>
+          <div class="dropdown">
+            <label for="grade">ODABERI RAZRED</label>
+            <select id="grade" [(ngModel)]="selectedGrade">
+              <option value="1">PRVI</option>
+              <option value="2">DRUGI</option>
+              <option value="3">TREĆI</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button class="send-challenge-btn">POŠALJI ZAHTEV ZA IGRU</button>
+    </div>
+
+    <!-- Zahtevi za prijateljstvo -->
+    <div class="friend-requests">
+      <h2>ZAHTEVI ZA PRIJATELJSTVO</h2>
+      <div class="request-card" *ngFor="let request of friendRequests">
+        <img [src]="request.profilePicture" alt="Profilna slika" class="profile-img" />
+        <span>{{ request.username }}</span>
+        <div class="request-actions">
+          <button class="accept-btn">PRIHVATI</button>
+          <button class="decline-btn">ODBIJ</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- <div class="card">
+  <div class="bg">
+    
+  </div>
+  <div class="blob"></div>
+</div> -->
