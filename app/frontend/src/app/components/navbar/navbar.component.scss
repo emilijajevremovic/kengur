@@ -1,14 +1,16 @@
 .navbar {
-    display: flex; /* Koristi flexbox za raspored */
-    justify-content: space-between; /* Raspoređuje stavke na krajeve */
-    align-items: center; /* Vertikalno centriranje */
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
     background-color: #ffffff; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1; 
     height: 60px;
     width: 100%;
-    padding: 0 15px; /* Unutrašnji razmak sa leve i desne strane */
-    //padding: 1%;
+    padding: 0 15px;
 }
 
 .navbar-nav {
@@ -114,45 +116,17 @@
 
 @media (max-width: 768px) {
     .nav-item, .nav-item-right {
-        font-size: 16px; /* Smanjuje font za manje ekrane */
-        padding: 5px 10px; /* Manji padding */
+        font-size: 16px; 
+        padding: 5px 10px; 
     }
 
     .navbar {
-        flex-wrap: wrap; /* Dozvoljava prelamanje stavki */
+        flex-wrap: wrap; 
         width: 100%;
     }
 
     .navbar-nav {
-        justify-content: center; /* Poravnava stavke za manje ekrane */
+        justify-content: center;
         width: 100%;
     }
 }
-
-// ul {
-//     list-style-type: none;
-//     margin: 0;
-//     padding: 0;
-//     overflow: hidden;
-//     background-color: #333;
-//   }
-  
-//   li {
-//     float: left;
-//   }
-  
-//   li a {
-//     display: block;
-//     color: white;
-//     text-align: center;
-//     padding: 14px 16px;
-//     text-decoration: none;
-//   }
-  
-//   li a:hover:not(.active) {
-//     background-color: #111;
-//   }
-  
-//   .active {
-//     background-color: #04AA6D;
-//   }

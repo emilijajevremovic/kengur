@@ -2,6 +2,11 @@ body {
   font-family: "Klavika", Verdana, Geneva, Tahoma, sans-serif;
   margin: 0;
   padding: 0;
+  height: 100%;
+}
+
+html {
+  height: 100%;
 }
 
 /* Importing Bootstrap SCSS file. */
