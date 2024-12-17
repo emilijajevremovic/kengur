@@ -19,7 +19,7 @@
 }
 
 .flex-container-row div {
-    height: 200px;
+    height: fit-content;
 }
 
 .flex-container-column {
@@ -30,7 +30,7 @@
 }
 
 .flex-container-column div {
-    height: 200px;
+    height: fit-content;
 }
 
 .friends-list {
@@ -49,16 +49,25 @@
 .search { 
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: left;
     flex-direction: row;
+}
+
+.search div {
+    height: fit-content;
     background-color: #ffffff;
     border-radius: 15px;
     box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
-.search div {
-    width: 40%;
-    margin: 5%;
+.search-bar {
+    width: fit-content;
+    margin: 0 1% 1% 1%;
+}
+
+.search-results {
+    margin-left: 3%;
+    width: 60%;
 }
 
 .requests {
@@ -69,8 +78,88 @@
     box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
-@media (max-width: 800px) {
+.input-group {
+    display: flex;
+    align-items: center;
+}
+  
+.input {
+min-height: 50px;
+max-width: 150px;
+padding: 0 1rem;
+font-size: 15px;
+border: 1px solid #0C3C5C;
+border-radius: 6px 0 0 6px;
+background-color: transparent;
+}
+
+.button--submit {
+min-height: 50px;
+padding: .5em 1em;
+border: none;
+border-radius: 0 6px 6px 0;
+background-color: #0C3C5C;
+color: #fff;
+font-size: 15px;
+cursor: pointer;
+transition: background-color .3s ease-in-out;
+}
+
+.button--submit:hover {
+background-color: #AD1026;
+}
+
+.input:focus, .input:focus-visible {
+border-color: #3898EC;
+outline: none;
+}
+
+  @media (max-width: 800px) {
+
     .flex-container-row {
       flex-direction: column;
+      justify-content: space-around;
+      padding-top: 0;
     }
+
+    .search { 
+        gap: 10px;
+    }
+
+    .search-bar {
+        margin-top: 5%;
+        width: fit-content;
+    }
+
+    .friends-list {
+        width: 90%;
+    }
+
+    .input-group {
+        width: fit-content;
+        flex-wrap: nowrap;
+    }
+
+    .input {
+        max-width: 120px;
+        font-size: 15px;
+        border: 1px solid #0C3C5C;
+        border-radius: 6px 0 0 6px;
+        background-color: transparent;
+        padding: 1%;
+    }
+      
+    .button--submit {
+        width: fit-content;
+        border: none;
+        border-radius: 0 6px 6px 0;
+        padding: 1%;
+        background-color: #0C3C5C;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color .3s ease-in-out;
+    }
+      
 }
+  
