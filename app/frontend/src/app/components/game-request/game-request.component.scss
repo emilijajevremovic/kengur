@@ -77,6 +77,17 @@ app-navbar {
   width: 50px;
 }
 
+.opponent-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.opponent-img img {
+  height: 100px;
+  width: 100px;
+}
+
 .friend-status h5 {
   margin: 0;
   padding-left: 1%;
