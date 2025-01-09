@@ -209,8 +209,23 @@ app-navbar {
     background-color: #bcb7ff;
     opacity: 1;
     filter: blur(12px);
-    animation: blob-bounce-small 10s infinite ease;
+    //animation: blob-bounce-small 10s infinite ease;
+    animation: myAnim 10s ease 0s infinite normal forwards;
   }  
+
+  @keyframes myAnim {
+	0% {
+		opacity: 1;
+		transform: rotateX(0);
+		transform-origin: bottom;
+	}
+
+	100% {
+		opacity: 0;
+		transform: rotateX(100deg);
+		transform-origin: bottom;
+	}
+}
 
   .bg {
     position: absolute;

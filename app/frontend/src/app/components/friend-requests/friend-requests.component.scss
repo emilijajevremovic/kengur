@@ -63,7 +63,6 @@
 }
 
 .search-results {
-    margin-left: 3%;
     width: 60%;
 }
 
@@ -72,7 +71,7 @@
     margin-top: 20px; 
     background-color: #ffffff;
     border-radius: 15px;
-    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2);
 }
 
 .input-group {
@@ -144,7 +143,7 @@ outline: none;
 
 .friend-status button:hover {
     background-color: #aa1818;
-  }
+}
 
 .status-indicator {
     width: 10px;
@@ -167,6 +166,26 @@ outline: none;
     box-shadow: none;
 }
 
+.buttons {
+    margin-left: auto;
+    gap: 1%;
+}
+
+.buttons button {
+    margin-right: 5px;
+}
+
+#red {
+    background-color: #aa1818;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#red:hover {
+    background-color: #134275;
+  }
+
   @media (max-width: 800px) {
 
     .flex-container-row {
@@ -187,6 +206,11 @@ outline: none;
     .search-bar {
         margin-top: 5%;
         width: 90%;
+    }
+
+    .requests {
+        width: 90%; 
+        align-self: center;
     }
 
     .friends-list {

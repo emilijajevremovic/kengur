@@ -14,6 +14,7 @@ import { PopupOkComponent } from '../popup-ok/popup-ok.component';
 export class RegisterComponent {
   passwordFieldType1: string = 'password';
   passwordFieldType2: string = 'password';
+  message0: string = '';
   message1: string = '';
   message2: string = '';
   registerForm!: FormGroup;
@@ -30,6 +31,7 @@ export class RegisterComponent {
 
   constructor(private router: Router, private fb: FormBuilder) {
     this.registerForm = this.fb.group({
+      nickname: ['', [Validators.required, Validators.minLength(5)]], 
       email: ['', [Validators.required, Validators.email]], 
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(8)]] 
@@ -45,29 +47,41 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    this.message0 = '';
     this.message1 = '';
     this.message2 = '';
-    if (this.registerForm.value.email) {
-      if (this.registerForm.get('email')?.valid) { 
-        // Provera lozinke
-        if (this.registerForm.value.password && this.registerForm.value.password.length < 8) {
-          this.message2 = "*Šifra mora imati najmanje 8 karaktera.";
-        } else if (this.registerForm.value.password.length >= 8) {
-          if (this.registerForm.valid) {
-            // slanje na backend poziv serivsa
-          } else {
-            this.message2 = "*Šifre se ne poklapaju.";
+    if(this.registerForm.value.nickname) {
+      if(this.registerForm.value.nickname.length < 5) {
+        this.message0 = "*Nadimak mora imati najmanje 5 karaktera.";
+      }
+      else if (this.registerForm.value.nickname.length >= 5) {
+        if (this.registerForm.value.email) {
+          if (this.registerForm.get('email')?.valid) { 
+            // Provera lozinke
+            if (this.registerForm.value.password && this.registerForm.value.password.length < 8) {
+              this.message2 = "*Šifra mora imati najmanje 8 karaktera.";
+            } else if (this.registerForm.value.password.length >= 8) {
+              if (this.registerForm.valid) {
+                // slanje na backend poziv serivsa
+              } else {
+                this.message2 = "*Šifre se ne poklapaju.";
+              }
+            } else {
+              this.message2 = "*Šifra je obavezna.";
+            }
+          } else { 
+            this.message1 = "*Email nije validan."; 
           }
         } else {
-          this.message2 = "*Šifra je obavezna.";
+          // Ako email nije unet
+          this.message1 = "*Email je obavezan.";
         }
-      } else { 
-        this.message1 = "*Email nije validan."; 
       }
-    } else {
-      // Ako email nije unet
-      this.message1 = "*Email je obavezan.";
     }
+    else {
+      this.message0 = "*Nadimak je obavezan.";
+    }
+    
   }
 
   togglePasswordVisibility1() {

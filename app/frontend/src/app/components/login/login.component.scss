@@ -1,10 +1,15 @@
 .login-container {
   position: relative;
-  min-height: 100vh; // Visina da pokriva celu stranicu
   display: flex;
   justify-content: center; // Centriranje horizontalno
   align-items: center; // Centriranje vertikalno
-  background-image: url("../../../assets/images/bg.png");
+  width: 100%;
+  height: 100%;
+  --color: #E1E1E1;
+  background-color: #F3F3F3;
+  background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+      linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+  background-size: 55px 55px;
 }
 
 .login-form {
@@ -33,20 +38,20 @@ form {
   align-items: center;
 }
 
-// .form-group {
-//   display: flex;
-//   align-items: center; // Naslovi pored input polja
-//   margin-bottom: 15px;
-//   width: 70%; // Širina cele grupe
-//   justify-content: right; // Raspoređuje labele i inpute ravnomerno
-// }
+.form-group {
+  display: flex;
+  align-items: center; 
+  margin-bottom: 15px;
+  width: 70%; 
+  justify-content: center; 
+}
 
 .form-group {
-  position: relative; /* Potrebno da ikonica bude apsolutno pozicionirana u okviru grupe */
+  position: relative; 
   display: flex;
-  align-items: center; /* Vertikalno poravnanje */
+  align-items: center;
   margin-bottom: 15px;
-  width: 70%; /* Širina cele grupe */
+  width: 70%; 
 }
 
 .popup {
@@ -57,12 +62,12 @@ label {
   font-size: 17px;
   font-weight: 500;
   text-align: left;
-  width: 10%; // Širina labela
+  width: 10%; 
   margin-right: 10px;
 }
 
 input {
-  width: 90%; // Preostala širina za input
+  width: 90%; 
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -70,7 +75,7 @@ input {
 }
 
 button {
-  width: 70%; // Širina dugmeta
+  width: 70%;
   padding: 10px;
   background-color: #3f51b5;
   color: white;
@@ -109,6 +114,7 @@ button:hover {
 .toggle-password {
   position: absolute; 
   right: 5%;
+  margin-right: 10px;
   cursor: pointer;
   color: #888; 
   font-size: 18px; 

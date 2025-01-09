@@ -1,10 +1,15 @@
 .register-container {
     position: relative;
-    min-height: 100vh; /* Visina da pokriva celu stranicu */
     display: flex;
-    justify-content: center; /* Centriranje horizontalno */
-    align-items: center; /* Centriranje vertikalno */
-    background-image: url("../../../assets/images/bg.png");
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    --color: #E1E1E1;
+    background-color: #F3F3F3;
+    background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+        linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+    background-size: 55px 55px;
   }
   
   .register-form {
@@ -33,13 +38,13 @@
     align-items: center;
   }
   
-  // .form-group {
-  //   display: flex;
-  //   align-items: center; /* Naslovi pored input polja */
-  //   margin-bottom: 15px;
-  //   width: 70%; /* Širina cele grupe */
-  //   justify-content: right; /* Raspoređuje labele i inpute ravnomerno */
-  // }
+  .form-group {
+    display: flex;
+    align-items: center; /* Naslovi pored input polja */
+    margin-bottom: 15px;
+    width: 70%; /* Širina cele grupe */
+    justify-content: center; /* Raspoređuje labele i inpute ravnomerno */
+  }
 
   .form-group {
     position: relative; /* Potrebno da ikonica bude apsolutno pozicionirana u okviru grupe */
@@ -109,6 +114,7 @@
   .toggle-password {
     position: absolute; 
     right: 5%;
+    margin-right: 10px;
     cursor: pointer;
     color: #888; 
     font-size: 18px; 
