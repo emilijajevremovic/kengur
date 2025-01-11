@@ -31,6 +31,7 @@
 
 .friends-list {
     width: 30%;
+    padding: 1%;
     background-color: #ffffff;
     border-radius: 15px;
     box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
@@ -42,11 +43,18 @@
     width: 60%;
 }
 
+.search-area {
+    background-color: white;
+    border-radius: 15px;
+    padding: 1%;
+    padding-top: 2%;
+}
+
 .search { 
     display: flex;
     flex-wrap: wrap;
-    justify-content: left;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
 }
 
 .search div {
@@ -59,11 +67,14 @@
 .search-bar {
     width: fit-content;
     margin: 0 1% 1% 1%;
-    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
 .search-results {
-    width: 60%;
+    width: 100%;
+}
+
+#results {
+    padding: 0;
 }
 
 .requests {
@@ -81,7 +92,7 @@
   
 .input {
 min-height: 50px;
-max-width: 180px;
+max-width: 250px;
 padding: 0 1rem;
 font-size: 15px;
 border: 1px solid #0C3C5C;
@@ -101,6 +112,14 @@ cursor: pointer;
 transition: background-color .3s ease-in-out;
 }
 
+p {
+    background: linear-gradient(to right, #448bbb, #1d4e70);
+    color: white;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
 .button--submit:hover {
 background-color: #AD1026;
 }
@@ -113,6 +132,7 @@ outline: none;
 .friend-status-img img {
     height: 50px;
     width: 50px;
+    margin-right: 5px;
 }
 
 .friend-status h5 {
@@ -125,7 +145,7 @@ outline: none;
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-right: 5%;
+    cursor: pointer;
 }
 
 .friend-status button {
@@ -134,7 +154,7 @@ outline: none;
     font-size: 14px;
     text-transform: uppercase;
     border: none;
-    border-radius: 5px;
+    border-radius: 50%;
     background-color: #134275;
     color: white;
     cursor: pointer;
@@ -151,6 +171,7 @@ outline: none;
     border-radius: 50%; 
     margin-left: 5px; 
     margin-left: auto;
+    margin-right: 5px;
 }
 
 .status-indicator.online {
@@ -161,9 +182,21 @@ outline: none;
     background-color: red; 
 }
 
+.friend-status.offline {
+    opacity: 0.6; 
+    filter: grayscale(50%); 
+    cursor: not-allowed;
+  }
+
+button img {
+    width: 25px;
+    height: 25px;
+}
+
 #list2 {
     width: 100%;
     box-shadow: none;
+    padding-top: 2%;
 }
 
 .buttons {
@@ -180,6 +213,10 @@ outline: none;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+#red img {
+    padding: 5px;
 }
 
 #red:hover {
@@ -215,6 +252,7 @@ outline: none;
 
     .friends-list {
         width: 90%;
+        padding: 1%;
     }
 
     .search-results {

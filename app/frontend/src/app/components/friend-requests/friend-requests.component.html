@@ -2,6 +2,7 @@
 <div class="main-container">
     <div class="flex-container-row">
         <div class="friends-list">
+            <p>Odaberi protivnika</p>
             <div>
                 <div class="friend-status">
                     <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
@@ -10,7 +11,7 @@
                 </div>
             </div>
             <div>
-                <div class="friend-status">
+                <div class="friend-status  offline">
                     <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
                     <h5>Ime Prezime</h5>
                     <div class="status-indicator offline"></div>
@@ -18,27 +19,30 @@
             </div>
         </div>
         <div class="search-and-requests">
-            <div class="search">
-                <div class="search-bar">
-                    <div class="input-group">
-                        <input class="input" placeholder="korisničko ime" autocomplete="off">
-                        <input class="button--submit" value="Pretraži" type="submit">
-                    </div>
-                </div>
-                <div class="search-results">
-                    <div class="friends-list" id="list2">
-                        <div>
-                            <div class="friend-status">
-                                <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                                <h5>Ime Prezime</h5>
-                                <button>POŠALJI ZAHTEV</button>
-                            </div>
+            <div class="search-area">
+                <p>Pretraži korisnike</p>
+                <div class="search">
+                    <div class="search-bar">
+                        <div class="input-group">
+                            <input class="input" placeholder="korisničko ime" autocomplete="off">
+                            <button class="button--submit"><img src="../../../assets/images/magnifying-glass.png" alt=""></button>
                         </div>
-                        <div>
-                            <div class="friend-status">
-                                <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                                <h5>Ime Prezime</h5>
-                                <button>POŠALJI ZAHTEV</button>
+                    </div>
+                    <div class="search-results">
+                        <div class="friends-list" id="list2" style="padding: 0;">
+                            <div>
+                                <div class="friend-status">
+                                    <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
+                                    <h5>Ime Prezime</h5>
+                                    <button style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="friend-status">
+                                    <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
+                                    <h5>Ime Prezime</h5>
+                                    <button style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -47,13 +51,14 @@
             <div class="requests">
                 <div class="request">
                     <div class="friends-list" id="list2">
+                        <p>Zahtevi za prijateljstvo</p>
                         <div>
                             <div class="friend-status">
                                 <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
                                 <h5>Ime Prezime</h5>
                                 <div class="buttons">
-                                    <button>PRIHVATI ZAHTEV</button>
-                                    <button id="red">ODBIJ ZAHTEV</button>
+                                    <button><img src="../../../assets/images/check.png" alt=""></button>
+                                    <button id="red"><img src="../../../assets/images/cross.png" alt=""></button>
                                 </div>
                             </div>
                         </div>
@@ -62,8 +67,8 @@
                                 <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
                                 <h5>Ime Prezime</h5>
                                 <div class="buttons">
-                                    <button>PRIHVATI ZAHTEV</button>
-                                    <button id="red">ODBIJ ZAHTEV</button>
+                                    <button><img src="../../../assets/images/check.png" alt=""></button>
+                                    <button id="red"><img src="../../../assets/images/cross.png" alt=""></button>
                                 </div>
                             </div>
                         </div>
