@@ -1,11 +1,34 @@
 <app-navbar></app-navbar>
+
+<div class="popup-overlay" *ngIf="isPopupOpen" (click)="closePopup()">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+        <div id="close-popup" (click)="closePopup()"><img src="../../../assets/images/close-popup.png" alt=""></div>
+        <div class="popup-request">
+            <div class="popup-opponent">
+                <div class="profile-picture">
+                    <img src="../../../assets/images/profile.png" alt="">
+                    <h5>nickname</h5>
+                    <span>emailaddress</span>
+                </div>
+            </div>
+            <div class="popup-subject">
+                <h1>hey</h1>
+            </div>
+            <div class="popup-class">
+                <h1>hey</h1>
+            </div>
+        </div>
+        <button id="popup-send-button">Pošalji zahtev</button>
+    </div>
+</div>
+
 <div class="main-container">
     <div class="flex-container-row">
         <div class="friends-list">
             <div id="p-div"><p>Odaberi protivnika</p></div>
             <div id="scrollable-div">
                 <div>
-                    <div class="friend-status online">
+                    <div class="friend-status online" (click)="openPopup()">
                         <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
                         <h5>Ime Prezime</h5>
                         <div class="status-indicator online"></div>
