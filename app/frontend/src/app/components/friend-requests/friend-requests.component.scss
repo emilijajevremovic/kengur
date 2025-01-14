@@ -43,6 +43,10 @@
     overflow: auto;
 }
 
+#scrollable-div div {
+    margin-right: 2px;
+}
+
 #scrollable-div div.online:hover{
     background-color: #b5b7b9;
     border-radius: 15px;
@@ -325,12 +329,17 @@ button img {
 
 .popup-request {
     margin-top: 5%;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     height: 60%;
+}
+
+.card-header {
+    margin-bottom: auto;
+    margin-top: 2%;
 }
 
 .popup-opponent {
@@ -346,6 +355,10 @@ button img {
 
 .popup-opponent:hover {
     box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+}
+
+.profile-picture {
+    height: 80%;
 }
 
 .profile-picture img {
@@ -395,8 +408,32 @@ button img {
 }
 
 #popup-send-button:hover {
-    background-color: #aa1818;
+    border: none;
+    background: linear-gradient(to right, #be5d5d, #aa1818);
     color: white;
+}
+
+.subjects {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: baseline;
+    height: 80%;
+}
+
+.subject {
+    border-radius: 15px;
+    padding: 2%;
+    margin: 2%;
+}
+
+.subject input[type="radio"]:checked {
+    background-color: #0C3C5C;
+}
+
+.subject img {
+    width: 50px;
+    height: 50px;
 }
 
   @media (max-width: 800px) {

@@ -5,6 +5,7 @@
         <div id="close-popup" (click)="closePopup()"><img src="../../../assets/images/close-popup.png" alt=""></div>
         <div class="popup-request">
             <div class="popup-opponent">
+                <div class="card-header"><h5>Protivnik</h5></div>
                 <div class="profile-picture">
                     <img src="../../../assets/images/profile.png" alt="">
                     <h5>nickname</h5>
@@ -12,10 +13,26 @@
                 </div>
             </div>
             <div class="popup-subject">
-                <h1>hey</h1>
+                <div class="card-header"><h5>Predmet</h5></div>
+                <div class="subjects">
+                    <div class="subject">
+                        <label for="radio-maths">
+                            <input type="radio" id="radio-maths" name="radio" checked>
+                            <span>Matematika</span>
+                            <span><img style="margin-top: 15px;" src="../../../assets/images/maths.png" alt=""></span>
+                        </label>
+                    </div>
+                    <div class="subject">
+                        <label for="radio-info">
+                            <input type="radio" id="radio-info" name="radio">
+                            <span>Informatika</span>
+                            <span><img style="margin-top: 15px;" src="../../../assets/images/programming.png" alt=""></span>
+                        </label>
+                    </div>
+                </div>                
             </div>
             <div class="popup-class">
-                <h1>hey</h1>
+                <div class="card-header"><h5>Razred</h5></div>
             </div>
         </div>
         <button id="popup-send-button">Pošalji zahtev</button>
