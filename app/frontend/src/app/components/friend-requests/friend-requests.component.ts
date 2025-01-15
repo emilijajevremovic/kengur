@@ -11,13 +11,13 @@ import { CommonModule, NgIf } from '@angular/common';
   styleUrl: './friend-requests.component.scss'
 })
 export class FriendRequestsComponent {
-  isPopupOpen = false; // Kontroliše da li je popup otvoren
+  isPopupOpen = false;
 
   openPopup() {
-    this.isPopupOpen = true; // Otvori popup
+    this.isPopupOpen = true; 
   }
 
   closePopup() {
-    this.isPopupOpen = false; // Zatvori popup
+    this.isPopupOpen = false; 
   }
 }

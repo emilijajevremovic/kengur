@@ -10,5 +10,5 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent }, 
     { path: 'home', component: HomeComponent }, 
     { path: 'game-request', component: GameRequestComponent }, 
-    { path: 'friend-requests', component: FriendRequestsComponent }, 
+    { path: 'lobby', component: FriendRequestsComponent }, 
 ];
