@@ -1,0 +1,188 @@
+.background {
+    --color: #E1E1E1;
+    background-color: #F3F3F3;
+    background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+    linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+    background-size: 55px 55px;
+    padding: 20px;
+  }
+  
+  .quiz-container {
+      background-color: white;
+      width: 60%;
+      min-width: fit-content;
+      margin: 0 auto;
+      padding: 15px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      border-radius: 15px;
+      box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+    }
+  
+    .timer {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 20px;
+    }
+  
+    .timer img {
+      width: 60px;
+    }
+    
+    .question-counter {
+      display: flex;
+      align-self: center;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .task-text {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .task-image img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+  
+    .answers form {
+      width: 50%;
+    }
+  
+    .form-div {
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    
+    .answers form label {
+      width: 40%;
+      height: 60px;
+      min-height: fit-content;
+      min-width: fit-content;
+      margin: 0.5rem 0;
+      padding: 0.8rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 5px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+    
+    .answers button img {
+      max-width: 100%;
+      height: auto;
+    }
+  
+    .next-button {
+      margin-left: auto;
+    }
+    
+    .next-button button {
+      padding: 10px 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 50%;
+      background-color: #134275;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .next-button img {
+      width: 25px;
+      height: 25px;
+    }
+  
+    .next-button button:hover {
+      background-color: #aa1818;
+    }
+    
+  .radio-input input {
+    display: none;
+  }
+  
+  .radio-input {
+    pointer-events: none;
+    --container_width: 300px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: #fff;
+    color: #000000;
+    width: var(--container_width);
+    overflow: hidden;
+    border: 1px solid rgba(53, 52, 52, 0.226);
+  }
+  
+  .radio-input label {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    font-weight: 600;
+    letter-spacing: -1px;
+    font-size: 14px;
+  }
+  
+  .selection {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: calc(var(--container_width) / 7);
+    z-index: 0;
+    left: 0;
+    top: 0;
+    transition: .15s ease;
+  }
+  
+  .radio-input label:has(input:checked) {
+    color: #fff;
+  }
+  
+  .radio-input label:has(input:checked) ~ .selection {
+    background-color: rgb(11 117 223);
+    display: inline-block;
+  }
+  
+  .radio-input label:nth-child(1):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 0/7));
+  }
+  
+  .radio-input label:nth-child(2):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 1/7));
+  }
+  
+  .radio-input label:nth-child(3):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 2/7));
+  }
+  
+  .radio-input label:nth-child(4):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 3/7));
+  }
+  
+  .radio-input label:nth-child(5):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 4/7));
+  }
+  
+  .radio-input label:nth-child(6):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 5/7));
+  }
+  
+  .radio-input label:nth-child(7):has(input:checked) ~ .selection {
+    transform: translateX(calc(var(--container_width) * 6/7));
+  }
