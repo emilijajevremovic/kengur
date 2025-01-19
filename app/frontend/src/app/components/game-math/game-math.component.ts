@@ -1,6 +1,7 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-game-math',
@@ -13,6 +14,12 @@ export class GameMathComponent implements OnInit {
 
   ngOnInit() {
     //this.startTimer();
+    // const obs$ = interval(1000);
+    // obs$.subscribe((d) => {
+    //   this.timeElapsed++;
+    //   this.seconds = this.timeElapsed % 60;
+    //   this.minutes = Math.floor(this.timeElapsed / 60);
+    //});
   }
 
   startTimer() {
@@ -27,6 +34,9 @@ export class GameMathComponent implements OnInit {
   timerInterval: any;
   isLastQuestion = false;
   selectedAnswerIndex: number | null = null; 
+
+  seconds = 0;
+  minutes = 0;
 
   tasks = [
     {
@@ -43,13 +53,13 @@ export class GameMathComponent implements OnInit {
     return this.tasks[this.currentQuestionIndex];
   }
 
-  get minutes() {
-    return Math.floor(this.timeElapsed / 60);
-  }
+  // get minutes() {
+  //   return Math.floor(this.timeElapsed / 60);
+  // }
 
-  get seconds() {
-    return this.timeElapsed % 60;
-  }
+  // get seconds() {
+  //   return this.timeElapsed % 60;
+  // }
 
   selectAnswer(index: number) {
     this.selectedAnswerIndex = index; 

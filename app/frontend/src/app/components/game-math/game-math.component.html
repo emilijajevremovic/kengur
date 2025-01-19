@@ -63,7 +63,7 @@
     
 
     <!-- Next Button -->
-    <div class="next-button">
+    <div class="next-button" *ngIf="!isLastQuestion">
       <button (click)="goToNextQuestion()"><img src="../../../assets/images/check.png" alt=""></button>
     </div>
     <div class="done-button" *ngIf="isLastQuestion">

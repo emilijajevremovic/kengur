@@ -2,22 +2,7 @@
     <div class="quiz-container">
       <!-- Timer -->
       <div class="timer">
-        <img src="../../../assets/images/chronometer.png" alt="">
-        <span style="font-size: xx-large;">{{ minutes }}:{{ seconds | number: '2.0' }}</span>
-      </div>
-  
-      <!-- Question Counter -->
-      <div class="question-counter">
-        <div class="radio-input">
-          <label><input value="value-1" name="value-radio" id="value-1" type="radio" checked=""><span>1</span></label>
-          <label><input value="value-2" name="value-radio" id="value-2" type="radio"><span>2</span></label>
-          <label><input value="value-3" name="value-radio" id="value-3" type="radio"><span>3</span></label>
-          <label><input value="value-4" name="value-radio" id="value-4" type="radio"><span>4</span></label>
-          <label><input value="value-5" name="value-radio" id="value-5" type="radio"><span>5</span></label>
-          <label><input value="value-6" name="value-radio" id="value-6" type="radio"><span>6</span></label>
-          <label><input value="value-7" name="value-radio" id="value-7" type="radio"><span>7</span></label>
-          <span class="selection"></span>
-        </div>
+        {{ minutes }}:{{ seconds | number: '2.0' }}
       </div>
   
       <!-- Task Text -->
@@ -26,48 +11,19 @@
       </div>
   
       <!-- Task Image -->
-      <div class="task-image" *ngIf="currentTask.taskPicture">
+      <!-- <div class="task-image" *ngIf="currentTask.taskPicture">
         <img style="height: 200px;" [src]="'assets/images/' + currentTask.taskPicture" alt="Task Image" />
-      </div>
+      </div> -->
   
-      <!-- Answers -->
+      <!-- Code -->
       <div class="answers">
-        <h5>Ponuđeni odgovori</h5>
-        <div class="form-div">
-          <form>
-            <ng-container *ngIf="currentTask.answersText.length > 0">
-              <label *ngFor="let answer of currentTask.answersText; let i = index">
-                <input 
-                  type="radio" 
-                  name="answers" 
-                  [value]="i" 
-                  (change)="selectAnswer(i)" 
-                  [checked]="selectedAnswerIndex === i" />
-                {{ answer }}
-              </label>
-            </ng-container>
-            <ng-container *ngIf="currentTask.answersPictures.length > 0">
-              <label *ngFor="let answer of currentTask.answersPictures; let i = index">
-                <input 
-                  type="radio" 
-                  name="answers" 
-                  [value]="i" 
-                  (change)="selectAnswer(i)" 
-                  [checked]="selectedAnswerIndex === i" />
-                <img [src]="'assets/images/' + answer" alt="Answer Image" />
-              </label>
-            </ng-container>
-          </form>
-        </div>
+        
       </div>
       
   
-      <!-- Next Button -->
-      <div class="next-button">
-        <button (click)="goToNextQuestion()"><img src="../../../assets/images/check.png" alt=""></button>
-      </div>
-      <div class="done-button" *ngIf="isLastQuestion">
-        <button (click)="endQuiz()">Gotovo</button>
+      <!-- Done Button -->
+      <div class="done-button">
+        <button (click)="endQuiz()"><img src="../../../assets/images/check.png" alt=""></button>
       </div>
     </div>
   </div>

@@ -5,11 +5,12 @@
     linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
     background-size: 55px 55px;
     padding: 20px;
+    height: 100%;
   }
   
   .quiz-container {
       background-color: white;
-      width: 60%;
+      width: 80%;
       min-width: fit-content;
       margin: 0 auto;
       padding: 15px;
@@ -84,11 +85,11 @@
       height: auto;
     }
   
-    .next-button {
+    .done-button {
       margin-left: auto;
     }
     
-    .next-button button {
+    .done-button button {
       padding: 10px 10px;
       font-size: 14px;
       border: none;
@@ -99,12 +100,12 @@
       transition: background-color 0.3s ease;
     }
   
-    .next-button img {
+    .done-button img {
       width: 25px;
       height: 25px;
     }
   
-    .next-button button:hover {
+    .done-button button:hover {
       background-color: #aa1818;
     }
     

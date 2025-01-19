@@ -1,18 +1,31 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-game-inf',
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule, RouterModule],
+  imports: [NgIf, NgFor, CommonModule, RouterModule, FormsModule],
   templateUrl: './game-inf.component.html',
   styleUrl: './game-inf.component.scss'
 })
 export class GameInfComponent implements OnInit {
 
+  timeElapsed = 0; // Tajmer
+  timerInterval: any;
+
+  currentQuestionIndex = 0;
+  totalQuestions = 8;
+  isLastQuestion = false;
+  selectedAnswerIndex: number | null = null; 
+
   ngOnInit() {
-    //this.startTimer();
+    this.startTimer();
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timerInterval); // Čisti interval kada komponenta bude uništena
   }
 
   startTimer() {
@@ -21,16 +34,9 @@ export class GameInfComponent implements OnInit {
     }, 1000);
   }
 
-  currentQuestionIndex = 0;
-  totalQuestions = 8;
-  timeElapsed = 0; // In seconds
-  timerInterval: any;
-  isLastQuestion = false;
-  selectedAnswerIndex: number | null = null; 
-
   tasks = [
     {
-      taskText: 'Koliko ima krugova na slici desno?',
+      taskText: 'Napisi kod koji ce od zadatog ulaza da na izlazu napise zadatu recenicu unazad.',
       taskPicture: 'maths.png',
       answersText: ['5', '6', '7', '8', '9'],
       answersPictures: [],
