@@ -12,26 +12,13 @@ import { RouterModule } from '@angular/router';
 })
 export class GameInfComponent implements OnInit {
 
-  timeElapsed = 0; // Tajmer
-  timerInterval: any;
-
-  currentQuestionIndex = 0;
-  totalQuestions = 8;
-  isLastQuestion = false;
-  selectedAnswerIndex: number | null = null; 
+  startDate: Date | null = null;
+  endDate: Date | null = null;
+  duration: string = '';
 
   ngOnInit() {
-    this.startTimer();
-  }
-
-  ngOnDestroy() {
-    clearInterval(this.timerInterval); // Čisti interval kada komponenta bude uništena
-  }
-
-  startTimer() {
-    this.timerInterval = setInterval(() => {
-      this.timeElapsed++;
-    }, 1000);
+    this.startDate = new Date();
+    console.log('Start time:', this.startDate);
   }
 
   tasks = [
@@ -45,35 +32,36 @@ export class GameInfComponent implements OnInit {
     // Add other tasks here
   ];
 
-  get currentTask() {
-    return this.tasks[this.currentQuestionIndex];
+  task: any = this.tasks[0];
+
+  endQuiz() {
+    this.endDate = new Date(); 
+    console.log('End time:', this.endDate);
+    this.calculateDuration();
+    //console.log(this.duration);
   }
 
-  get minutes() {
-    return Math.floor(this.timeElapsed / 60);
-  }
-
-  get seconds() {
-    return this.timeElapsed % 60;
-  }
-
-  selectAnswer(index: number) {
-    this.selectedAnswerIndex = index; 
-    console.log('Selected answer index:', index);
-  }
-
-  goToNextQuestion() {
-    if (this.currentQuestionIndex < this.tasks.length - 1) {
-      this.currentQuestionIndex++;
-      this.selectedAnswerIndex = null; 
-    } 
-    else {
-      this.endQuiz();
+  calculateDuration(): void {
+    if (this.startDate && this.endDate) {
+      const timeDifference = this.endDate.getTime() - this.startDate.getTime(); 
+      const totalSeconds = Math.floor(timeDifference / 1000); 
+      this.duration = this.formatTime(totalSeconds);
     }
   }
 
-  endQuiz() {
-    clearInterval(this.timerInterval);
-    console.log('Quiz ended!');
+  formatTime(totalSeconds: number): string {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const hours = Math.floor(minutes / 60);
+    
+    if (hours > 0) {
+      return `${this.formatNumber(hours)}:${this.formatNumber(minutes % 60)}:${this.formatNumber(seconds)}`;
+    }
+    
+    return `${this.formatNumber(minutes)}:${this.formatNumber(seconds)}`;
+  }
+
+  formatNumber(time: number): string {
+    return time < 10 ? '0' + time : time.toString();
   }
 }

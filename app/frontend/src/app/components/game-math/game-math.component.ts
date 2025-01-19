@@ -12,31 +12,19 @@ import { interval } from 'rxjs';
 })
 export class GameMathComponent implements OnInit {
 
-  ngOnInit() {
-    //this.startTimer();
-    // const obs$ = interval(1000);
-    // obs$.subscribe((d) => {
-    //   this.timeElapsed++;
-    //   this.seconds = this.timeElapsed % 60;
-    //   this.minutes = Math.floor(this.timeElapsed / 60);
-    //});
-  }
-
-  startTimer() {
-    this.timerInterval = setInterval(() => {
-      this.timeElapsed++;
-    }, 1000);
-  }
-
   currentQuestionIndex = 0;
   totalQuestions = 8;
-  timeElapsed = 0; // In seconds
-  timerInterval: any;
   isLastQuestion = false;
   selectedAnswerIndex: number | null = null; 
 
-  seconds = 0;
-  minutes = 0;
+  startDate: Date | null = null;
+  endDate: Date | null = null;
+  duration: string = '';
+
+  ngOnInit() {
+    this.startDate = new Date();
+    console.log('Start time:', this.startDate);
+  }
 
   tasks = [
     {
@@ -52,14 +40,6 @@ export class GameMathComponent implements OnInit {
   get currentTask() {
     return this.tasks[this.currentQuestionIndex];
   }
-
-  // get minutes() {
-  //   return Math.floor(this.timeElapsed / 60);
-  // }
-
-  // get seconds() {
-  //   return this.timeElapsed % 60;
-  // }
 
   selectAnswer(index: number) {
     this.selectedAnswerIndex = index; 
@@ -77,7 +57,33 @@ export class GameMathComponent implements OnInit {
   }
 
   endQuiz() {
-    clearInterval(this.timerInterval);
-    console.log('Quiz ended!');
+    this.endDate = new Date(); 
+    console.log('End time:', this.endDate);
+    this.calculateDuration();
+  }
+
+  calculateDuration(): void {
+    if (this.startDate && this.endDate) {
+      const timeDifference = this.endDate.getTime() - this.startDate.getTime(); 
+      const totalSeconds = Math.floor(timeDifference / 1000); 
+      this.duration = this.formatTime(totalSeconds);
+      //console.log(this.duration);
+    }
+  }
+
+  formatTime(totalSeconds: number): string {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const hours = Math.floor(minutes / 60);
+    
+    if (hours > 0) {
+      return `${this.formatNumber(hours)}:${this.formatNumber(minutes % 60)}:${this.formatNumber(seconds)}`;
+    }
+    
+    return `${this.formatNumber(minutes)}:${this.formatNumber(seconds)}`;
+  }
+
+  formatNumber(time: number): string {
+    return time < 10 ? '0' + time : time.toString();
   }
 }
