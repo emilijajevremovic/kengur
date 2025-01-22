@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import * as CodeMirror from 'codemirror';
+import { HttpClient } from '@angular/common/http';
 import 'codemirror/lib/codemirror.css'; 
 
 @Component({
@@ -17,11 +18,19 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   startDate: Date | null = null;
   endDate: Date | null = null;
   duration: string = '';
+  input: string = ''; // Opcioni ulaz
+  language: string = 'c'; // Odabrani jezik
+  result: string = ''; // Rezultat izvršavanja
   editor: CodeMirror.EditorFromTextArea | null = null;
 
   @ViewChild('editor') editorElement!: ElementRef;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {}
+
+  ngOnInit() {
+    this.startDate = new Date();
+    //console.log('Start time:', this.startDate);
+  }
 
   ngAfterViewInit(): void {
     if (typeof window !== 'undefined') {
@@ -61,9 +70,27 @@ export class GameInfComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    this.startDate = new Date();
-    //console.log('Start time:', this.startDate);
+  runCode() {
+
+    const payload = {
+      code: this.editor?.getValue(),
+      input: this.input,
+      language: this.language
+    };
+
+    //console.log(payload);
+    this.http.post<any>('http://localhost/Projekat/kengur/app/backend/api.php', payload).subscribe(
+      response => {
+        if (response.error) {
+          this.result = `Error: ${response.error}`;
+        } else {
+          this.result = `${response.output}`;
+        }
+      },
+      error => {
+        this.result = error.error.text;
+      }
+    );
   }
 
   tasks = [

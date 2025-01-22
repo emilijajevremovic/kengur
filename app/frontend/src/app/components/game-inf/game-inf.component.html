@@ -19,15 +19,14 @@
           <div class="d-flex justify-content-between mb-2">
             <div class="col-12 w-25">
               <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
-              <select class="form-select" id="inlineFormSelectPref" (change)="changeLanguage($event)">
+              <select [(ngModel)]="language" class="form-select" id="inlineFormSelectPref" (change)="changeLanguage($event)">
                 <option selected value="c">C</option>
                 <option value="cpp">C++</option>
                 <option value="python">Python</option>
               </select>
             </div>
             <div>
-              <button class="btn btn-success">Coding Sprint</button>
-              <button class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+              <button class="btn btn-success" (click)="runCode()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
                 <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
               </svg></button>
             </div>
@@ -39,11 +38,11 @@
         <div class="col d-flex flex-column rounded px-4">
           <div class="h-50">
             <label for="Input" class="mt-4 mb-2">Input</label>
-            <textarea type="text" class="form-control h-75" aria-label="Last name"></textarea>
+            <textarea [(ngModel)]="input" type="text" class="form-control h-75"></textarea>
           </div>
           <div class="h-50">
             <label for="Output" class="mt-4 mb-2">Output</label>
-            <textarea type="text" class="form-control h-75" aria-label="Last name"></textarea>
+            <textarea [(ngModel)]="result" type="text" class="form-control h-75"></textarea>
           </div>
         </div>
       </div>
