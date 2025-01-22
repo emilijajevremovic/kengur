@@ -1,14 +1,10 @@
 <?php
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
-// Dozvoliti određene HTTP metode (ako je potrebno)
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-// Dozvoliti određene HTTP zaglavlja
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Proveri da li je POST zahtev
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Parsiraj JSON payload
     $request = json_decode(file_get_contents('php://input'), true);
     $code = $request['code'] ?? '';
     $input = $request['input'] ?? '';
@@ -18,47 +14,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $output = '';
     $error = '';
 
-    $file = 'code.py';
-    file_put_contents($file, $code);
-    file_put_contents('input.txt', $input);
-    exec("C:\Users\jevem\AppData\Local\Programs\Python\Python312\python.exe $file < input.txt 2>&1", $output, $return_var);
+    switch ($language) {
+        case 'c':
+            $file = 'code.c';
+            file_put_contents($file, $code);
+            $output_exe = 'output.exe';
 
-    if ($return_var !== 0) {
-        echo json_encode(["error" => implode("\n", $output)]);
-    } else {
-        echo json_encode(["output" => implode("\n", $output)]);
+            // Kompajlacija
+            $compile_output = shell_exec("C:\mingw64\bin\gcc.exe $file -o $output_exe 2>&1");
+            if (!file_exists($output_exe)) {
+                echo json_encode(["error" => "Compilation failed: $compile_output"]);
+                exit;
+            }
+            // Izvršavanje
+            echo "hello\n";
+            //$output = shell_exec(__DIR__ . DIRECTORY_SEPARATOR . $output_exe . " < input.txt 2>&1");
+            $input_file = 'input.txt';
+            $command = __DIR__ . DIRECTORY_SEPARATOR . $output_exe;
+            if (file_exists($input_file)) {
+                // Ako fajl postoji, izvrši komandu sa input.txt kao ulaz
+                $output = shell_exec($command . " < " . $input_file . " 2>&1");
+            } else {
+                // Ako fajl ne postoji, samo izvrši komandu bez ulaza
+                $output = shell_exec($command . " 2>&1");
+            }
+
+            break;
+
+        case 'cpp':
+            $file = 'code.cpp';
+            file_put_contents($file, $code);
+            $output_exe = "output.exe";
+
+            // Kompajlacija
+            $compile_output = shell_exec("C:\mingw64\bin\g++.exe $file -o $output_exe 2>&1");
+            if (!file_exists($output_exe)) {
+                echo json_encode(["error" => "Compilation failed: $compile_output"]);
+                exit;
+            }
+
+            // Izvršavanje
+            $output = shell_exec(__DIR__ . DIRECTORY_SEPARATOR . $output_exe . " < input.txt 2>&1");
+            break;
+
+        case 'python':
+            $file = 'code.py';
+            file_put_contents($file, $code);
+            file_put_contents('input.txt', $input);
+
+            // Izvršavanje Python koda
+            exec("C:\Users\jevem\AppData\Local\Programs\Python\Python312\python.exe $file < input.txt 2>&1", $output, $return_var);
+            break;
+
+        default:
+            echo json_encode(["error" => "Unsupported language"]);
+            exit;
     }
 
-    // switch ($language) {
-    //     case 'c':
-    //         $file = 'code.c';
-    //         file_put_contents($file, $code);
-    //         file_put_contents('input.txt', $input);
-    //         exec("gcc $file -o output && ./output < input.txt 2>&1", $output, $return_var);
-    //         break;
+    if (is_array($output)) {
+        $output = implode("\n", $output);
+    }
 
-    //     case 'cpp':
-    //         $file = 'code.cpp';
-    //         file_put_contents($file, $code);
-    //         file_put_contents('input.txt', $input);
-    //         exec("g++ $file -o output && ./output < input.txt 2>&1", $output, $return_var);
-    //         break;
-
-    //     case 'python':
-    //         $file = 'code.py';
-    //         file_put_contents($file, $code);
-    //         file_put_contents('input.txt', $input);
-    //         exec("python3 $file < input.txt 2>&1", $output, $return_var);
-    //         break;
-
-    //     default:
-    //         echo json_encode(["error" => "Unsupported language"]);
-    //         exit;
-    // }
+    echo json_encode(["output" => $output]);
 
     // if ($return_var !== 0) {
-    //     echo json_encode(["error" => implode("\n", $output)]);
+    //     echo json_encode(["error" => $output]);
     // } else {
-    //     echo json_encode(["output" => implode("\n", $output)]);
+    //     echo json_encode(["output" => $output]);
     // }
 }

@@ -88,6 +88,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
         }
       },
       error => {
+        console.log(error);
         this.result = error.error.text;
       }
     );
