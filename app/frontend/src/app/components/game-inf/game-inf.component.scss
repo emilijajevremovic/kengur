@@ -24,7 +24,12 @@
     .text-field {
       text-align: left;
       border-radius: 15px;
-      box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .textarea {
+      border: 1px solid rgb(214, 214, 214);
+      //border-radius: 15px;
+      //box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2);
     }
 
     .text-field-2 {

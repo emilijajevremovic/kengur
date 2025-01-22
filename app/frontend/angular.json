@@ -32,9 +32,14 @@
             "styles": [
               "src/styles.scss",
               "node_modules/font-awesome/css/font-awesome.min.css",
-              "node_modules/codemirror/lib/codemirror.css"
+              "node_modules/codemirror/lib/codemirror.css",
+              "node_modules/codemirror/theme/dracula.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/codemirror/lib/codemirror.js",
+              "node_modules/codemirror/mode/clike/clike.js",
+              "node_modules/codemirror/mode/python/python.js"
+            ],
             "server": "src/main.server.ts",
             "prerender": true,
             "ssr": {
