@@ -4,7 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import * as CodeMirror from 'codemirror';
-import 'codemirror/lib/codemirror.css'; 
+import 'codemirror/lib/codemirror.css';  
 
 @Component({
   selector: 'app-game-inf',
@@ -22,22 +22,47 @@ export class GameInfComponent implements OnInit, AfterViewInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
+  // ngAfterViewInit(): void {
+  //   if (typeof window !== 'undefined') {
+  //     import('codemirror').then(CodeMirror => {
+  //       const editor = CodeMirror.fromTextArea(this.editorElement.nativeElement, {
+  //         lineNumbers: true,     // Prikazuje brojeve linija
+  //         mode: 'javascript',    // Sintaksno isticanje za JavaScript
+  //         theme: 'default',      // Tema
+  //         autoCloseBrackets: true,
+  //       });
+  
+  //       // Postavljanje širine i visine editora
+  //       const width = window.innerWidth;
+  //       editor.setSize(0.7 * width + 'px', '500px');
+  //     });
+  //   }
+  // }
+
   ngAfterViewInit(): void {
     if (typeof window !== 'undefined') {
-      import('codemirror').then(CodeMirror => {
-        CodeMirror.fromTextArea(this.editorElement.nativeElement, {
-          lineNumbers: true,     // Prikazuje brojeve linija
-          mode: 'javascript',    // Sintaksno isticanje za JavaScript
-          theme: 'default',      // Tema
-        });
+      Promise.all([
+        import('codemirror'),
+        import('codemirror/addon/edit/closebrackets'),
+      ]).then(([CodeMirror]) => {
+        const editor = CodeMirror.fromTextArea(this.editorElement.nativeElement, {
+          lineNumbers: true,
+          mode: 'javascript',
+          theme: 'default',
+          autoCloseBrackets: true,
+        } as any);
+  
+        const width = window.innerWidth;
+        editor.setSize(0.7 * width + 'px', '500px');
       });
     }
   }
   
+  
 
   ngOnInit() {
     this.startDate = new Date();
-    console.log('Start time:', this.startDate);
+    //console.log('Start time:', this.startDate);
   }
 
   tasks = [
