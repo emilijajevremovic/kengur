@@ -23,7 +23,7 @@ export class GameMathComponent implements OnInit {
 
   ngOnInit() {
     this.startDate = new Date();
-    console.log('Start time:', this.startDate);
+    //console.log('Start time:', this.startDate);
   }
 
   tasks = [
@@ -58,7 +58,7 @@ export class GameMathComponent implements OnInit {
 
   endQuiz() {
     this.endDate = new Date(); 
-    console.log('End time:', this.endDate);
+    //console.log('End time:', this.endDate);
     this.calculateDuration();
   }
 

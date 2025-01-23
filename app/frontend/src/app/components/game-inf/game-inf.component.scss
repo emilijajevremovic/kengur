@@ -181,39 +181,9 @@
     transition: .15s ease;
   }
   
-  .radio-input label:has(input:checked) {
-    color: #fff;
-  }
   
-  .radio-input label:has(input:checked) ~ .selection {
-    background-color: rgb(11 117 223);
-    display: inline-block;
+@media (max-width: 800px) {
+  .quiz-container {
+    gap: 20px;
   }
-  
-  .radio-input label:nth-child(1):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 0/7));
-  }
-  
-  .radio-input label:nth-child(2):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 1/7));
-  }
-  
-  .radio-input label:nth-child(3):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 2/7));
-  }
-  
-  .radio-input label:nth-child(4):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 3/7));
-  }
-  
-  .radio-input label:nth-child(5):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 4/7));
-  }
-  
-  .radio-input label:nth-child(6):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 5/7));
-  }
-  
-  .radio-input label:nth-child(7):has(input:checked) ~ .selection {
-    transform: translateX(calc(var(--container_width) * 6/7));
-  }
+}

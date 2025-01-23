@@ -211,3 +211,13 @@
 .radio-input label:nth-child(7):has(input:checked) ~ .selection {
   transform: translateX(calc(var(--container_width) * 6/7));
 }
+
+@media (max-width: 800px) {
+  .quiz-container {
+    gap: 20px;
+  }
+
+  .background {
+    height: 115%;
+  }
+}
