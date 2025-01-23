@@ -5,9 +5,9 @@
     linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
     background-size: 55px 55px;
     padding: 20px;
-    height: 100%;
+    height: 115%;
   }
-  
+
   .quiz-container {
       background-color: white;
       width: 80%;
@@ -179,6 +179,12 @@
     left: 0;
     top: 0;
     transition: .15s ease;
+  }
+
+  .task-text {
+    width: 700px;
+    min-width: fit-content;
+    margin: auto;
   }
   
   
