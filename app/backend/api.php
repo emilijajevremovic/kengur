@@ -27,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
             // Izvršavanje
-            echo "hello\n";
             //$output = shell_exec(__DIR__ . DIRECTORY_SEPARATOR . $output_exe . " < input.txt 2>&1");
             $input_file = 'input.txt';
             $command = __DIR__ . DIRECTORY_SEPARATOR . $output_exe;
-            if (file_exists($input_file)) {
-                // Ako fajl postoji, izvrši komandu sa input.txt kao ulaz
+            if (!empty($input)) {
+                // Ako input postoji, izvrši komandu sa input.txt kao ulaz
+                file_put_contents($input_file, $input);
                 $output = shell_exec($command . " < " . $input_file . " 2>&1");
             } else {
                 // Ako fajl ne postoji, samo izvrši komandu bez ulaza
@@ -42,9 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
 
         case 'cpp':
-            $file = 'code.cpp';
+            $file = 'code.cpp'; 
             file_put_contents($file, $code);
-            $output_exe = "output.exe";
+            $output_exe = 'output.exe';
 
             // Kompajlacija
             $compile_output = shell_exec("C:\mingw64\bin\g++.exe $file -o $output_exe 2>&1");
@@ -54,7 +54,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Izvršavanje
-            $output = shell_exec(__DIR__ . DIRECTORY_SEPARATOR . $output_exe . " < input.txt 2>&1");
+            $input_file = 'input.txt';
+            $command = __DIR__ . DIRECTORY_SEPARATOR . $output_exe;
+
+            if (!empty($input)) {
+                // Ako je prosleđen ulaz, kreiraj input.txt
+                file_put_contents($input_file, $input);
+                $output = shell_exec($command . " < " . $input_file . " 2>&1");
+            } else {
+                // Ako nije prosleđen ulaz, samo izvrši program
+                $output = shell_exec($command . " 2>&1");
+            }
+
             break;
 
         case 'python':
