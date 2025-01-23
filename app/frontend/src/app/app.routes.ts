@@ -6,6 +6,7 @@ import { GameMathComponent } from './components/game-math/game-math.component';
 import { GameInfComponent } from './components/game-inf/game-inf.component';
 import { GameResultComponent } from './components/game-result/game-result.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent }, 
@@ -15,4 +16,5 @@ export const routes: Routes = [
     { path: 'game-informatics', component: GameInfComponent }, 
     { path: 'game-result', component: GameResultComponent }, 
     { path: 'profile', component: ProfileComponent }, 
+    { path: 'reset-password', component: ResetPasswordComponent }, 
 ];
