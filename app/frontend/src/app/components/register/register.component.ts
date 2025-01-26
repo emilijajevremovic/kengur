@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { PopupOkComponent } from '../popup-ok/popup-ok.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -29,16 +30,16 @@ export class RegisterComponent {
     this.showPopup = false;
   }
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', [Validators.required]],
       surname: ['', [Validators.required]],
-      nickname: ['', [Validators.required, Validators.minLength(5)]],
+      nickname: ['', [Validators.required, Validators.minLength(4)]],
       city: ['', [Validators.required]],
       school: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
+      password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
     }, {
       validators: this.passwordsMatchValidator
     });
@@ -46,8 +47,8 @@ export class RegisterComponent {
 
   passwordsMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
     const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { 'mismatch': true };
+    const password_confirmation = group.get('password_confirmation')?.value;
+    return password === password_confirmation ? null : { 'mismatch': true };
   }
 
   onSubmit() {
@@ -55,8 +56,18 @@ export class RegisterComponent {
     this.message = "";
 
     if (this.registerForm.valid) {
-      //console.log('Forma je validna:', this.registerForm.value);
-      // Ovde pošaljite podatke na backend
+      //const { password_confirmation, ...userData } = this.registerForm.value;
+      const userData = this.registerForm.value;
+      console.log(userData);
+      this.authService.register(userData).subscribe({
+        next: (response) => {
+          this.router.navigate(['/lobby']);
+        },
+        error: (error) => {
+          console.error('Greška pri registraciji:', error);
+          this.message = error.error?.message || 'Došlo je do greške.';
+        },
+      });
     } else {
       if (this.registerForm.errors?.['mismatch']) {
         this.message = 'Šifre se ne poklapaju.';

@@ -10,6 +10,12 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
+        // Ukoliko korisnik sa tim emailom vec postoji, vrati poruku
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser) {
+            return response()->json(['error' => 'Korisnik sa ovim emailom već postoji.'], 409); // HTTP 409 Conflict
+        }
+
         // Validacija podataka
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -33,6 +39,7 @@ class UserController extends Controller
             'city' => $request->city,
             'email' => $request->email,
             'password' => bcrypt($request->password), // enkriptovanje lozinke
+            'nickname' => $request->nickname,
         ]);
 
         return response()->json(['user' => $user], 201); // vrati novog korisnika 

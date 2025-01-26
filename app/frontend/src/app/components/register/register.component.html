@@ -22,7 +22,7 @@
           placeholder="Unesi nadimak"
           [ngClass]="{ 'error-input': registerForm.get('nickname')?.invalid && (registerForm.get('nickname')?.touched || submitted) }"
         />
-        <span matTooltip="Ovo polje je obavezno." class="info-icon">
+        <span matTooltip="Ovo polje je obavezno. Mora imati minimum 4 karaktera." class="info-icon">
           <i class="fa fa-info-circle"></i>
         </span>
       </div>
@@ -100,9 +100,9 @@
           <input
             [type]="passwordFieldType2"
             type="password"
-            formControlName="confirmPassword"
+            formControlName="password_confirmation"
             placeholder="Potvrdi šifru"
-            [ngClass]="{ 'error-input': registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.touched || submitted) }"
+            [ngClass]="{ 'error-input': registerForm.get('password_confirmation')?.invalid && (registerForm.get('password_confirmation')?.touched || submitted) }"
           />
           <span class="toggle-password" (click)="togglePasswordVisibility2()">
             <i [class]="passwordFieldType2 === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
