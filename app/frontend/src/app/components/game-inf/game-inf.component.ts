@@ -92,6 +92,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
         this.result = error.error.text;
       }
     );
+    this.input = "";
   }
 
   tasks = [
