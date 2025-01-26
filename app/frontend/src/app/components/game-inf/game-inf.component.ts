@@ -79,7 +79,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
     };
 
     //console.log(payload);
-    this.http.post<any>('http://localhost/Projekat/kengur/app/backend/api.php', payload).subscribe(
+    this.http.post<any>('http://localhost:8000/execute-code', payload).subscribe(
       response => {
         if (response.error) {
           this.result = `Error: ${response.error}`;
