@@ -3,21 +3,21 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PopupOkComponent } from '../popup-ok/popup-ok.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupOkComponent],
+  imports: [ReactiveFormsModule, CommonModule, PopupOkComponent, MatTooltipModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
   passwordFieldType1: string = 'password';
   passwordFieldType2: string = 'password';
-  message0: string = '';
-  message1: string = '';
-  message2: string = '';
+  message: string = '';
   registerForm!: FormGroup;
+  submitted = false;
   showPopup: boolean = false;
   popupMessage: string = 'Ovo je univerzalni popup!';
 
@@ -31,12 +31,16 @@ export class RegisterComponent {
 
   constructor(private router: Router, private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      nickname: ['', [Validators.required, Validators.minLength(5)]], 
-      email: ['', [Validators.required, Validators.email]], 
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', [Validators.required]],
+      surname: ['', [Validators.required]],
+      nickname: ['', [Validators.required, Validators.minLength(5)]],
+      city: ['', [Validators.required]],
+      school: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]] 
+      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
     }, {
-      validators: this.passwordsMatchValidator 
+      validators: this.passwordsMatchValidator
     });
   }
 
@@ -47,41 +51,18 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    this.message0 = '';
-    this.message1 = '';
-    this.message2 = '';
-    if(this.registerForm.value.nickname) {
-      if(this.registerForm.value.nickname.length < 5) {
-        this.message0 = "*Nadimak mora imati najmanje 5 karaktera.";
+    this.submitted = true;
+    this.message = "";
+
+    if (this.registerForm.valid) {
+      //console.log('Forma je validna:', this.registerForm.value);
+      // Ovde pošaljite podatke na backend
+    } else {
+      if (this.registerForm.errors?.['mismatch']) {
+        this.message = 'Šifre se ne poklapaju.';
       }
-      else if (this.registerForm.value.nickname.length >= 5) {
-        if (this.registerForm.value.email) {
-          if (this.registerForm.get('email')?.valid) { 
-            // Provera lozinke
-            if (this.registerForm.value.password && this.registerForm.value.password.length < 8) {
-              this.message2 = "*Šifra mora imati najmanje 8 karaktera.";
-            } else if (this.registerForm.value.password.length >= 8) {
-              if (this.registerForm.valid) {
-                // slanje na backend poziv serivsa
-              } else {
-                this.message2 = "*Šifre se ne poklapaju.";
-              }
-            } else {
-              this.message2 = "*Šifra je obavezna.";
-            }
-          } else { 
-            this.message1 = "*Email nije validan."; 
-          }
-        } else {
-          // Ako email nije unet
-          this.message1 = "*Email je obavezan.";
-        }
-      }
+      //console.log('Forma nije validna');
     }
-    else {
-      this.message0 = "*Nadimak je obavezan.";
-    }
-    
   }
 
   togglePasswordVisibility1() {
@@ -94,6 +75,7 @@ export class RegisterComponent {
       this.passwordFieldType2 === 'password' ? 'text' : 'password';
   }
 
-  navigateToLogin() { this.router.navigate(['/login']); }
-  
+  navigateToLogin() {
+    this.router.navigate(['/login']);
+  }
 }
