@@ -18,30 +18,6 @@
       <div class="form-group">
         <input
           type="text"
-          formControlName="name"
-          placeholder="Unesi ime"
-          [ngClass]="{ 'error-input': registerForm.get('name')?.invalid && (registerForm.get('name')?.touched || submitted) }"
-        />
-        <span matTooltip="Ovo polje je obavezno." class="info-icon">
-          <i class="fa fa-info-circle"></i>
-        </span>
-      </div>
-    
-      <div class="form-group">
-        <input
-          type="text"
-          formControlName="surname"
-          placeholder="Unesi prezime"
-          [ngClass]="{ 'error-input': registerForm.get('surname')?.invalid && (registerForm.get('surname')?.touched || submitted) }"
-        />
-        <span matTooltip="Ovo polje je obavezno." class="info-icon">
-          <i class="fa fa-info-circle"></i>
-        </span>
-      </div>
-
-      <div class="form-group">
-        <input
-          type="text"
           formControlName="nickname"
           placeholder="Unesi nadimak"
           [ngClass]="{ 'error-input': registerForm.get('nickname')?.invalid && (registerForm.get('nickname')?.touched || submitted) }"
@@ -51,52 +27,90 @@
         </span>
       </div>
 
-      <div class="form-group">
-        <input
-          type="text"
-          formControlName="city"
-          placeholder="Unesi mesto"
-          [ngClass]="{ 'error-input': registerForm.get('city')?.invalid && (registerForm.get('citty')?.touched || submitted) }"
-        />
-        <span matTooltip="Ovo polje je obavezno." class="info-icon">
-          <i class="fa fa-info-circle"></i>
-        </span>
+      <div class="inner-group">
+        <div class="form-group">
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Unesi ime"
+            [ngClass]="{ 'error-input': registerForm.get('name')?.invalid && (registerForm.get('name')?.touched || submitted) }"
+          />
+          <span matTooltip="Ovo polje je obavezno." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
+      
+        <div class="form-group">
+          <input
+            type="text"
+            formControlName="surname"
+            placeholder="Unesi prezime"
+            [ngClass]="{ 'error-input': registerForm.get('surname')?.invalid && (registerForm.get('surname')?.touched || submitted) }"
+          />
+          <span matTooltip="Ovo polje je obavezno." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
       </div>
 
-      <div class="form-group">
-        <input
-          type="text"
-          formControlName="school"
-          placeholder="Unesi naziv škole"
-          [ngClass]="{ 'error-input': registerForm.get('school')?.invalid && (registerForm.get('school')?.touched || submitted) }"
-        />
-        <span matTooltip="Ovo polje je obavezno." class="info-icon">
-          <i class="fa fa-info-circle"></i>
-        </span>
+      <div class="inner-group">
+        <div class="form-group">
+          <input
+            type="text"
+            formControlName="city"
+            placeholder="Unesi mesto"
+            [ngClass]="{ 'error-input': registerForm.get('city')?.invalid && (registerForm.get('citty')?.touched || submitted) }"
+          />
+          <span matTooltip="Ovo polje je obavezno." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <input
+            type="text"
+            formControlName="school"
+            placeholder="Unesi naziv škole"
+            [ngClass]="{ 'error-input': registerForm.get('school')?.invalid && (registerForm.get('school')?.touched || submitted) }"
+          />
+          <span matTooltip="Ovo polje je obavezno." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
       </div>
 
-      <div class="form-group">
-        <input
-          type="text"
-          formControlName="password"
-          placeholder="Unesi šifru"
-          [ngClass]="{ 'error-input': registerForm.get('password')?.invalid && (registerForm.get('password')?.touched || submitted) }"
-        />
-        <span matTooltip="Ovo polje je obavezno. Šifra mora imati minimum 8 karaktera." class="info-icon">
-          <i class="fa fa-info-circle"></i>
-        </span>
-      </div>
+      <div class="inner-group">
+        <div class="form-group">
+          <input
+            [type]="passwordFieldType1"
+            type="password"
+            formControlName="password"
+            placeholder="Unesi šifru"
+            [ngClass]="{ 'error-input': registerForm.get('password')?.invalid && (registerForm.get('password')?.touched || submitted) }"
+          />
+          <span class="toggle-password" (click)="togglePasswordVisibility1()">
+            <i [class]="passwordFieldType1 === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
+          </span>
+          <span matTooltip="Ovo polje je obavezno. Šifra mora imati minimum 8 karaktera." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
 
-      <div class="form-group">
-        <input
-          type="text"
-          formControlName="confirmPassword"
-          placeholder="Potvrdi šifru"
-          [ngClass]="{ 'error-input': registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.touched || submitted) }"
-        />
-        <span matTooltip="Ovo polje je obavezno. Šifre moraju da se poklope." class="info-icon">
-          <i class="fa fa-info-circle"></i>
-        </span>
+        <div class="form-group">
+          <input
+            [type]="passwordFieldType2"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Potvrdi šifru"
+            [ngClass]="{ 'error-input': registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.touched || submitted) }"
+          />
+          <span class="toggle-password" (click)="togglePasswordVisibility2()">
+            <i [class]="passwordFieldType2 === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
+          </span>
+          <span matTooltip="Ovo polje je obavezno. Šifre moraju da se poklope." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
       </div>
 
       <div *ngIf="message" class="form-group" style="color: rgb(177, 16, 16);">

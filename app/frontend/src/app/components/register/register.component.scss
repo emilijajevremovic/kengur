@@ -16,42 +16,42 @@
     background-color: white;
     padding: 1%;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Blaga senka */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     width: 80%;
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centriranje elemenata unutar forme */
+    align-items: center; 
   }
   
   .login-title {
     font-size: 28px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 30px; /* Razmak između naslova i forme */
+    margin-bottom: 30px; 
   }
   
   form {
     width: 85%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    //align-items: center;
   }
   
   .form-group {
     display: flex;
-    align-items: center; /* Naslovi pored input polja */
+    align-items: center; 
     margin-bottom: 15px;
-    width: 70%; /* Širina cele grupe */
-    justify-content: center; /* Raspoređuje labele i inpute ravnomerno */
+    width: 100%; 
+    justify-content: center;
   }
 
   .form-group {
-    position: relative; /* Potrebno da ikonica bude apsolutno pozicionirana u okviru grupe */
+    position: relative; 
     display: flex;
-    align-items: center; /* Vertikalno poravnanje */
+    align-items: center; 
     margin-bottom: 15px;
-    width: 70%; /* Širina cele grupe */
+    width: 100%; 
   }
   
   .popup {
@@ -100,6 +100,7 @@
   .link {
     padding-top: 5%;
     padding-bottom: 5%;
+    align-self: center;
   }
   
   #link {
@@ -113,7 +114,7 @@
 
   .toggle-password {
     position: absolute; 
-    right: 5%;
+    right: 35px;
     margin-right: 10px;
     cursor: pointer;
     color: #888; 
@@ -127,13 +128,13 @@
   }
 
   .error-input {
-    border: 1px solid rgb(177, 16, 16); /* Crvena boja za okvir */
-    background-color: #ffe6e6; /* Svetlo crvena pozadina */
+    border: 1px solid rgb(177, 16, 16); 
+    background-color: #ffe6e6;
   }
   
   .error-input:focus {
-    outline: none; /* Uklanja plavi okvir na fokusu */
-    box-shadow: 0 0 5px rgb(177, 16, 16); /* Crvena senka */
+    outline: none;
+    box-shadow: 0 0 5px rgb(177, 16, 16); 
   }
 
 .error-input {
@@ -163,5 +164,21 @@
 .error-message {
   color: red;
   font-size: 0.85rem;
+}
+
+.inner-group {
+  display: flex;
+  padding-left: 8px;
+}
+
+.inner-group div {
+  padding-right: 10px;
+}
+
+@media (max-width: 800px) {
+  .inner-group {
+    display: block;
+    //padding-left: 8px;
+  }
 }
   

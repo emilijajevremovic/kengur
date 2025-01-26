@@ -61,7 +61,8 @@ export class RegisterComponent {
       if (this.registerForm.errors?.['mismatch']) {
         this.message = 'Šifre se ne poklapaju.';
       }
-      //console.log('Forma nije validna');
+      else 
+        this.message = 'Forma nije validna.';
     }
   }
 
