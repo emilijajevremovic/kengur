@@ -113,7 +113,7 @@ button:hover {
 
 .toggle-password {
   position: absolute; 
-  right: 5%;
+  right: 8%;
   margin-right: 10px;
   cursor: pointer;
   color: #888; 
@@ -140,4 +140,32 @@ button:hover {
 .error-input:focus {
   outline: none; /* Uklanja plavi okvir na fokusu */
   box-shadow: 0 0 5px rgb(177, 16, 16); /* Crvena senka */
+}
+
+.mat-tooltip {
+  font-size: 14px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.error-input {
+  border: 2px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+}
+
+.error-input {
+  border: 1px solid red;
+}
+
+.info-icon {
+  font-size: 16px;
+  color: #007bff;
+  cursor: pointer;
+  margin-left: 10px;
 }

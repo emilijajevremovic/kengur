@@ -2,21 +2,23 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, MatTooltipModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   passwordFieldType: string = 'password';
   loginForm!: FormGroup;
-  message1: string = '';
-  message2: string = '';
+  message: string = '';
+  submitted: boolean = false;
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]], 
       password: ['', [Validators.required, Validators.minLength(8)]] 
@@ -24,24 +26,33 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.message1 = '';
-    this.message2 = '';
-    if (this.loginForm.value.email) {
-      if (this.loginForm.get('email')?.valid) { 
-        // provera lozinke
-        if (this.loginForm.value.password && this.loginForm.value.password.length < 8) this.message2 = "*Šifra mora imati 8 karaktera."
-        else if (this.loginForm.value.password.length >= 8) {
-          // poziv servisa
-        }
-        else this.message2 = "*Šifra je obavezna."
-      } 
-      else { this.message1 = "*Email nije validan."; }
+    this.submitted = true;
+    this.message = '';
+  
+    if (this.loginForm.valid) {
+      const loginData = this.loginForm.value;
+      //console.log(loginData);
+      this.authService.login(loginData).subscribe({
+        next: (response) => {
+          if (response.token) {
+            localStorage.setItem('auth_token', response.token);
+          }
+          this.router.navigate(['/lobby']); 
+        },
+        error: (error) => {
+          if (error.status === 401) {
+            this.message = 'Pogrešan email ili lozinka.';
+          } else {
+            this.message = error.error?.message || 'Došlo je do greške pri prijavi.';
+          }
+        },
+      });
     } 
     else {
-      // nije unet email
-      this.message1 = "*Email je obavezan."
+      this.message = 'Forma nije validna.';
     }
   }
+  
 
   togglePasswordVisibility() {
     this.passwordFieldType =

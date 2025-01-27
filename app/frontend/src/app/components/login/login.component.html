@@ -4,25 +4,36 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Email input sa validacijom -->
       <div class="form-group">
-        <input type="email" id="email" placeholder="Unesi email" formControlName="email" [ngClass]="{ 'error-input': (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) || (message1 == '*Email je obavezan.')}" />       
-      </div>
-
-      <div *ngIf="message1" class="form-group" style="color: rgb(177, 16, 16);">
-        <small>{{ message1 }}</small>
+        <input
+          type="email"
+          formControlName="email" id="email"
+          placeholder="Unesi email"
+          [ngClass]="{ 'error-input': (loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || submitted)) }"
+        />
+        <span matTooltip="Ovo polje je obavezno. Email mora biti u ispravnom formatu." class="info-icon">
+          <i class="fa fa-info-circle"></i>
+        </span>
       </div>
 
       <!-- Password input sa vidljivošću toggle-a i validacijom -->
       <div class="form-group">
-        <input [type]="passwordFieldType" id="password" placeholder="Unesi šifru" formControlName="password" [ngClass]="{ 'error-input': (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) || (message2 == '*Šifra je obavezna.')}" />
+        <input
+          [type]="passwordFieldType"
+          type="password"
+          formControlName="password"
+          placeholder="Unesi šifru"
+          [ngClass]="{ 'error-input': loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || submitted) }"
+        />
         <span class="toggle-password" (click)="togglePasswordVisibility()">
           <i [class]="passwordFieldType === 'password' ? 'fa fa-eye-slash' : 'fa fa-eye'" style="min-height: 10px; min-width: 10px;"></i>
         </span>
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-        </div>
+        <span matTooltip="Ovo polje je obavezno. Šifra mora imati minimum 8 karaktera." class="info-icon">
+          <i class="fa fa-info-circle"></i>
+        </span>
       </div>
 
-      <div *ngIf="message2" class="form-group" style="color: rgb(177, 16, 16);">
-        <small>{{ message2 }}</small>
+      <div *ngIf="message" class="form-group" style="color: rgb(177, 16, 16);">
+        <small>{{ message }}</small>
       </div>
       <button type="submit">Prijavi se</button>
 

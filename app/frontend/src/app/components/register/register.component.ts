@@ -56,16 +56,20 @@ export class RegisterComponent {
     this.message = "";
 
     if (this.registerForm.valid) {
-      //const { password_confirmation, ...userData } = this.registerForm.value;
       const userData = this.registerForm.value;
-      console.log(userData);
+      //console.log(userData);
       this.authService.register(userData).subscribe({
         next: (response) => {
           this.router.navigate(['/lobby']);
         },
         error: (error) => {
-          console.error('Greška pri registraciji:', error);
-          this.message = error.error?.message || 'Došlo je do greške.';
+          if (error.status === 409) {
+            this.message = 'Korisnik sa ovom email adresom već postoji.';
+          }
+          else {
+            //console.error('Greška pri registraciji.', error);
+            this.message = error.error?.message || 'Došlo je do greške.';
+          }
         },
       });
     } else {
