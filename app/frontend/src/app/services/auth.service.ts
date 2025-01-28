@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { AnyARecord } from 'dns';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,14 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('auth_token');
     this.router.navigate(['/login']);
+  }
+
+  getUserData(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/user`);
+  }
+
+  updateUserProfile(userData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/update-user`, userData);
   }
 
 }

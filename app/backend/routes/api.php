@@ -26,3 +26,8 @@ Route::get('user/{id}', [UserController::class, 'getUserById']);
 Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:api')->get('search-users', [UserController::class, 'searchUsers']);
+
+Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'getUser']);
+
+Route::middleware('auth:sanctum')->post('/update-user', [UserController::class, 'updateUserProfile']);
+

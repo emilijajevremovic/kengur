@@ -3,19 +3,27 @@
     <div class="card">
         <button (click)="logout()" class="logout">Odjavi se &nbsp;<i class="bi bi-box-arrow-right"></i></button>
         <div class="profile-picture">
-            <img src="../../../assets/images/profile.png" alt="">
+            <img src="http://localhost:8000/{{ profileImage }}" alt="Profile Picture">
         </div>
         <div class="edit-button" style="margin-bottom: 50px;">
-            <button class="edit">Promeni sliku</button>
+            <button class="edit" (click)="triggerFileInput()">Promeni sliku</button>
+            <input 
+                type="file" 
+                #fileInput 
+                accept="image/*" 
+                (change)="onFileSelected($event)" 
+                style="display: none;" 
+            />
         </div>
         <div class="nickname">
             <div class="brutalist-container">
                 <input
                   class="brutalist-input smooth-type"
-                  type="text"/>
+                  type="text"
+                  value="{{ user.nickname }}"/>
                 <label class="brutalist-label">KORISNIČKO IME</label>
             </div>
         </div>
-        <button class="save">Sačuvaj izmene</button>
+        <button (click)="changeUserInfo()" class="save">Sačuvaj izmene</button>
     </div>
 </div>

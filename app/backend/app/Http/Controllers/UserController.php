@@ -48,7 +48,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password), // enkriptovanje lozinke
             'nickname' => $request->nickname,
-            'profile_picture' => 'images/profiles/default_profile_picture.jpg',
+            'profile_picture' => 'storage/profile_images/default_profile_picture.png',
         ]);
 
         return response()->json(['user' => $user], 201); // vrati novog korisnika 
@@ -88,6 +88,18 @@ class UserController extends Controller
         return response()->json($user, 200);
     }
 
+    public function getUser(Request $request)
+    {
+        // Dohvata trenutno autentifikovanog korisnika
+        $user = $request->user();
+
+        // Vraća korisničke podatke
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+        ], 200);
+    }
+
     public function searchUsers(Request $request)
     {
         $userAuth = Auth::user();
@@ -107,4 +119,35 @@ class UserController extends Controller
 
         return response()->json($user);
     }
+
+    public function updateUserProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nickname' => 'required|string|max:255',
+        ]);
+
+        if ($user->profile_picture) {
+            Storage::delete('public/' . $user->profile_picture);
+        }
+
+        $imageName = time() . '.' . $request->profile_picture->extension();
+        $request->profile_picture->storeAs('public/profile_images', $imageName);
+
+        $user->profile_picture = 'storage/profile_images/' . $imageName;
+
+        $user->nickname = $request->nickname;
+
+        $user->save();
+
+        return response()->json(['message' => 'User profile updated successfully!']);
+    }
+
+
 }
