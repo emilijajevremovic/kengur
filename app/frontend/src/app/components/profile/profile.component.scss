@@ -27,7 +27,7 @@
 }
 
 .profile-picture img {
-    width: 300px;
+    width: 200px;
 }
 
 .edit {
@@ -46,7 +46,7 @@
     background-color: #AD1026;
 }
 
-.save {
+.logout {
     min-height: 50px;
     padding: .5em 1em;
     border: none;
@@ -59,8 +59,25 @@
     margin-left: auto;
 }
 
-.save:hover {
+.logout:hover {
     background-color: #0C3C5C;
+}
+
+.save {
+  min-height: 50px;
+  padding: .5em 1em;
+  border: none;
+  border-radius: 15px;
+  background-color: #0C3C5C;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color .3s ease-in-out;
+  margin: 10px;
+}
+
+.save:hover {
+  background-color: #AD1026;
 }
 
 @media (max-width: 800px) {

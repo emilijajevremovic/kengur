@@ -7,14 +7,15 @@ import { GameInfComponent } from './components/game-inf/game-inf.component';
 import { GameResultComponent } from './components/game-result/game-result.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent }, 
     { path: 'register', component: RegisterComponent }, 
-    { path: 'lobby', component: FriendRequestsComponent }, 
-    { path: 'game-math', component: GameMathComponent }, 
-    { path: 'game-informatics', component: GameInfComponent }, 
-    { path: 'game-result', component: GameResultComponent }, 
-    { path: 'profile', component: ProfileComponent }, 
+    { path: 'lobby', component: FriendRequestsComponent, canActivate: [authGuard] }, 
+    { path: 'game-math', component: GameMathComponent, canActivate: [authGuard] }, 
+    { path: 'game-informatics', component: GameInfComponent, canActivate: [authGuard] }, 
+    { path: 'game-result', component: GameResultComponent,canActivate: [authGuard] }, 
+    { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }, 
     { path: 'reset-password', component: ResetPasswordComponent }, 
 ];

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,5 +10,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
+
+  constructor(private authService: AuthService) {}
+
+  logout() {
+    this.authService.logout();
+  }
 
 }

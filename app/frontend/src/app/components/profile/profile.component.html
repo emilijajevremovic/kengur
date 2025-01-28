@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="background">
     <div class="card">
-        <button class="save">Sačuvaj izmene</button>
+        <button (click)="logout()" class="logout">Odjavi se &nbsp;<i class="bi bi-box-arrow-right"></i></button>
         <div class="profile-picture">
             <img src="../../../assets/images/profile.png" alt="">
         </div>
@@ -16,5 +16,6 @@
                 <label class="brutalist-label">NADIMAK</label>
             </div>
         </div>
+        <button class="save">Sačuvaj izmene</button>
     </div>
 </div>
