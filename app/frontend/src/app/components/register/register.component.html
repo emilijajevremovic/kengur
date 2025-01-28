@@ -19,7 +19,7 @@
         <input
           type="text"
           formControlName="nickname"
-          placeholder="Unesi nadimak"
+          placeholder="Unesi korisničko ime"
           [ngClass]="{ 'error-input': registerForm.get('nickname')?.invalid && (registerForm.get('nickname')?.touched || submitted) }"
         />
         <span matTooltip="Ovo polje je obavezno. Mora imati minimum 4 karaktera." class="info-icon">

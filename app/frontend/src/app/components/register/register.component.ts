@@ -66,6 +66,9 @@ export class RegisterComponent {
           if (error.status === 409) {
             this.message = 'Korisnik sa ovom email adresom već postoji.';
           }
+          else if (error.status === 410) {
+            this.message = 'Korisnik sa ovim korisničkim imenom već postoji.';
+          }
           else {
             //console.error('Greška pri registraciji.', error);
             this.message = error.error?.message || 'Došlo je do greške.';
