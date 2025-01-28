@@ -24,3 +24,5 @@ Route::post('/create-user', [UserController::class, 'create']);
 Route::get('user/{id}', [UserController::class, 'getUserById']);
 
 Route::post('/login', [UserController::class, 'login']);
+
+Route::middleware('auth:api')->get('search-users', [UserController::class, 'searchUsers']);

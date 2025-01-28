@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule, NgIf } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-friend-requests',
@@ -11,6 +12,9 @@ import { CommonModule, NgIf } from '@angular/common';
   styleUrl: './friend-requests.component.scss'
 })
 export class FriendRequestsComponent {
+
+  constructor(private authService: AuthService) {}
+
   isPopupOpen = false;
 
   openPopup() {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Validator; 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -85,5 +86,25 @@ class UserController extends Controller
 
         // Vratiti podatke o korisniku
         return response()->json($user, 200);
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $userAuth = Auth::user();
+
+        if (!$userAuth) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        $searchTerm = $request->query('nickname');
+        echo "$searchTerm";
+
+        $user = User::where('nickname', 'like', '%' . $searchTerm . '%')->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Korisnik sa tim nickname-om nije pronađen.'], 404);
+        }
+
+        return response()->json($user);
     }
 }
