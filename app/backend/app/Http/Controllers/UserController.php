@@ -14,7 +14,12 @@ class UserController extends Controller
         // Ukoliko korisnik sa tim emailom vec postoji, vrati poruku
         $existingUser = User::where('email', $request->email)->first();
         if ($existingUser) {
-            return response()->json(['error' => 'Korisnik sa ovim emailom već postoji.'], 409); // HTTP 409 Conflict
+            return response()->json(['error' => 'Korisnik sa ovim emailom već postoji.'], 409); 
+        }
+
+        $existingNickname = User::where('nickname', $request->nickname)->first();
+        if ($existingNickname) {
+            return response()->json(['error' => 'Korisnik sa ovim nadimkom već postoji.'], 410); 
         }
 
         // Validacija podataka
