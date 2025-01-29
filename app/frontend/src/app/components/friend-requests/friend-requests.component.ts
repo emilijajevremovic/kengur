@@ -38,9 +38,10 @@ export class FriendRequestsComponent implements OnInit{
           this.searchPerformed = true;
         },
         error: (error) => {
-          console.error('Greška prilikom pretrage:', error);
-          console.log('Detalji greške:', error?.error);
           this.searchPerformed = true;
+          this.searchedUsers = [];
+          //console.error('Greška prilikom pretrage:', error);
+          //console.log('Detalji greške:', error?.error);
         }
       });
     } else {

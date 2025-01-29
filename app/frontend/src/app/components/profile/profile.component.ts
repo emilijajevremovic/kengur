@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
   baseUrl = environment.apiUrl;
 
   user: any = {};
-  profileImage: string = "";
+  profileImage: any;
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement> | undefined;
 
   ngOnInit(): void {
