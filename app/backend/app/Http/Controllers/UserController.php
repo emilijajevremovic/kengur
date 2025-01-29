@@ -137,6 +137,13 @@ class UserController extends Controller
             Storage::delete('public/' . $user->profile_picture);
         }
 
+        // if ($user->profile_picture) {
+        //     $oldImagePath = public_path('storage/' . $user->profile_picture);
+        //     if (file_exists($oldImagePath)) {
+        //         unlink($oldImagePath);  // Delete the old image from the storage
+        //     }
+        // }
+
         $imageName = time() . '.' . $request->profile_picture->extension();
         $request->profile_picture->storeAs('public/profile_images', $imageName);
 

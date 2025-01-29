@@ -2,11 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [NavbarComponent, NgIf],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -18,9 +19,12 @@ export class ProfileComponent implements OnInit {
 
   user: any = {};
   profileImage: any;
+  profileImagePreview: any;
+  pictureSelected: boolean = false;
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement> | undefined;
 
   ngOnInit(): void {
+    this.pictureSelected = false;
     this.authService.getUserData().subscribe({
       next: (data) => {
         this.user = data.user;
@@ -41,13 +45,18 @@ export class ProfileComponent implements OnInit {
   }
 
   onFileSelected(event: Event): void {
+    this.pictureSelected = true;
     const input = event.target as HTMLInputElement;
     if (input?.files && input.files.length > 0) {
       const file = input.files[0];
-
+      
+      // Store the selected file directly, no need to use FileReader
+      this.profileImage = file;
+  
+      // Optionally, you can display the image immediately if you want
       const reader = new FileReader();
       reader.onload = () => {
-        this.profileImage = reader.result as string; 
+        this.profileImagePreview = reader.result as string;  // This is for preview purposes
       };
       reader.readAsDataURL(file);
     }
