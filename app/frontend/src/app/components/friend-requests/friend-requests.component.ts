@@ -62,7 +62,7 @@ export class FriendRequestsComponent implements OnInit{
 
   showMore(user: any) {
     this.selectedUser = user;
-    console.log(this.selectedUser.profile_picture);
+    //console.log(this.selectedUser.profile_picture);
     this.isPopup2Open = true;
   }
 
