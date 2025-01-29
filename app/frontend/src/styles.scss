@@ -9,5 +9,22 @@ html {
   height: 100%;
 }
 
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: white !important;
+  --mdc-snackbar-supporting-text-color: black !important;
+  --mat-mdc-snack-bar-button-color: black !important;
+  border: 1px solid #ddd !important;
+}
+
+.mat-mdc-snack-bar-container .mat-button {
+  color: #303f9f !important; /* Plava boja za dugme */
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-button {
+  background-color: #303f9f6e !important; /* Dodaj pozadinsku boju za dugme */
+  color: #303f9f !important; /* Tekst u beloj boji */
+}
+
+
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';

@@ -19,4 +19,5 @@ export const routes: Routes = [
     { path: 'game-result', component: GameResultComponent,canActivate: [authGuard] }, 
     { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }, 
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [loggedGuard] }, 
+    { path: '**', redirectTo: 'lobby', pathMatch: 'full' },
 ];

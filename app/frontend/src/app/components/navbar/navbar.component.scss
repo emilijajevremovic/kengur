@@ -53,6 +53,8 @@
     max-height: 50px; 
     width: auto; 
     object-fit: contain; 
+    border-radius: 50%;
+    border: 1px solid #303f9f;
 }
 
 .nav-item:hover {

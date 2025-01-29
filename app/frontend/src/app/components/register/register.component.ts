@@ -5,11 +5,13 @@ import { Router } from '@angular/router';
 import { PopupOkComponent } from '../popup-ok/popup-ok.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../services/auth.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupOkComponent, MatTooltipModule],
+  imports: [ReactiveFormsModule, CommonModule, PopupOkComponent, MatTooltipModule, MatSnackBarModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -30,7 +32,7 @@ export class RegisterComponent {
     this.showPopup = false;
   }
 
-  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
+  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService, private snackBar: MatSnackBar) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', [Validators.required]],
@@ -55,11 +57,17 @@ export class RegisterComponent {
     this.submitted = true;
     this.message = "";
 
+    
+
     if (this.registerForm.valid) {
       const userData = this.registerForm.value;
       //console.log(userData);
       this.authService.register(userData).subscribe({
         next: (response) => {
+          this.snackBar.open('Uspešno ste se registrovali. Prijavite se.', 'OK', {
+            duration: 5000,  
+            panelClass: ['light-snackbar'] 
+          });
           this.router.navigate(['/lobby']);
         },
         error: (error) => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
@@ -37,6 +37,12 @@ export class AuthService {
 
   getUserData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/user`);
+  }
+
+  getUserByNickname(nickname: string): Observable<any> {
+    const params = new HttpParams().set('nickname', nickname);
+  
+    return this.http.get(`${this.baseUrl}/search-users`, { params });
   }
 
   updateUserProfile(userData: FormData): Observable<any> {

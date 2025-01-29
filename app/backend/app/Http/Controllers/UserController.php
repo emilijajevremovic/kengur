@@ -31,7 +31,7 @@ class UserController extends Controller
             'city' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed', 
-            'nickname' => 'required|string|min:8|max:255'
+            'nickname' => 'required|string|min:4|max:255'
         ]);
 
         // Ako validacija nije prošla
@@ -109,7 +109,6 @@ class UserController extends Controller
         }
 
         $searchTerm = $request->query('nickname');
-        echo "$searchTerm";
 
         $user = User::where('nickname', 'like', '%' . $searchTerm . '%')->first();
 

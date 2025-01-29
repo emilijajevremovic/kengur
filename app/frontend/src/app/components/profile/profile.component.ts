@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -13,6 +14,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(private authService: AuthService) {}
 
+  baseUrl = environment.apiUrl;
+
   user: any = {};
   profileImage: string = "";
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement> | undefined;
@@ -22,8 +25,8 @@ export class ProfileComponent implements OnInit {
       next: (data) => {
         this.user = data.user;
         this.profileImage = this.user.profile_picture;
-        console.log('User data:', this.user);
-        console.log(this.profileImage);
+        //console.log('User data:', this.user);
+        //console.log(this.profileImage);
       },
       error: (error) => {
         //console.error('Error fetching user data:', error);
@@ -57,11 +60,11 @@ export class ProfileComponent implements OnInit {
 
     this.authService.updateUserProfile(formData).subscribe({
       next: (response) => {
-        console.log('Profil uspešno ažuriran:', response);
+        //console.log('Profil uspešno ažuriran:', response);
         // Ažuriraj sliku ili nickname na frontu ako je potrebno
       },
       error: (error) => {
-        console.error('Greška prilikom ažuriranja profila:', error);
+        //console.error('Greška prilikom ažuriranja profila:', error);
       }
     });
   }

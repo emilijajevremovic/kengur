@@ -26,8 +26,17 @@
     padding-bottom: 50px;
 }
 
+.profile-picture {
+  
+  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+}
+
 .profile-picture img {
-    width: 200px;
+    width: 150px;
+    border-radius: 50%;
+    border: 5px solid #0C3C5C;
 }
 
 .edit {
@@ -86,7 +95,7 @@
     }
 
     .profile-picture img{
-        width: 200px;
+        width: 150px;
     }
 }
 
