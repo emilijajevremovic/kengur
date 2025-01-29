@@ -110,13 +110,13 @@ class UserController extends Controller
 
         $searchTerm = $request->query('nickname');
 
-        $user = User::where('nickname', 'like', '%' . $searchTerm . '%')->first();
+        $users = User::where('nickname', 'like', '%' . $searchTerm . '%')->get();
 
-        if (!$user) {
-            return response()->json(['error' => 'Korisnik sa tim nickname-om nije pronađen.'], 404);
+        if ($users->isEmpty()) {
+            return response()->json(['error' => 'Korisnik sa tim korisničkim imenom nije pronađen.'], 404);
         }
-
-        return response()->json($user);
+    
+        return response()->json($users);
     }
 
     public function updateUserProfile(Request $request)

@@ -135,36 +135,17 @@
                         </div>
                     </div>
                     <div class="search-results">
-                        <div class="friends-list" id="list1" style="padding: 0;">
+                        <div *ngIf="searchedUsers.length > 0" class="friends-list" id="list1" style="padding: 0;">
                             <div>
-                                <div class="friend-status">
-                                    <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                                    <h5>Ime Prezime</h5>
-                                    <button style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="friend-status">
-                                    <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                                    <h5>Ime Prezime</h5>
-                                    <button style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="friend-status">
-                                    <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                                    <h5>Ime Prezime</h5>
-                                    <button style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="friend-status">
-                                    <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                                    <h5>Ime Prezime</h5>
-                                    <button style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
+                                <div class="friend-status" *ngFor="let user of searchedUsers">
+                                    <div class="friend-status-img"><img src="{{ baseUrl }}/{{ user.profile_picture }}" alt=""></div>
+                                    <h5>{{ user.name }} {{ user.surname }}</h5>
+                                    &nbsp;&nbsp;&nbsp;<span>{{ user.nickname }}</span>
+                                    <button matTooltip="Dodaj za prijatelja" matTooltipPosition="above" style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
                                 </div>
                             </div>
                         </div>
+                        <p *ngIf="searchedUsers.length === 0 && searchPerformed">Nema pronađenih korisnika.</p>
                     </div>
                 </div>
             </div>
@@ -178,8 +159,8 @@
                                     <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
                                     <h5>Ime Prezime</h5>
                                     <div class="buttons">
-                                        <button><img src="../../../assets/images/check.png" alt=""></button>
-                                        <button id="red"><img src="../../../assets/images/cross.png" alt=""></button>
+                                        <button matTooltip="Prihvati" matTooltipPosition="above"><img src="../../../assets/images/check.png" alt=""></button>
+                                        <button matTooltip="Odbij" matTooltipPosition="above" id="red"><img src="../../../assets/images/cross.png" alt=""></button>
                                     </div>
                                 </div>
                             </div>
