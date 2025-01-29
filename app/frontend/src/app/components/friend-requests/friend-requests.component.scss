@@ -297,17 +297,26 @@ button img {
 }
 
 .popup-content {
-    --color: #E1E1E1;
-    background-color: #F3F3F3;
-    background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
-    linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
-    background-size: 55px 55px;
+    background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 90%;
     height: 60%;
     text-align: center;
+}
+
+.popup-content2 {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 450px;
+    height: fit-content;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: left;
+    margin: auto;
 }
 
 .clickable-div {
@@ -413,16 +422,13 @@ button img {
     text-transform: uppercase;
     border: none;
     border-radius: 15px;
-    border: 2px solid #aa1818;
-    background-color: white;
-    color: #aa1818;
+    background-color: #0C3C5C;
+    color: white;
     cursor: pointer;
 }
 
 #popup-send-button:hover {
-    border: none;
-    background: linear-gradient(to right, #be5d5d, #aa1818);
-    color: white;
+    background-color: #aa1818;
 }
 
 .subjects {
@@ -437,6 +443,22 @@ button img {
     border-radius: 15px;
     padding: 2%;
     margin: 2%;
+}
+
+.popup-request2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup-request2 h5 {
+    margin: 0;
+    width: fit-content;
+    color: #0C3C5C;
+}
+
+.popup-request2 span {
+    width: fit-content;
 }
 
 .subject input[type="radio"]:checked {

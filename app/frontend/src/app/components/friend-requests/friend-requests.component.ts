@@ -22,8 +22,10 @@ export class FriendRequestsComponent implements OnInit{
   baseUrl = environment.apiUrl;
   searchQuery: string = '';
   isPopupOpen = false;
+  isPopup2Open = false;
   searchedUsers: any[] = [];
   searchPerformed = false;
+  selectedUser: any;
 
   ngOnInit(): void {}
 
@@ -51,11 +53,28 @@ export class FriendRequestsComponent implements OnInit{
     }
   }
 
+  addFriend() {
+    this.snackBar.open('Zahtev je poslat.', 'OK', {
+      duration: 5000,  
+      panelClass: ['light-snackbar'] 
+    });
+  }
+
+  showMore(user: any) {
+    this.selectedUser = user;
+    console.log(this.selectedUser.profile_picture);
+    this.isPopup2Open = true;
+  }
+
   openPopup() {
     this.isPopupOpen = true; 
   }
 
   closePopup() {
     this.isPopupOpen = false; 
+  }
+
+  closePopup2() {
+    this.isPopup2Open = false; 
   }
 }
