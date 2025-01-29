@@ -8,6 +8,7 @@ use Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -133,16 +134,19 @@ class UserController extends Controller
             'nickname' => 'required|string|max:255',
         ]);
 
-        if ($user->profile_picture) {
-            Storage::delete('public/' . $user->profile_picture);
+        if ($user->profile_picture && basename($user->profile_picture) !== 'default_profile_picture.png') {
+            // Dobijanje apsolutne putanje do stare slike
+            $oldImagePath = public_path($user->profile_picture);  // Popravljen putanje
+    
+            // Logovanje stare putanje za proveru
+            //Log::info('Old image path: ' . $oldImagePath);
+    
+            // Provera i brisanje stare slike
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);  // Brisanje stare slike
+                //Log::info('Old image deleted: ' . $oldImagePath);
+            }
         }
-
-        // if ($user->profile_picture) {
-        //     $oldImagePath = public_path('storage/' . $user->profile_picture);
-        //     if (file_exists($oldImagePath)) {
-        //         unlink($oldImagePath);  // Delete the old image from the storage
-        //     }
-        // }
 
         $imageName = time() . '.' . $request->profile_picture->extension();
         $request->profile_picture->storeAs('public/profile_images', $imageName);
