@@ -23,11 +23,16 @@ export class FriendRequestsComponent implements OnInit{
   searchQuery: string = '';
   isPopupOpen = false;
   isPopup2Open = false;
+  isPopup3Open = false;
   searchedUsers: any[] = [];
   searchPerformed = false;
   selectedUser: any;
+  selectedRequest: any;
+  friendRequests: any = [];
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadFriendRequests();
+  }
 
   searchUsers() {
     this.searchPerformed = false;
@@ -79,10 +84,64 @@ export class FriendRequestsComponent implements OnInit{
     });
   }
 
+  loadFriendRequests() {
+    this.authService.getFriendRequests().subscribe({
+      next: (requests) => {
+        this.friendRequests = requests;
+        //console.log(this.friendRequests);
+      },
+      error: (error) => {
+        console.error('Greška pri dobijanju zahteva:', error);
+      }
+    });
+  }
+
+  acceptRequest(id: any) {
+    this.authService.acceptFriendRequest(id).subscribe({
+      next: (requests) => {
+        this.snackBar.open('Prihvatili ste zahtev za prijateljstvo.', 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar']
+        });
+      },
+      error: (error) => {
+        this.snackBar.open('Došlo je do greške, pokušajte ponovo.', 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar']
+        });
+      }
+    });
+  }
+
+  rejectRequest(id: any) {
+    this.authService.rejectFriendRequest(id).subscribe({
+      next: (requests) => {
+        this.loadFriendRequests();
+        this.snackBar.open('Odbili ste zahtev za prijateljstvo.', 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar']
+        });
+      },
+      error: (error) => {
+        this.loadFriendRequests();
+        this.snackBar.open('Došlo je do greške, pokušajte ponovo.', 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar']
+        });
+      }
+    });
+  }
+
   showMore(user: any) {
     this.selectedUser = user;
     //console.log(this.selectedUser.profile_picture);
     this.isPopup2Open = true;
+  }
+
+  showMoreAboutRequest(user: any) {
+    this.selectedRequest = user;
+    //console.log(this.selectedRequest);
+    this.isPopup3Open = true;
   }
 
   openPopup() {
@@ -95,5 +154,9 @@ export class FriendRequestsComponent implements OnInit{
 
   closePopup2() {
     this.isPopup2Open = false; 
+  }
+
+  closePopup3() {
+    this.isPopup3Open = false; 
   }
 }

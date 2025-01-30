@@ -69,4 +69,22 @@ class FriendRequestController extends Controller
 
         return response()->json(['message' => 'Prijateljski zahtev odbijen.']);
     }
+
+    // Izlistavanje zahteva korisnika
+    public function getFriendRequests()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        // Pronalazi sve zahteve za prijateljstvo koje je korisnik primio, ali nije još prihvatio/odbio
+        $requests = FriendRequest::where('receiver_id', $user->id)
+                    ->where('status', 'pending') // Samo oni koji nisu prihvaćeni/odbijeni
+                    ->with(['sender:id,nickname,profile_picture,city,school,name,surname,email']) // Prikazuje informacije o pošiljaocu
+                    ->get();
+
+        return response()->json($requests);
+    }
 }

@@ -38,3 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reject-friend-request', [FriendRequestController::class, 'rejectRequest']);
 });
 
+Route::middleware('auth:sanctum')->get('/friend-requests', [FriendRequestController::class, 'getFriendRequests']);
+
+

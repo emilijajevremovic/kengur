@@ -61,6 +61,10 @@ export class AuthService {
   rejectFriendRequest(requestId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/reject-friend-request`, { request_id: requestId });
   }
+
+  getFriendRequests(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/friend-requests`);
+  }
   //
 
 }
