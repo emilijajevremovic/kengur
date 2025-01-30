@@ -141,7 +141,7 @@
                                     <div class="friend-status-img"><img src="{{ baseUrl }}/{{ user.profile_picture }}" alt=""></div>
                                     <h5>{{ user.name }} {{ user.surname }}</h5>
                                     &nbsp;&nbsp;&nbsp;<span>{{ user.nickname }}</span>
-                                    <button (click)="addFriend(); $event.stopPropagation()" matTooltip="Dodaj za prijatelja" matTooltipPosition="above" style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
+                                    <button (click)="addFriend(user); $event.stopPropagation()" matTooltip="Dodaj za prijatelja" matTooltipPosition="above" style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png" alt=""></button>
                                 </div>
                             </div>
                         </div>

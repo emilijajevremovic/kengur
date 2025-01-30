@@ -49,4 +49,18 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/update-user`, userData);
   }
 
+  //Zahtevi za prijateljstvo
+  sendFriendRequest(receiverId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/send-friend-request`, { receiver_id: receiverId });
+  }
+  
+  acceptFriendRequest(requestId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/accept-friend-request`, { request_id: requestId });
+  }
+  
+  rejectFriendRequest(requestId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/reject-friend-request`, { request_id: requestId });
+  }
+  //
+
 }

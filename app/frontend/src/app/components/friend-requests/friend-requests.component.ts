@@ -54,10 +54,28 @@ export class FriendRequestsComponent implements OnInit{
     }
   }
 
-  addFriend() {
-    this.snackBar.open('Zahtev je poslat.', 'OK', {
-      duration: 5000,  
-      panelClass: ['light-snackbar'] 
+  addFriend(user: any) {
+    this.authService.sendFriendRequest(user.id).subscribe({
+      next: (response) => {
+        this.snackBar.open('Zahtev za prijateljstvo je poslat.', 'OK', {
+          duration: 5000,  
+          panelClass: ['light-snackbar'] 
+        });
+      },
+      error: (error) => {
+        if (error.status === 400) {
+          this.snackBar.open('Već ste poslali zahtev ovom korisniku.', 'OK', {
+            duration: 5000,
+            panelClass: ['light-snackbar']
+          });
+        }
+        else {
+          this.snackBar.open('Došlo je do greške, pokušajte ponovo.', 'OK', {
+            duration: 5000,
+            panelClass: ['light-snackbar']
+          });
+        }
+      }
     });
   }
 

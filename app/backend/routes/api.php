@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FriendRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,10 @@ Route::middleware('auth:api')->get('search-users', [UserController::class, 'sear
 Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'getUser']);
 
 Route::middleware('auth:sanctum')->post('/update-user', [UserController::class, 'updateUserProfile']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/send-friend-request', [FriendRequestController::class, 'sendRequest']);
+    Route::post('/accept-friend-request', [FriendRequestController::class, 'acceptRequest']);
+    Route::post('/reject-friend-request', [FriendRequestController::class, 'rejectRequest']);
+});
 
