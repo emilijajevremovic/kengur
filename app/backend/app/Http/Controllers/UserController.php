@@ -112,7 +112,9 @@ class UserController extends Controller
 
         $searchTerm = $request->query('nickname');
 
-        $users = User::where('nickname', 'like', '%' . $searchTerm . '%')->get();
+        $users = User::where('nickname', 'like', '%' . $searchTerm . '%')
+                 ->where('id', '!=', $userAuth->id) // Isključivanje trenutno prijavljenog korisnika
+                 ->get();
 
         if ($users->isEmpty()) {
             return response()->json(['error' => 'Korisnik sa tim korisničkim imenom nije pronađen.'], 404);
