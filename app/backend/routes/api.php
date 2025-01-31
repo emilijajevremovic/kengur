@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendRequestController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/friend-requests', [FriendRequestController::class, 'getFriendRequests']);
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
+
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
+
 
 

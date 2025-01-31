@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PopupOkComponent } from '../popup-ok/popup-ok.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,74 +13,25 @@ import { PopupOkComponent } from '../popup-ok/popup-ok.component';
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent {
-  passwordFieldType1: string = 'password';
-  passwordFieldType2: string = 'password';
-  message1: string = '';
-  message2: string = '';
-  registerForm!: FormGroup;
-  showPopup: boolean = false;
-  popupMessage: string = 'Ovo je univerzalni popup!';
+  resetForm: FormGroup;
+  message = '';
 
-  constructor(private router: Router, private fb: FormBuilder) {
-    this.registerForm = this.fb.group({
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+    this.resetForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
-    }, {
-      validators: this.passwordsMatchValidator
     });
   }
 
-  passwordsMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { 'mismatch': true };
+  sendResetEmail() {
+    if (this.resetForm.invalid) return;
+
+    this.http.post('http://localhost:8000/api/forgot-password', this.resetForm.value)
+      .subscribe(
+        (res: any) => this.message = 'Email za resetovanje je poslat!',
+        (err) => this.message = 'Došlo je do greške!'
+      );
   }
 
-  onSubmit() {
-    this.message1 = '';
-    this.message2 = '';
-
-    if (this.registerForm.value.email) {
-      if (this.registerForm.get('email')?.valid) {
-        // Validate password
-        if (this.registerForm.value.password && this.registerForm.value.password.length < 8) {
-          this.message2 = '*Šifra mora imati najmanje 8 karaktera.';
-        } else if (this.registerForm.value.password.length >= 8) {
-          if (this.registerForm.valid) {
-            // Simulacija slanja na backend (ovde dodaj backend logiku)
-            console.log('Forma uspešno poslata:', this.registerForm.value);
-            this.popupMessage = 'Uspešno ste resetovali šifru!';
-            this.openPopup();
-          } else {
-            this.message2 = '*Šifre se ne poklapaju.';
-          }
-        } else {
-          this.message2 = '*Šifra je obavezna.';
-        }
-      } else {
-        this.message1 = '*Email nije validan.';
-      }
-    } else {
-      this.message1 = '*Email je obavezan.';
-    }
-  }
-
-  togglePasswordVisibility1() {
-    this.passwordFieldType1 =
-      this.passwordFieldType1 === 'password' ? 'text' : 'password';
-  }
-
-  togglePasswordVisibility2() {
-    this.passwordFieldType2 =
-      this.passwordFieldType2 === 'password' ? 'text' : 'password';
-  }
-
-  openPopup() {
-    this.showPopup = true;
-  }
-
-  closePopup() {
-    this.showPopup = false;
-  }
+  navigateToRegister() { this.router.navigate(['/register']); }
+  
 }

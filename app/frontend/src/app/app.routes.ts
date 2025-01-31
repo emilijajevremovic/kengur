@@ -9,6 +9,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { authGuard } from './guards/auth.guard';
 import { loggedGuard } from './guards/logged.guard';
+import { NewPasswordComponent } from './components/new-password/new-password.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [loggedGuard] }, 
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'game-result', component: GameResultComponent,canActivate: [authGuard] }, 
     { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }, 
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [loggedGuard] }, 
+    { path: 'new-password/:token', component: NewPasswordComponent },
     { path: '**', redirectTo: 'lobby', pathMatch: 'full' },
 ];
