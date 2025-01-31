@@ -60,4 +60,7 @@ export class LoginComponent {
   }
 
   navigateToRegister() { this.router.navigate(['/register']); }
+
+  navigateToResetPassword() { this.router.navigate(['/reset-password']); }
+
 }

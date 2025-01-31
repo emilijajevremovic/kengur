@@ -99,16 +99,6 @@
 //   background-color: #AD1026;
 // }
 
-@media (max-width: 800px) {
-    .card {
-        width: fit-content;
-    }
-
-    .profile-picture img{
-        width: 150px;
-    }
-}
-
 .outer {
   display: flex;
   flex-direction: row;
@@ -154,6 +144,33 @@ h5 {
 
 .col {
   margin-bottom: 20px;
+}
+
+@media (max-width: 800px) {
+  .background {
+    height: fit-content;
+    padding-bottom: 30px;
+  }
+
+  .card {
+      width: fit-content;
+  }
+
+  .profile-picture img{
+      width: 150px;
+  }
+
+  .outer {
+    flex-direction: column;
+  }
+
+  .first {
+    border-radius: 15px 15px 0px 0px;
+  }
+
+  .second {
+    width: 100%;
+  }
 }
 
 .brutalist-container {
