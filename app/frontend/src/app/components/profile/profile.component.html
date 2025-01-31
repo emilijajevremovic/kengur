@@ -1,32 +1,103 @@
 <app-navbar></app-navbar>
 <div class="background">
     <div class="card">
-        <button (click)="logout()" class="logout">Odjavi se &nbsp;<i class="bi bi-box-arrow-right"></i></button>
-        <div class="profile-picture" *ngIf="!pictureSelected">
-            <img src="{{ baseUrl }}/{{ user.profile_picture }}" alt="">
-        </div>
-        <div class="profile-picture" *ngIf="pictureSelected">
-            <img src="{{ profileImagePreview }}" alt="">
-        </div>
-        <div class="edit-button" style="margin-bottom: 50px;">
-            <button class="edit" (click)="triggerFileInput()">Promeni sliku</button>
-            <input 
-                type="file" 
-                #fileInput 
-                accept="image/*" 
-                (change)="onFileSelected($event)" 
-                style="display: none;" 
-            />
-        </div>
-        <div class="nickname">
-            <div class="brutalist-container">
-                <input
-                  class="brutalist-input smooth-type"
-                  type="text"
-                  value="{{ user.nickname }}"/>
-                <label class="brutalist-label">KORISNIČKO IME</label>
+        <div class="outer">
+            <div class="inner first">
+                <div class="profile-picture" *ngIf="!pictureSelected">
+                    <img src="{{ baseUrl }}/{{ user.profile_picture }}" alt="">
+                </div>
+                <div class="profile-picture" *ngIf="pictureSelected">
+                    <img src="{{ profileImagePreview }}" alt="">
+                </div>
+                <div class="edit-button" style="margin-bottom: 50px;">
+                    <button class="edit" (click)="triggerFileInput()">Promeni sliku <i class="bi bi-pencil-square"></i></button>
+                    <input 
+                        type="file" 
+                        #fileInput 
+                        accept="image/*" 
+                        (change)="onFileSelected($event)" 
+                        style="display: none;" 
+                    />
+                </div>
+                <div class="nickname">
+                    <div class="brutalist-container">
+                        <input 
+                        style="margin-bottom: 10px;"
+                        type="text" 
+                        class="brutalist-input smooth-type"
+                        [(ngModel)]="user.nickname" 
+                        #nicknameRef="ngModel"
+                        required
+                        [ngClass]="{'invalid': nicknameRef.invalid && nicknameRef.touched}"
+                        />
+                        <label class="brutalist-label">KORISNIČKO IME</label>
+                    </div>
+                </div>
+                <span style="color: white; font-size: 12px;">{{errorMessage}}</span>
+                <button (click)="changeUserInfo()" class="edit save" style="margin-top: 10px;">Sačuvaj izmene <i class="bi bi-check2"></i></button>
+            </div>
+            <div class="inner second">
+                <button (click)="logout()" class="logout">Odjavi se &nbsp;<i class="bi bi-box-arrow-right"></i></button>
+                <div class="info">
+                    <div class="row">
+                        <div class="col">
+                            <h5> IME </h5>
+                            <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Ime" 
+                            [(ngModel)]="user.name" 
+                            #nameRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': nameRef.invalid && nameRef.touched}"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5> PREZIME </h5>
+                            <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Prezime" 
+                            [(ngModel)]="user.surname" 
+                            #surnameRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': surnameRef.invalid && surnameRef.touched}"
+                            />
+                        </div>
+                    </div>
+                    <h5> EMAIL </h5><p style="font-weight: bold; color: #0C3C5C;">{{ user.email }}</p>
+                    <div class="row">
+                        <div class="col">
+                            <h5> ŠKOLA </h5>
+                            <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Škola" 
+                            [(ngModel)]="user.school" 
+                            #schoolRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': schoolRef.invalid && schoolRef.touched}"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5> MESTO </h5>
+                            <input 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="Mesto" 
+                            [(ngModel)]="user.city" 
+                            #cityRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': cityRef.invalid && cityRef.touched}"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <button (click)="changeUserInfo()" class="save">Sačuvaj izmene</button>
     </div>
 </div>

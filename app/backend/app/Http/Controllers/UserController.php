@@ -133,20 +133,23 @@ class UserController extends Controller
 
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'nickname' => 'required|string|max:255',
+            'nickname' => 'required|string|min:4|max:255',
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'school' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
         ]);
 
+        // Provera da li već postoji korisnik sa istim nadimkom
+        if (User::where('nickname', $request->nickname)->where('id', '!=', $user->id)->exists()) {
+            return response()->json(['error' => 'Nickname već postoji.'], 400);
+        }
+
         if ($user->profile_picture && basename($user->profile_picture) !== 'default_profile_picture.png') {
-            // Dobijanje apsolutne putanje do stare slike
-            $oldImagePath = public_path($user->profile_picture);  // Popravljen putanje
+            $oldImagePath = public_path($user->profile_picture); 
     
-            // Logovanje stare putanje za proveru
-            //Log::info('Old image path: ' . $oldImagePath);
-    
-            // Provera i brisanje stare slike
             if (file_exists($oldImagePath)) {
                 unlink($oldImagePath);  // Brisanje stare slike
-                //Log::info('Old image deleted: ' . $oldImagePath);
             }
         }
 
@@ -156,6 +159,10 @@ class UserController extends Controller
         $user->profile_picture = 'storage/profile_images/' . $imageName;
 
         $user->nickname = $request->nickname;
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->school = $request->school;
+        $user->city = $request->city;
 
         $user->save();
 

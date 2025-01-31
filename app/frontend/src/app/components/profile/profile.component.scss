@@ -11,9 +11,9 @@
 }
 
 .card {
-    padding: 20px;
+    //padding: 20px;
     margin: auto;
-    width: 50%;
+    width: 60%;
     border: none;
     border-radius: 15px;
     box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
@@ -23,14 +23,19 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    padding-bottom: 50px;
+    //padding-bottom: 50px;
 }
 
 .profile-picture {
-  
+  background-color: white;
   border-radius: 50%;
   width: 160px;
   height: 160px;
+  align-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-picture img {
@@ -50,10 +55,7 @@
     font-size: 15px;
     cursor: pointer;
     transition: background-color .3s ease-in-out;
-}
-
-.edit:hover {
-    background-color: #AD1026;
+    margin-top: 10px;
 }
 
 .logout {
@@ -61,17 +63,18 @@
     padding: .5em 1em;
     border: none;
     border-radius: 15px;
-    background-color: #AD1026;
-    color: #fff;
+    background-color: transparent;
+    color: #AD1026;
     font-size: 15px;
     cursor: pointer;
     transition: background-color .3s ease-in-out;
     margin-left: auto;
+    font-weight: bolder;
 }
 
-.logout:hover {
-    background-color: #0C3C5C;
-}
+// .logout:hover {
+//     background-color: #0C3C5C;
+// }
 
 .save {
   min-height: 50px;
@@ -80,15 +83,21 @@
   border-radius: 15px;
   background-color: #0C3C5C;
   color: #fff;
+  border: 1px solid white;
   font-size: 15px;
   cursor: pointer;
   transition: background-color .3s ease-in-out;
   margin: 10px;
 }
 
-.save:hover {
-  background-color: #AD1026;
+.invalid {
+  border: 2px solid #AD1026 !important;
+  background-color: #f5c8c8 !important;
 }
+
+// .save:hover {
+//   background-color: #AD1026;
+// }
 
 @media (max-width: 800px) {
     .card {
@@ -100,7 +109,53 @@
     }
 }
 
-/* From Uiverse.io by 0xnihilism */ 
+.outer {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  //align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  padding-bottom: 10px;
+}
+
+h5 {
+  margin: 0;
+}
+
+.first {
+  background-color: #0C3C5C;
+  width: fit-content;
+  border-radius: 15px 0px 0px 15px;
+}
+
+.second {
+  width: 60%;
+  align-items: baseline;
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.info {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.col {
+  margin-bottom: 20px;
+}
+
 .brutalist-container {
     position: relative;
     width: 250px;
