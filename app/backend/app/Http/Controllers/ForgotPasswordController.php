@@ -29,7 +29,7 @@ class ForgotPasswordController extends Controller
         $email = $request->email;
 
         // Sačuvaj token u bazi
-        DB::table('password_resets')->updateOrInsert(
+        DB::table('password_reset')->updateOrInsert(
             ['email' => $email],
             ['token' => $hashedToken, 'created_at' => now()]
         );
@@ -65,7 +65,7 @@ class ForgotPasswordController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        $record = DB::table('password_resets')->where('email', $request->email)->first();
+        $record = DB::table('password_reset')->where('email', $request->email)->first();
 
         if (!$record || !Hash::check($request->token, $record->token)) {
             return response()->json(['error' => 'Nevažeći token!'], 400);
@@ -83,7 +83,7 @@ class ForgotPasswordController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        DB::table('password_resets')->where('email', $record->email)->delete();
+        DB::table('password_reset')->where('email', $record->email)->delete();
 
         return response()->json(['message' => 'Lozinka uspešno resetovana.']);
     }
