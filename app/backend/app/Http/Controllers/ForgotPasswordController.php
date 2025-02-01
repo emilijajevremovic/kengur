@@ -17,6 +17,7 @@ class ForgotPasswordController extends Controller
 {
     public function sendResetLink(Request $request)
     {
+        $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
         $user = DB::table('users')->where('email', $request->email)->first();
 
         if (!$user) {
@@ -31,7 +32,7 @@ class ForgotPasswordController extends Controller
         // Sačuvaj token u bazi
         DB::table('password_reset')->updateOrInsert(
             ['email' => $email],
-            ['token' => $hashedToken, 'created_at' => now()]
+            ['token' => $token, 'created_at' => now()] // Čuvamo nehaširani token
         );
 
         // Pošalji email koristeći PHP Mailer
@@ -49,7 +50,8 @@ class ForgotPasswordController extends Controller
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = 'Resetovanje lozinke';
-            $mail->Body    = "Kliknite na link da resetujete lozinku: <a href='http://localhost:4200/new-password/$token'>Resetuj lozinku</a>";
+            $mail->Body = "Kliknite na link da resetujete lozinku: <a href='{$frontendUrl}/new-password/$token?email=$email'>Resetuj lozinku</a>";
+
 
             $mail->send();
             return response()->json(['message' => 'Link za resetovanje lozinke je poslat na email.']);
@@ -61,13 +63,14 @@ class ForgotPasswordController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
+            'email' => 'required',
             'token' => 'required',
             'password' => 'required|min:6|confirmed',
         ]);
 
         $record = DB::table('password_reset')->where('email', $request->email)->first();
 
-        if (!$record || !Hash::check($request->token, $record->token)) {
+        if (!$record || $request->token !== $record->token) {
             return response()->json(['error' => 'Nevažeći token!'], 400);
         }
 

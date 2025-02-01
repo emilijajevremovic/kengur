@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -16,7 +17,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class NewPasswordComponent {
   resetForm: FormGroup;
-  token = '';
+  token: any;
+  email = '';
   message = '';
   success = false;
   passwordFieldType: string = 'password';
@@ -24,31 +26,49 @@ export class NewPasswordComponent {
   submitted: boolean = false;
   baseUrl = environment.apiUrl;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private router: Router, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private router: Router, private authService: AuthService, private snackBar: MatSnackBar) {
     this.resetForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
     });
 
+    this.route.paramMap.subscribe(params => {
+      this.token = params.get('token');
+    });
+  
     this.route.queryParams.subscribe(params => {
-      this.token = params['token'];
+      this.email = params['email'];
     });
   }
 
   onSubmit() {
+    //console.log(this.token);
+    //console.log(this.email);
+
     this.submitted = true;
     if (this.resetForm.invalid || this.resetForm.value.password !== this.resetForm.value.confirmPassword) {
       this.message = '*Šifre se ne poklapaju!';
       return;
     }
 
-    this.authService.resetPassword(this.token, this.resetForm.value.password).subscribe(
+    const resetData = { 
+      email: this.email,
+      token: this.token,  
+      password: this.resetForm.value.password,  
+      password_confirmation: this.resetForm.value.password  
+    };
+
+    this.authService.resetPassword(resetData).subscribe(
       (res: any) => {
-        this.message = 'Lozinka uspešno promenjena.';
+        this.message = '';
+        this.snackBar.open('Šifra uspešno promenjena.', 'OK', {
+          duration: 5000,  
+          panelClass: ['light-snackbar'] 
+        });
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       (err) => {
-        this.message = '*Neispravan token ili email.';
+        this.message = '*Došlo je do greške. Pokušajte ponovo.';
       }
     );
   }
