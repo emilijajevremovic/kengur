@@ -22,4 +22,9 @@ export class PusherService {
   subscribeToChannel(channelName: string) {
     return this.pusher.subscribe(channelName);
   }
+
+  disconnect() {
+    this.pusher.disconnect();
+  }
+  
 }

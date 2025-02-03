@@ -52,14 +52,14 @@
         <div class="friends-list">
             <div id="p-div"><p>Odaberi protivnika</p></div>
             <div id="scrollable-div">
-                <div>
-                    <div class="friend-status online" (click)="openPopup()">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator online"></div>
+                <div *ngFor="let user of users">
+                    <div class="friend-status" [ngClass]="user.is_online ? 'online' : 'offline'" (click)="openPopup()">
+                        <div class="friend-status-img"><img src="{{baseUrl}}/{{user.profile_picture}}" alt=""></div>
+                        <h5>{{ user.nickname }}</h5>
+                        <div class="status-indicator" [ngClass]="user.is_online ? 'online' : 'offline'"></div>
                     </div>
                 </div>
-                <div>
+                <!-- <div>
                     <div class="friend-status online">
                         <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
                         <h5>Ime Prezime</h5>
@@ -121,7 +121,7 @@
                         <h5>Ime Prezime</h5>
                         <div class="status-indicator offline"></div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="search-and-requests">

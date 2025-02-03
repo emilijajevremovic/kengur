@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { NgIf, CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PusherService } from '../../services/pusher.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private snackBar: MatSnackBar) {
+  constructor(private authService: AuthService, private fb: FormBuilder, private snackBar: MatSnackBar, private pusherService: PusherService) {
     this.profileForm = this.fb.group({
       nickname: ['', [Validators.required, Validators.minLength(4)]],
       name: ['', [Validators.required]],
@@ -113,6 +114,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
+    this.pusherService.disconnect();
     this.authService.logout();
   }
 

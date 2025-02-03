@@ -169,5 +169,23 @@ class UserController extends Controller
         return response()->json(['message' => 'User profile updated successfully!']);
     }
 
+    public function getUsers(Request $request)
+    {
+        $userAuth = Auth::user();
+
+        if (!$userAuth) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        $users = User::where('id', '!=', $userAuth->id)
+                     ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city') 
+                     ->get();
+
+        if ($users->isEmpty()) {
+            return response()->json(['error' => 'Nema korisnika koji su trenutno online.'], 404);
+        }
+
+        return response()->json($users);
+    }
 
 }

@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PusherService } from '../../services/pusher.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-friend-requests',
@@ -18,7 +19,7 @@ import { PusherService } from '../../services/pusher.service';
 })
 export class FriendRequestsComponent implements OnInit{
 
-  constructor(private authService: AuthService, private snackBar: MatSnackBar, private pusherService: PusherService) {}
+  constructor(private authService: AuthService, private snackBar: MatSnackBar, private pusherService: PusherService, private userService: UserService) {}
 
   baseUrl = environment.apiUrl;
   searchQuery: string = '';
@@ -30,9 +31,39 @@ export class FriendRequestsComponent implements OnInit{
   selectedUser: any;
   selectedRequest: any;
   friendRequests: any = [];
+  users: any[] = [];
+  onlineUsers: string[] = [];
 
   ngOnInit(): void {
     this.loadFriendRequests();
+
+    this.fetchUsers();
+
+    // websocket listener
+    const channel = this.pusherService.pusher.subscribe('online-users-channel');
+    channel.bind('OnlineUsersUpdated', (data: any) => {
+      console.log("Primljen WebSocket događaj:", data); 
+      this.onlineUsers = data.onlineUsers; 
+      this.updateUserLists();
+    });
+  }
+
+  fetchUsers(): void {
+    this.userService.getUsers().subscribe((users) => {
+      this.users = users;
+      this.updateUserLists();
+    });
+  }
+
+  updateUserLists(): void {
+    this.users.forEach((user) => {
+      user.is_online = this.onlineUsers.includes(user.id.toString());
+    });
+
+    // sortiranje korisnika
+    this.users.sort((a, b) => {
+      return (b.is_online ? 1 : 0) - (a.is_online ? 1 : 0);
+    });
   }
 
   searchUsers() {

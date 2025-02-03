@@ -45,5 +45,6 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink
 
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
+Route::middleware('auth:api')->get('/users', [UserController::class, 'getUsers']);
 
 
