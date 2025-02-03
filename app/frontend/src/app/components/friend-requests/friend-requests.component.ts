@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PusherService } from '../../services/pusher.service';
 
 @Component({
   selector: 'app-friend-requests',
@@ -17,7 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class FriendRequestsComponent implements OnInit{
 
-  constructor(private authService: AuthService, private snackBar: MatSnackBar) {}
+  constructor(private authService: AuthService, private snackBar: MatSnackBar, private pusherService: PusherService) {}
 
   baseUrl = environment.apiUrl;
   searchQuery: string = '';
