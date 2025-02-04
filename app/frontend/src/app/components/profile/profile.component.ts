@@ -6,6 +6,7 @@ import { NgIf, CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PusherService } from '../../services/pusher.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,7 @@ import { PusherService } from '../../services/pusher.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private snackBar: MatSnackBar, private pusherService: PusherService) {
+  constructor(private authService: AuthService, private fb: FormBuilder, private snackBar: MatSnackBar, private pusherService: PusherService, private userService: UserService) {
     this.profileForm = this.fb.group({
       nickname: ['', [Validators.required, Validators.minLength(4)]],
       name: ['', [Validators.required]],
@@ -115,7 +116,15 @@ export class ProfileComponent implements OnInit {
 
   logout() {
     this.pusherService.disconnect();
+    this.setUserOffline();
     this.authService.logout();
+  }
+
+  setUserOffline() {
+    this.userService.setUserOffline().subscribe({
+      next: (data) => console.log('Korisnik postavljen kao offline:', data),
+      error: (error) => console.error('Greška pri postavljanju offline statusa:', error)
+    });
   }
 
 }

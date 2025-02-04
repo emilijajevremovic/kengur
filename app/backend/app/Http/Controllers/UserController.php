@@ -179,13 +179,61 @@ class UserController extends Controller
 
         $users = User::where('id', '!=', $userAuth->id)
                      ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city') 
-                     ->get();
-
-        if ($users->isEmpty()) {
-            return response()->json(['error' => 'Nema korisnika koji su trenutno online.'], 404);
-        }
+                     ->get()
+                     ->map(function ($user) {
+                        $user->is_online = $user->is_online; 
+                        return $user;
+                    });
 
         return response()->json($users);
     }
+
+    public function setOnline()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        // Dohvatanje trenutnih online korisnika
+        $onlineUsers = cache()->get('online_users', []);
+
+        // Dodavanje novog korisnika u listu
+        if (!in_array($user->id, $onlineUsers)) {
+            $onlineUsers[] = $user->id;
+        }
+
+        // Ažuriranje liste u cache-u
+        cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+
+        // Emitovanje ažurirane liste online korisnika
+        broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+        Log::info("📢 Emitovan OnlineUsersUpdated event (setOnline)", ['onlineUsers' => $onlineUsers]);
+
+        return response()->json(['message' => 'Korisnik je online']);
+    }
+
+
+    public function setOffline()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        $onlineUsers = cache()->get('online_users', []);
+        $onlineUsers = array_diff($onlineUsers, [$user->id]); 
+
+        cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+
+        // Emituj događaj kada se korisnik odjavi
+        broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+        Log::info("📢 Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
+
+        return response()->json(['message' => 'Korisnik je offline']);
+    }
+
 
 }

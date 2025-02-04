@@ -18,17 +18,16 @@ class OnlineUsersUpdated implements ShouldBroadcast
 
     public function __construct($onlineUsers)
     {
-        $this->onlineUsers = $onlineUsers;
+        $this->onlineUsers = array_values($onlineUsers);
     }
 
     public function broadcastOn()
     {
-        return ['online-users-channel'];
+        return new Channel('online-users-channel');
     }
 
     public function broadcastAs()
     {
         return 'OnlineUsersUpdated';
     }
-    
 }

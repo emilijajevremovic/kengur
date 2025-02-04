@@ -35,36 +35,51 @@ export class FriendRequestsComponent implements OnInit{
   onlineUsers: string[] = [];
 
   ngOnInit(): void {
-    this.loadFriendRequests();
+    this.userService.setUserOnline().subscribe({
+      next: (data) => console.log('FRIEND-REQUEST: Korisnik postavljen kao online:', data),
+      error: (error) => console.error('FRIEND-REQUEST: Greška pri postavljanju online statusa:', error)
+    });
 
+    this.loadFriendRequests();
     this.fetchUsers();
 
-    // websocket listener
-    const channel = this.pusherService.pusher.subscribe('online-users-channel');
+    const channel = this.pusherService.subscribeToChannel('online-users-channel');
+    console.log("📡 Pretplaćeni na kanal: online-users-channel");
+
     channel.bind('OnlineUsersUpdated', (data: any) => {
-      console.log("Primljen WebSocket događaj:", data); 
-      this.onlineUsers = data.onlineUsers; 
-      this.updateUserLists();
+      console.log("📡 Primljen WebSocket događaj:", data); 
+      if (data.onlineUsers && Array.isArray(data.onlineUsers)) {
+        this.onlineUsers = data.onlineUsers.map((id: number) => id.toString());
+        console.log("✅ Ažurirana lista online korisnika:", this.onlineUsers);
+        this.updateUserLists();
+      } else {
+        console.error("❌ Stigao neispravan WebSocket događaj:", data);
+      }
     });
-  }
+}
 
   fetchUsers(): void {
     this.userService.getUsers().subscribe((users) => {
       this.users = users;
+      console.log(users);
       this.updateUserLists();
     });
   }
 
   updateUserLists(): void {
+    console.log("📌 Pristigli podaci o korisnicima:", this.users);
+    console.log("📌 Lista online korisnika sa WebSocket-a:", this.onlineUsers);
+  
     this.users.forEach((user) => {
       user.is_online = this.onlineUsers.includes(user.id.toString());
     });
-
-    // sortiranje korisnika
-    this.users.sort((a, b) => {
-      return (b.is_online ? 1 : 0) - (a.is_online ? 1 : 0);
-    });
+  
+    console.log("✅ Ažurirana lista korisnika:", this.users);
+  
+    // Sortiraj korisnike tako da su online korisnici prvi
+    this.users.sort((a, b) => Number(b.is_online) - Number(a.is_online));
   }
+  
 
   searchUsers() {
     this.searchPerformed = false;

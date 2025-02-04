@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ export class LoginComponent {
   message: string = '';
   submitted: boolean = false;
 
-  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService) {
+  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService, private userService: UserService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]], 
       password: ['', [Validators.required, Validators.minLength(8)]] 
@@ -36,6 +37,11 @@ export class LoginComponent {
         next: (response) => {
           if (response.token) {
             localStorage.setItem('auth_token', response.token);
+
+            this.userService.setUserOnline().subscribe({
+              next: (data) => console.log('Korisnik postavljen kao online nakon prijave:', data),
+              error: (error) => console.error('Greška pri postavljanju online statusa:', error)
+            });
           }
           this.router.navigate(['/lobby']); 
         },
@@ -52,7 +58,6 @@ export class LoginComponent {
       this.message = 'Forma nije validna.';
     }
   }
-  
 
   togglePasswordVisibility() {
     this.passwordFieldType =

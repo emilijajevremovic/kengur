@@ -16,5 +16,13 @@ export class UserService {
   getUsers(): Observable<any> {
     return this.http.get(`${this.baseUrl}/users`);
   }
+
+  setUserOnline(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/set-online`, {}); 
+  }
+
+  setUserOffline(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/set-offline`, {});
+  }
   
 }
