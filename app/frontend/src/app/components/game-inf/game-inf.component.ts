@@ -88,7 +88,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
         }
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.result = error.error.text;
       }
     );
@@ -110,7 +110,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
 
   endQuiz() {
     this.endDate = new Date(); 
-    console.log('End time:', this.endDate);
+    //console.log('End time:', this.endDate);
     this.calculateDuration();
   }
 

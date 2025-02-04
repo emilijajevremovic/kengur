@@ -27,8 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
       this.userService.setUserOnline().subscribe({
-        next: (data) => console.log('Korisnik postavljen kao online:', data),
-        error: (error) => console.error('Greška pri postavljanju online statusa:', error)
+        // next: (data) => console.log('Korisnik postavljen kao online:', data),
+        // error: (error) => console.error('Greška pri postavljanju online statusa:', error)
       });
 
       window.addEventListener('beforeunload', this.setUserOffline.bind(this));
@@ -43,8 +43,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   setUserOffline() {
     this.userService.setUserOffline().subscribe({
-      next: (data) => console.log('Korisnik postavljen kao offline:', data),
-      error: (error) => console.error('Greška pri postavljanju offline statusa:', error)
+      // next: (data) => console.log('Korisnik postavljen kao offline:', data),
+      // error: (error) => console.error('Greška pri postavljanju offline statusa:', error)
     });
   }
 }

@@ -43,7 +43,7 @@ export class GameMathComponent implements OnInit {
 
   selectAnswer(index: number) {
     this.selectedAnswerIndex = index; 
-    console.log('Selected answer index:', index);
+    //console.log('Selected answer index:', index);
   }
 
   goToNextQuestion() {

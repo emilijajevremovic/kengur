@@ -198,7 +198,7 @@ class UserController extends Controller
 
         // Dohvatanje trenutnih online korisnika
         $onlineUsers = cache()->get('online_users', []);
-        Log::info("UPRAVO SE PRIJAVIO KORISNIK, PRE NJEGA SU ONLINE BILI:", ['onlineUsers' => $onlineUsers]);
+        //Log::info("UPRAVO SE PRIJAVIO KORISNIK, PRE NJEGA SU ONLINE BILI:", ['onlineUsers' => $onlineUsers]);
 
         // Dodavanje novog korisnika u listu
         if (!in_array($user->id, $onlineUsers)) {
@@ -211,7 +211,7 @@ class UserController extends Controller
 
         // Emitovanje ažurirane liste online korisnika
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
-        Log::info("📢 Emitovan OnlineUsersUpdated event nakon prijave", ['onlineUsers' => $onlineUsers]);
+        //Log::info("Emitovan OnlineUsersUpdated event nakon prijave", ['onlineUsers' => $onlineUsers]);
 
         return response()->json(['message' => 'Korisnik je online']);
     }
@@ -232,7 +232,7 @@ class UserController extends Controller
 
         // Emituj događaj kada se korisnik odjavi
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
-        //Log::info("📢 Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
+        //Log::info("Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
 
         return response()->json(['message' => 'Korisnik je offline']);
     }

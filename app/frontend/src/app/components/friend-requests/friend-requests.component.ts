@@ -36,21 +36,19 @@ export class FriendRequestsComponent implements OnInit{
 
   ngOnInit(): void {
     this.userService.setUserOnline().subscribe({
-      next: (data) => console.log('FRIEND-REQUEST: Korisnik postavljen kao online:', data),
-      error: (error) => console.error('FRIEND-REQUEST: Greška pri postavljanju online statusa:', error)
+      // next: (data) => console.log('FRIEND-REQUEST: Korisnik postavljen kao online:', data),
+      // error: (error) => console.error('FRIEND-REQUEST: Greška pri postavljanju online statusa:', error)
     });
     
     const channel = this.pusherService.subscribeToChannel('online-users-channel');
-    console.log("📡 Pretplaćeni na kanal: online-users-channel");
 
     channel.bind('OnlineUsersUpdated', (data: any) => {
-      console.log("📡 Primljen WebSocket događaj:", data); 
       if (data.onlineUsers && Array.isArray(data.onlineUsers)) {
         this.onlineUsers = data.onlineUsers.map((id: number) => id.toString());
-        console.log("✅ Ažurirana lista online korisnika:", this.onlineUsers);
+        //console.log("Ažurirana lista online korisnika:", this.onlineUsers);
         this.updateUserLists();
       } else {
-        console.error("❌ Stigao neispravan WebSocket događaj:", data);
+        console.error("Stigao neispravan WebSocket događaj:", data);
       }
       this.updateUserLists();
     });
@@ -63,7 +61,7 @@ export class FriendRequestsComponent implements OnInit{
   fetchUsers(): void {
     this.userService.getUsers().subscribe((users) => {
       this.users = users;
-      console.log(users);
+      //console.log(users);
       this.updateUserLists();
     });
   }
@@ -71,20 +69,20 @@ export class FriendRequestsComponent implements OnInit{
   fetchOnlineUsers(): void {
     this.userService.getOnlineUsers().subscribe((users) => {
         this.onlineUsers = users.map((user: any) => user.id.toString());
-        console.log("🔹 Online korisnici osveženi:", this.onlineUsers);
+        //console.log("Online korisnici osveženi:", this.onlineUsers);
         this.updateUserLists();
     });
 }
 
   updateUserLists(): void {
-    console.log("📌 Pristigli podaci o korisnicima:", this.users);
-    console.log("📌 Lista online korisnika sa WebSocket-a:", this.onlineUsers);
+    //console.log("Pristigli podaci o korisnicima:", this.users);
+    //console.log("Lista online korisnika sa WebSocket-a:", this.onlineUsers);
   
     this.users.forEach((user) => {
       user.is_online = this.onlineUsers.includes(user.id.toString());
     });
   
-    console.log("✅ Ažurirana lista korisnika:", this.users);
+    //console.log("Ažurirana lista korisnika:", this.users);
   
     // Sortiraj korisnike tako da su online korisnici prvi
     this.users.sort((a, b) => Number(b.is_online) - Number(a.is_online));

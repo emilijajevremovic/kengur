@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
 
     $connection->on('subscribe', function ($channelName) use ($connection) {
-        Log::info("Korisnik pokušava da bude online", ['channel-name' => $channelName]);
+        //Log::info("Korisnik pokušava da bude online", ['channel-name' => $channelName]);
 
         if (strpos($channelName, 'private-user-') === 0) {
             $userId = str_replace('private-user-', '', $channelName);
@@ -43,6 +43,6 @@ WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
 });
 
 function broadcastToAllUsers($onlineUsers) {
-    Log::info("Emitovan OnlineUsersUpdated event", ['onlineUsers' => $onlineUsers]);
+    //Log::info("Emitovan OnlineUsersUpdated event", ['onlineUsers' => $onlineUsers]);
     broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers)); // Emituj događaj
 }
