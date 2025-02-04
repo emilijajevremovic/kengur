@@ -198,6 +198,7 @@ class UserController extends Controller
 
         // Dohvatanje trenutnih online korisnika
         $onlineUsers = cache()->get('online_users', []);
+        Log::info("UPRAVO SE PRIJAVIO KORISNIK, PRE NJEGA SU ONLINE BILI:", ['onlineUsers' => $onlineUsers]);
 
         // Dodavanje novog korisnika u listu
         if (!in_array($user->id, $onlineUsers)) {
@@ -206,10 +207,11 @@ class UserController extends Controller
 
         // Ažuriranje liste u cache-u
         cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+        //sleep(1);
 
         // Emitovanje ažurirane liste online korisnika
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
-        Log::info("📢 Emitovan OnlineUsersUpdated event (setOnline)", ['onlineUsers' => $onlineUsers]);
+        Log::info("📢 Emitovan OnlineUsersUpdated event nakon prijave", ['onlineUsers' => $onlineUsers]);
 
         return response()->json(['message' => 'Korisnik je online']);
     }
@@ -230,10 +232,28 @@ class UserController extends Controller
 
         // Emituj događaj kada se korisnik odjavi
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
-        Log::info("📢 Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
+        //Log::info("📢 Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
 
         return response()->json(['message' => 'Korisnik je offline']);
     }
 
+    public function getOnlineUsers()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        // Dohvatanje svih online korisnika iz cache-a
+        $onlineUserIds = cache()->get('online_users', []);
+
+        // Dohvatanje podataka o online korisnicima
+        $onlineUsers = User::whereIn('id', $onlineUserIds)
+                            ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city')
+                            ->get();
+
+        return response()->json($onlineUsers);
+    }
 
 }

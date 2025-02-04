@@ -38,10 +38,10 @@ export class LoginComponent {
           if (response.token) {
             localStorage.setItem('auth_token', response.token);
 
-            this.userService.setUserOnline().subscribe({
-              next: (data) => console.log('Korisnik postavljen kao online nakon prijave:', data),
-              error: (error) => console.error('Greška pri postavljanju online statusa:', error)
-            });
+            // this.userService.setUserOnline().subscribe({
+            //   next: (data) => console.log('Korisnik postavljen kao online nakon prijave:', data),
+            //   error: (error) => console.error('Greška pri postavljanju online statusa:', error)
+            // });
           }
           this.router.navigate(['/lobby']); 
         },

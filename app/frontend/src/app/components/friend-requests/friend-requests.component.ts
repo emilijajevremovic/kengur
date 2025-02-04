@@ -39,10 +39,7 @@ export class FriendRequestsComponent implements OnInit{
       next: (data) => console.log('FRIEND-REQUEST: Korisnik postavljen kao online:', data),
       error: (error) => console.error('FRIEND-REQUEST: Greška pri postavljanju online statusa:', error)
     });
-
-    this.loadFriendRequests();
-    this.fetchUsers();
-
+    
     const channel = this.pusherService.subscribeToChannel('online-users-channel');
     console.log("📡 Pretplaćeni na kanal: online-users-channel");
 
@@ -55,7 +52,12 @@ export class FriendRequestsComponent implements OnInit{
       } else {
         console.error("❌ Stigao neispravan WebSocket događaj:", data);
       }
+      this.updateUserLists();
     });
+
+    this.fetchOnlineUsers();
+    this.loadFriendRequests();
+    this.fetchUsers();
 }
 
   fetchUsers(): void {
@@ -65,6 +67,14 @@ export class FriendRequestsComponent implements OnInit{
       this.updateUserLists();
     });
   }
+
+  fetchOnlineUsers(): void {
+    this.userService.getOnlineUsers().subscribe((users) => {
+        this.onlineUsers = users.map((user: any) => user.id.toString());
+        console.log("🔹 Online korisnici osveženi:", this.onlineUsers);
+        this.updateUserLists();
+    });
+}
 
   updateUserLists(): void {
     console.log("📌 Pristigli podaci o korisnicima:", this.users);
