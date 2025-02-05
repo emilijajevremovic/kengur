@@ -30,14 +30,15 @@ export class FriendRequestsComponent implements OnInit{
   searchPerformed = false;
   selectedUser: any;
   selectedRequest: any;
+  opponent: any;
   friendRequests: any = [];
   users: any[] = [];
   onlineUsers: string[] = [];
 
   ngOnInit(): void {
     this.userService.setUserOnline().subscribe({
-      // next: (data) => console.log('FRIEND-REQUEST: Korisnik postavljen kao online:', data),
-      // error: (error) => console.error('FRIEND-REQUEST: Greška pri postavljanju online statusa:', error)
+      // next: (data) => console.log('Korisnik postavljen kao online:', data),
+      // error: (error) => console.error('Greška pri postavljanju online statusa:', error)
     });
     
     const channel = this.pusherService.subscribeToChannel('online-users-channel');
@@ -199,7 +200,8 @@ export class FriendRequestsComponent implements OnInit{
     this.isPopup3Open = true;
   }
 
-  openPopup() {
+  openPopup(user: any) {
+    this.opponent = user;
     this.isPopupOpen = true; 
   }
 

@@ -90,6 +90,21 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+        'mongodb' => [
+            'driver'   => 'mongodb',
+            // 'host'     => env('MONGO_HOST', 'softeng.pmf.kg.ac.rs'),
+            'host'     => env('MONGO_HOST', '127.0.0.1'),
+            // 'port'     => env('MONGO_PORT', 50090),
+            'port'     => env('MONGO_PORT', 27017),
+            'database' => env('MONGO_DATABASE', 'Kengur'),
+            // 'username' => env('MONGO_USERNAME', 'admin'),
+            // 'password' => env('MONGO_PASSWORD', 'pass'),
+            'username' => env('MONGO_USERNAME', 'admin'),
+            'password' => env('MONGO_PASSWORD', 'pass'),
+            'options'  => [
+                //'authSource' => 'admin',
+            ],
+        ],
 
     ],
 

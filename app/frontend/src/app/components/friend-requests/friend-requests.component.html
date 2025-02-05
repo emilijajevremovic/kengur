@@ -7,9 +7,9 @@
             <div class="popup-opponent">
                 <div class="card-header"><h5>Protivnik</h5></div>
                 <div class="profile-picture">
-                    <img src="../../../assets/images/profile.png" alt="">
-                    <h5>nickname</h5>
-                    <span>emailaddress</span>
+                    <img src="{{baseUrl}}/{{opponent.profile_picture}}" alt="">
+                    <h5>{{opponent.nickname}}</h5>
+                    <span>{{opponent.email}}</span>
                 </div>
             </div>
             <div class="popup-subject">
@@ -53,75 +53,12 @@
             <div id="p-div"><p>Odaberi protivnika</p></div>
             <div id="scrollable-div">
                 <div *ngFor="let user of users">
-                    <div class="friend-status" [ngClass]="user.is_online ? 'online' : 'offline'" (click)="openPopup()">
+                    <div class="friend-status" [ngClass]="user.is_online ? 'online' : 'offline'" (click)="user.is_online ? openPopup(user) : null">
                         <div class="friend-status-img"><img src="{{baseUrl}}/{{user.profile_picture}}" alt=""></div>
                         <h5>{{ user.nickname }}</h5>
                         <div class="status-indicator" [ngClass]="user.is_online ? 'online' : 'offline'"></div>
                     </div>
                 </div>
-                <!-- <div>
-                    <div class="friend-status online">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator online"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status online">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator online"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="friend-status  offline">
-                        <div class="friend-status-img"><img src="../../../assets/images/profile.png" alt=""></div>
-                        <h5>Ime Prezime</h5>
-                        <div class="status-indicator offline"></div>
-                    </div>
-                </div> -->
             </div>
         </div>
         <div class="search-and-requests">
