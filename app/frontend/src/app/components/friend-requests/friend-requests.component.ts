@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PusherService } from '../../services/pusher.service';
 import { UserService } from '../../services/user.service';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-friend-requests',
@@ -19,7 +20,7 @@ import { UserService } from '../../services/user.service';
 })
 export class FriendRequestsComponent implements OnInit{
 
-  constructor(private authService: AuthService, private snackBar: MatSnackBar, private pusherService: PusherService, private userService: UserService) {}
+  constructor(private authService: AuthService, private snackBar: MatSnackBar, private pusherService: PusherService, private userService: UserService, private taskService: TaskService) {}
 
   baseUrl = environment.apiUrl;
   searchQuery: string = '';
@@ -34,6 +35,9 @@ export class FriendRequestsComponent implements OnInit{
   friendRequests: any = [];
   users: any[] = [];
   onlineUsers: string[] = [];
+  selectedSubject: string = 'math';
+  distinctClassesMath: string[] = [];
+  distinctClassesInfo: string[] = [];
 
   ngOnInit(): void {
     this.userService.setUserOnline().subscribe({
@@ -57,7 +61,19 @@ export class FriendRequestsComponent implements OnInit{
     this.fetchOnlineUsers();
     this.loadFriendRequests();
     this.fetchUsers();
+    this.loadMathClasses();
 }
+
+  loadMathClasses(): void {
+    this.taskService.getDistinctClassesMath().subscribe(data => {
+      this.distinctClassesMath = data.map(cls => JSON.parse(cls)); 
+      //console.log(this.distinctClassesMath);
+    });
+  }
+
+  onSubjectChange(subject: string): void {
+    this.selectedSubject = subject;
+  }
 
   fetchUsers(): void {
     this.userService.getUsers().subscribe((users) => {

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CodeExecutorController;
 use Illuminate\Support\Facades\DB;
 use App\Models\Assignment;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,5 @@ Route::post('/execute-code', [CodeExecutorController::class, 'executeCode']);
 Route::get('/first-task', function () {
     return response()->json(Assignment::first());
 });
+
+Route::get('/distinct-classes', [TaskController::class, 'getDistinctClasses']);

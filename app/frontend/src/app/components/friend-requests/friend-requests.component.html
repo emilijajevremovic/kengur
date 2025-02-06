@@ -14,32 +14,38 @@
             </div>
             <div class="popup-subject">
                 <div class="card-header"><h5>Predmet</h5></div>
-                <div class="subjects">
-                    <div class="subject">
-                        <label for="radio-maths">
-                            <input type="radio" id="radio-maths" name="radio" checked>
-                            <span>Matematika</span><br>
-                            <span><img style="margin-top: 15px;" src="../../../assets/images/maths.png" alt=""></span>
-                        </label>
-                    </div>
-                    <div class="subject">
-                        <label for="radio-info">
-                            <input type="radio" id="radio-info" name="radio">
-                            <span>Informatika</span><br>
-                            <span><img style="margin-top: 15px;" src="../../../assets/images/programming.png" alt=""></span>
-                        </label>
-                    </div>
-                </div>                
-            </div>
+                    <div class="subjects">
+                        <div class="subject">
+                            <label for="radio-maths">
+                                <input type="radio" id="radio-maths" name="radio" value="math" [(ngModel)]="selectedSubject" (change)="onSubjectChange('math')">
+                                <span>Matematika</span><br>
+                                <span><img style="margin-top: 15px;" src="../../../assets/images/maths.png" alt=""></span>
+                            </label>
+                        </div>
+                        <div class="subject">
+                            <label for="radio-info">
+                                <input type="radio" id="radio-info" name="radio" value="info" [(ngModel)]="selectedSubject" (change)="onSubjectChange('info')">
+                                <span>Informatika</span><br>
+                                <span><img style="margin-top: 15px;" src="../../../assets/images/programming.png" alt=""></span>
+                            </label>
+                        </div>
+                    </div>               
+                </div>
             <div class="popup-class">
                 <div class="card-header"><h5>Razred</h5></div>
-                <div class="class-select">
+                <div class="class-select" *ngIf="selectedSubject === 'math'">
                     <select name="classes" id="classes">
-                        <option value="1">1. i 2.</option>
-                        <option value="3">3.</option>
-                        <option value="4">4.</option>
-                        <option value="5">5. i 6.</option>
-                  </select>
+                        <option *ngFor="let classItem of distinctClassesMath" [value]="classItem">
+                            {{ classItem }}
+                        </option>
+                    </select>
+                </div>
+                <div class="class-select" *ngIf="selectedSubject === 'info'">
+                    <select name="classes" id="classes">
+                        <option *ngFor="let classItem of distinctClassesInfo" [value]="classItem">
+                            {{ classItem }}
+                        </option>
+                    </select>
                 </div>
             </div>
         </div>
