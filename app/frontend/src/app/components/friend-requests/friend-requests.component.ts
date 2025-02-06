@@ -38,6 +38,8 @@ export class FriendRequestsComponent implements OnInit{
   selectedSubject: string = 'math';
   distinctClassesMath: string[] = [];
   distinctClassesInfo: string[] = [];
+  classSelected: string = '';
+  user: any = {};
 
   ngOnInit(): void {
     this.userService.setUserOnline().subscribe({
@@ -62,7 +64,44 @@ export class FriendRequestsComponent implements OnInit{
     this.loadFriendRequests();
     this.fetchUsers();
     this.loadMathClasses();
+
+    const userId = this.authService.getUserId();
+    const privateChannel = this.pusherService.subscribeToChannel(`user.${userId}`);
+
+    privateChannel.bind('ChallengeUser', (data: any) => {
+      alert(`${data.challengerName} izaziva te na meč iz ${data.category} za razred ${data.class}`);
+    });
+
+    this.authService.getUserData().subscribe({
+      next: (data) => {
+        this.user = data.user.nickname;
+      },
+      error: (error) => {
+        //console.error('Error fetching user data:', error);
+      },
+    });
+
 }
+
+  sendChallenge(): void {
+    const challengeData = {
+      challenger_name: this.user,
+      opponent_id: this.opponent.id,
+      category: this.selectedSubject,
+      class: this.classSelected
+    };
+
+    this.taskService.sendChallenge(challengeData)
+      .subscribe({
+        next: () => {
+          //console.log('Izazov uspešno poslat!');
+          //alert(`Poslali ste izazov korisniku ID: ${challengeData.opponent_id} za predmet ${challengeData.category} i razred ${challengeData.class}`);
+        },
+        error: (err) => {
+          //console.error('Greška prilikom slanja izazova:', err);
+        }
+    });
+  }
 
   loadMathClasses(): void {
     this.taskService.getDistinctClassesMath().subscribe(data => {

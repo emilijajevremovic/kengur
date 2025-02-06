@@ -34,14 +34,14 @@
             <div class="popup-class">
                 <div class="card-header"><h5>Razred</h5></div>
                 <div class="class-select" *ngIf="selectedSubject === 'math'">
-                    <select name="classes" id="classes">
+                    <select name="classes" id="classes" [(ngModel)]="classSelected">
                         <option *ngFor="let classItem of distinctClassesMath" [value]="classItem">
                             {{ classItem }}
                         </option>
                     </select>
                 </div>
                 <div class="class-select" *ngIf="selectedSubject === 'info'">
-                    <select name="classes" id="classes">
+                    <select name="classes" id="classes" [(ngModel)]="classSelected">
                         <option *ngFor="let classItem of distinctClassesInfo" [value]="classItem">
                             {{ classItem }}
                         </option>
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div><button id="popup-send-button">Pošalji zahtev</button></div>
+        <div><button id="popup-send-button" (click)="sendChallenge()">Pošalji zahtev</button></div>
     </div>
 </div>
 

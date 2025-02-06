@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ChallengeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,5 +54,8 @@ Route::middleware('auth:sanctum')->post('/set-offline', [UserController::class, 
 
 Route::middleware('auth:api')->get('/online-users', [UserController::class, 'getOnlineUsers']);
 
+Route::middleware('auth:sanctum')->get('/user-id', [UserController::class, 'getUserId']);
+
+Route::post('/send-challenge', [UserController::class, 'sendChallenge']);
 
 

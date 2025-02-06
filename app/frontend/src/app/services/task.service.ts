@@ -16,4 +16,8 @@ export class TaskService {
     return this.http.get<string[]>(`${this.baseUrl}/distinct-classes`);
   }
 
+  sendChallenge(challengeData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/send-challenge`, challengeData);
+  }
+
 }

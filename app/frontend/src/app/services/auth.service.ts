@@ -39,6 +39,10 @@ export class AuthService {
     return this.http.get(`${this.baseUrl}/user`);
   }
 
+  getUserId(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/user-id`);
+  }
+
   getUserByNickname(nickname: string): Observable<any> {
     const params = new HttpParams().set('nickname', nickname);
   

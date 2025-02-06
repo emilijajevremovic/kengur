@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Events\ChallengeUser;
 
 class UserController extends Controller
 {
@@ -99,6 +100,17 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'user' => $user,
+        ], 200);
+    }
+
+    public function getUserId(Request $request)
+    {
+        // Dohvata trenutno autentifikovanog korisnika
+        $user = $request->user();
+
+        // Vraća korisničke podatke
+        return response()->json([
+            'id' => $user->id,
         ], 200);
     }
 
@@ -254,6 +266,25 @@ class UserController extends Controller
                             ->get();
 
         return response()->json($onlineUsers);
+    }
+
+    public function sendChallenge(Request $request)
+    {
+        $data = $request->validate([
+            'challenger_name' => 'required|string',
+            'opponent_id' => 'required|integer',
+            'category' => 'required|string',
+            'class' => 'required|string',
+        ]);
+
+        broadcast(new ChallengeUser(
+            $data['challenger_name'],
+            $data['opponent_id'],
+            $data['category'],
+            $data['class']
+        ))->toOthers();
+
+        return response()->json(['message' => 'Challenge sent']);
     }
 
 }
