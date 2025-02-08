@@ -115,7 +115,7 @@ export class FriendRequestsComponent implements OnInit{
       this.distinctClassesMath = data.map(cls => JSON.parse(cls)); 
       //console.log(this.distinctClassesMath);
       if(this.selectedSubject == "math" && this.distinctClassesMath.length > 0) {
-        this.classSelected = this.distinctClassesMath[0];
+        this.classSelected = this.distinctClassesMath[0][0];
       }
     });
   }
@@ -123,10 +123,10 @@ export class FriendRequestsComponent implements OnInit{
   onSubjectChange(subject: string): void {
     this.selectedSubject = subject;
     if(this.selectedSubject == "math" && this.distinctClassesMath.length > 0) {
-      this.classSelected = this.distinctClassesMath[0];
+      this.classSelected = this.distinctClassesMath[0][0];
     }
     if(this.selectedSubject == "info" && this.distinctClassesInfo.length > 0) {
-      this.classSelected = this.distinctClassesInfo[0];
+      this.classSelected = this.distinctClassesInfo[0][0];
     }
   }
 
