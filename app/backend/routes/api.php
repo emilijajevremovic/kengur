@@ -56,6 +56,8 @@ Route::middleware('auth:api')->get('/online-users', [UserController::class, 'get
 
 Route::middleware('auth:sanctum')->get('/user-id', [UserController::class, 'getUserId']);
 
-Route::post('/send-challenge', [UserController::class, 'sendChallenge']);
+Route::middleware('auth:sanctum')->post('/send-challenge', [UserController::class, 'sendChallenge']);
+
+Route::middleware('auth:sanctum')->post('/reject-challenge', [UserController::class, 'rejectChallenge']);
 
 

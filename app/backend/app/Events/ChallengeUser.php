@@ -15,16 +15,20 @@ class ChallengeUser implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $challengerName;
+    public $challengerId;
     public $category;
     public $class;
     public $opponentId;
+    public $profilePicture;
 
-    public function __construct($challengerName, $opponentId, $category, $class)
+    public function __construct($challengerName, $challengerId, $opponentId, $category, $class, $profilePicture)
     {
         $this->challengerName = $challengerName;
+        $this->challengerId = $challengerId;
         $this->category = $category;
         $this->class = $class;
         $this->opponentId = $opponentId; 
+        $this->profilePicture = $profilePicture;
         $this->dontBroadcastToCurrentUser();
     }
 

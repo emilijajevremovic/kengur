@@ -20,4 +20,8 @@ export class TaskService {
     return this.http.post(`${this.baseUrl}/api/send-challenge`, challengeData);
   }
 
+  rejectChallenge(rejectionData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/reject-challenge`, rejectionData);
+  }
+
 }

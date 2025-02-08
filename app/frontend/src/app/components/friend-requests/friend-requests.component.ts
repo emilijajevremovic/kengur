@@ -94,6 +94,11 @@ export class FriendRequestsComponent implements OnInit{
     this.taskService.sendChallenge(challengeData)
       .subscribe({
         next: () => {
+          this.snackBar.open('Izazov uspešno poslat.', 'OK', {
+            duration: 5000,  
+            panelClass: ['light-snackbar'] 
+          });
+          // this.closePopup();
           //console.log('Izazov uspešno poslat!');
           //alert(`Poslali ste izazov korisniku ID: ${challengeData.opponent_id} za predmet ${challengeData.category} i razred ${challengeData.class}`);
         },
@@ -101,6 +106,8 @@ export class FriendRequestsComponent implements OnInit{
           //console.error('Greška prilikom slanja izazova:', err);
         }
     });
+
+    this.closePopup();
   }
 
   loadMathClasses(): void {

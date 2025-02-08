@@ -8,6 +8,9 @@ import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { WebsocketService } from './services/websocket.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TaskService } from './services/task.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -29,8 +32,12 @@ export class AppComponent implements OnInit, OnDestroy {
   challengerName!: string;
   category: string = 'math';
   classSelected!: string;
+  myNickname!: string;
+  challengerId!: any;
+  challengerPicture!: any;
+  baseUrl = environment.apiUrl;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
@@ -42,9 +49,13 @@ export class AppComponent implements OnInit, OnDestroy {
       window.addEventListener('beforeunload', this.setUserOffline.bind(this));
 
       this.authService.getUserData().subscribe({
-        next: (response) => {
+        next: async (response) => {
           const userId = response.user.id;
+          this.myNickname = response.user.nickname;
           this.subscribeToChallenges(userId);
+          
+          await this.webSocketService.initPusherService();
+          this.subscribeToRejections(userId);
         },
         error: (error) => console.error('Greška pri dohvatanju korisničkih podataka:', error)
       });
@@ -67,9 +78,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeToChallenges(userId: number): void {
     this.webSocketService.subscribeToChallenge(userId, (data: any) => {
+      //console.log(data);
       this.challengerName = data.challengerName;
       this.category = data.category;
       this.classSelected = data.class;
+      this.challengerId = data.challengerId;
+      this.challengerPicture = data.profilePicture;
       this.isPopupOpen = true;
     });
   }
@@ -82,8 +96,33 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
-  rejectChallenge() {
+  rejectChallenge(): void {
+    if (!this.challengerName) return;
+  
+    const rejectionData = {
+      challenger_id: this.challengerId, 
+      opponent_nickname: this.myNickname 
+    };
+  
+    this.taskService.rejectChallenge(rejectionData).subscribe({
+      next: () => {
+        this.snackBar.open('Izazov odbijen.', 'OK', {
+          duration: 5000,  
+          panelClass: ['light-snackbar'] 
+        });
+        this.isPopupOpen = false; 
+      },
+      error: (err) => console.error('Greška pri odbijanju izazova:', err)
+    });
+  }
 
+  subscribeToRejections(userId: number): void {
+    this.webSocketService.subscribeToRejections(userId, (data: any) => {
+      this.snackBar.open(`Korisnik ${data.opponentName} je odbio vaš izazov.`, 'OK', {
+        duration: 5000,  
+        panelClass: ['light-snackbar'] 
+      });
+    });
   }
 
 }

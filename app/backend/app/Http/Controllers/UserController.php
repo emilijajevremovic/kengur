@@ -277,14 +277,41 @@ class UserController extends Controller
             'class' => 'required|string',
         ]);
 
+        $challenger = auth()->user();
+        if (!$challenger) {
+            return response()->json(['error' => 'Challenger not found'], 404);
+        }
+
         broadcast(new ChallengeUser(
-            $data['challenger_name'],
+            $data['challenger_name'], 
+            $challenger->id, 
             $data['opponent_id'],
-            $data['category'],
-            $data['class']
+            $data['category'], 
+            $data['class'],
+            $challenger->profile_picture 
         ))->toOthers();
 
-        return response()->json(['message' => 'Challenge sent']);
+        return response()->json([
+            'message' => 'Challenge sent successfully!',
+            'challenger_name' => $data['challenger_name'],
+            'challenger_id' => $challenger->id,
+            'opponent_id' => $data['opponent_id'],
+            'category' => $data['category'],
+            'class' => $data['class'],
+            'profile_picture' => $challenger->profile_picture
+        ]);
+    }
+
+    public function rejectChallenge(Request $request)
+    {
+        $data = $request->validate([
+            'challenger_id' => 'required|integer',
+            'opponent_nickname' => 'required|string',
+        ]);
+
+        broadcast(new ChallengeRejected($data['challenger_id'], $data['opponent_nickname']));
+
+        return response()->json(['message' => 'Challenge rejected']);
     }
 
 }

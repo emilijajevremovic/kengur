@@ -10,7 +10,7 @@ export class WebsocketService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-  async initPusherService() {
+  async initPusherService(): Promise<void> {
     if (isPlatformBrowser(this.platformId) && !this.pusherService) {
       const module = await import('./pusher.service');
       this.pusherService = new module.PusherService(this.platformId);
@@ -28,8 +28,21 @@ export class WebsocketService {
     const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
 
     channel.bind('ChallengeReceived', (data: any) => {
-      console.log('Primljen izazov:', data);
       callback(data);
     });
   }
+
+  subscribeToRejections(userId: number, callback: (data: any) => void) {
+    if (!this.pusherService) {
+      console.error('Greška: PusherService nije inicijalizovan pre poziva subscribeToRejections!');
+      return;
+    }
+    
+    const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
+  
+    channel.bind('ChallengeRejected', (data: any) => {
+      callback(data);
+    });
+  }
+
 }
