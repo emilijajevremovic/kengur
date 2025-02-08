@@ -107,11 +107,20 @@ export class FriendRequestsComponent implements OnInit{
     this.taskService.getDistinctClassesMath().subscribe(data => {
       this.distinctClassesMath = data.map(cls => JSON.parse(cls)); 
       //console.log(this.distinctClassesMath);
+      if(this.selectedSubject == "math" && this.distinctClassesMath.length > 0) {
+        this.classSelected = this.distinctClassesMath[0];
+      }
     });
   }
 
   onSubjectChange(subject: string): void {
     this.selectedSubject = subject;
+    if(this.selectedSubject == "math" && this.distinctClassesMath.length > 0) {
+      this.classSelected = this.distinctClassesMath[0];
+    }
+    if(this.selectedSubject == "info" && this.distinctClassesInfo.length > 0) {
+      this.classSelected = this.distinctClassesInfo[0];
+    }
   }
 
   fetchUsers(): void {

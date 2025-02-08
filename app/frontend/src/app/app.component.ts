@@ -5,6 +5,9 @@ import { RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserService } from './services/user.service';
+import { AuthService } from './services/auth.service';
+import { WebsocketService } from './services/websocket.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -14,15 +17,20 @@ import { UserService } from './services/user.service';
     FormsModule, 
     ReactiveFormsModule, 
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTooltipModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'kengur';
+  isPopupOpen: boolean = false;
+  challengerName!: string;
+  category: string = 'math';
+  classSelected!: string;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
@@ -32,6 +40,15 @@ export class AppComponent implements OnInit, OnDestroy {
       });
 
       window.addEventListener('beforeunload', this.setUserOffline.bind(this));
+
+      this.authService.getUserData().subscribe({
+        next: (response) => {
+          const userId = response.user.id;
+          this.subscribeToChallenges(userId);
+        },
+        error: (error) => console.error('Greška pri dohvatanju korisničkih podataka:', error)
+      });
+
     }
   }
 
@@ -47,4 +64,26 @@ export class AppComponent implements OnInit, OnDestroy {
       // error: (error) => console.error('Greška pri postavljanju offline statusa:', error)
     });
   }
+
+  subscribeToChallenges(userId: number): void {
+    this.webSocketService.subscribeToChallenge(userId, (data: any) => {
+      this.challengerName = data.challengerName;
+      this.category = data.category;
+      this.classSelected = data.class;
+      this.isPopupOpen = true;
+    });
+  }
+
+  closePopup() {
+    this.isPopupOpen = false; 
+  }
+
+  acceptChallenge() {
+
+  }
+
+  rejectChallenge() {
+
+  }
+
 }

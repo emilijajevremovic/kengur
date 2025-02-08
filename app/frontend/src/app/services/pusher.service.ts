@@ -1,15 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import Pusher from 'pusher-js';
 import { environment } from '../../environments/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PusherService {
   pusher: Pusher;
+  private authToken: string | null = null;
   baseUrl = environment.apiUrl;
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.authToken = localStorage.getItem('auth_token'); 
+    }
+    
     this.pusher = new Pusher('ABCDEF', {
       cluster: 'mt1',
       wsHost: '127.0.0.1',
@@ -21,7 +27,7 @@ export class PusherService {
       authEndpoint: `${this.baseUrl}/api/broadcasting/auth`, // Omogućava autentifikaciju
       auth: {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}` // Autentifikacija pomoću tokena
+          Authorization: this.authToken ? `Bearer ${this.authToken}` : ''
         }
       }
     });

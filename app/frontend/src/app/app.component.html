@@ -1,1 +1,60 @@
 <router-outlet></router-outlet>
+
+<div class="popup-overlay" (click)="closePopup()" *ngIf="isPopupOpen">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+        <div id="close-popup" (click)="closePopup()">
+            <img src="../../../assets/images/close-popup.png" alt="">
+        </div>
+
+        <div class="popup-request">
+            <div class="popup-opponent">
+                <div class="card-header"><h5>Protivnik</h5></div>
+                <div class="profile-picture">
+                    <img src="" alt="">
+                    <h5>{{challengerName}}</h5>
+                    <span>{{challengerName}}</span>
+                </div>
+            </div>
+            <div class="popup-subject">
+                <div class="card-header">
+                    <h5>Predmet</h5>
+                </div>
+                <div class="subjects">
+                    <div class="subject" *ngIf="category == 'math'">
+                        <label for="radio-maths">
+                            <span>Matematika</span><br>
+                            <span><img style="margin-top: 15px;" src="../../../assets/images/maths.png" alt=""></span>
+                        </label>
+                    </div>
+                    <div class="subject" *ngIf="category == 'info'">
+                        <label for="radio-info">
+                            <span>Informatika</span><br>
+                            <span><img style="margin-top: 15px;" src="../../../assets/images/programming.png" alt=""></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-class">
+                <div class="card-header">
+                    <h5>Razred</h5>
+                </div>
+                <div class="class-select">
+                    <select name="classes" id="classes" disabled>
+                        <option [value]="classSelected">
+                            {{ classSelected }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button matTooltip="Prihvati" matTooltipPosition="above" (click)="acceptChallenge()">
+                <img src="../../../assets/images/check.png" alt="">
+            </button>
+            <button matTooltip="Odbij" matTooltipPosition="above" id="red" (click)="rejectChallenge()">
+                <img src="../../../assets/images/cross.png" alt="">
+            </button>
+        </div>
+    </div>
+</div>
