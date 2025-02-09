@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TaskService } from './services/task.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
+import { PusherService } from './services/pusher.service';
 
 @Component({
   selector: 'app-root',
@@ -55,6 +56,8 @@ export class AppComponent implements OnInit, OnDestroy {
           this.subscribeToChallenges(userId);
           
           await this.webSocketService.initPusherService();
+          console.log('PusherService je sada inicijalizovan');
+
           this.subscribeToRejections(userId);
         },
         error: (error) => console.error('Greška pri dohvatanju korisničkih podataka:', error)
@@ -103,6 +106,8 @@ export class AppComponent implements OnInit, OnDestroy {
       challenger_id: this.challengerId, 
       opponent_nickname: this.myNickname 
     };
+
+    console.log("ja sam:", this.myNickname," Probam da posaljem korisniku sa id=", this.challengerId, " da ne zelim da igram.");
   
     this.taskService.rejectChallenge(rejectionData).subscribe({
       next: () => {
@@ -111,6 +116,7 @@ export class AppComponent implements OnInit, OnDestroy {
           panelClass: ['light-snackbar'] 
         });
         this.isPopupOpen = false; 
+        console.log("poslala sam u task service da necu da igram");
       },
       error: (err) => console.error('Greška pri odbijanju izazova:', err)
     });
@@ -118,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeToRejections(userId: number): void {
     this.webSocketService.subscribeToRejections(userId, (data: any) => {
-      this.snackBar.open(`Korisnik ${data.opponentName} je odbio vaš izazov.`, 'OK', {
+      this.snackBar.open(`Korisnik ${data.opponentNickname} je odbio vaš izazov.`, 'OK', {
         duration: 5000,  
         panelClass: ['light-snackbar'] 
       });

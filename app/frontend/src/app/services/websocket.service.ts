@@ -39,8 +39,10 @@ export class WebsocketService {
     }
     
     const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
+    console.log(`Pretplaćen na kanal: private-user.${userId}`);
   
     channel.bind('ChallengeRejected', (data: any) => {
+      console.log('Odbijen izazov primljen preko WebSockets-a:', data);
       callback(data);
     });
   }

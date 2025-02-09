@@ -310,6 +310,8 @@ class UserController extends Controller
             'opponent_nickname' => 'required|string',
         ]);
 
+        Log::info('Podaci o odbijenom izazovu:', $data);
+
         broadcast(new ChallengeRejected($data['challenger_id'], $data['opponent_nickname']));
 
         return response()->json(['message' => 'Challenge rejected']);
