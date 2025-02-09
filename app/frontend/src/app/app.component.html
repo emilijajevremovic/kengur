@@ -57,3 +57,6 @@
         </div>
     </div>
 </div>
+
+<app-popup-ok *ngIf="isPopupOkOpen" [message]="popupOkMessage" (close)="isPopupOkOpen = false"></app-popup-ok>
+

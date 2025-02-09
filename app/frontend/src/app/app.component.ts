@@ -12,6 +12,7 @@ import { TaskService } from './services/task.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
 import { PusherService } from './services/pusher.service';
+import { PopupOkComponent } from './components/popup-ok/popup-ok.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { PusherService } from './services/pusher.service';
     ReactiveFormsModule, 
     CommonModule,
     HttpClientModule,
-    MatTooltipModule
+    MatTooltipModule,
+    PopupOkComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -37,6 +39,9 @@ export class AppComponent implements OnInit, OnDestroy {
   challengerId!: any;
   challengerPicture!: any;
   baseUrl = environment.apiUrl;
+  isPopupOkOpen: boolean = false;
+  popupOkMessage: string = '';
+
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar) {}
 
@@ -124,10 +129,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeToRejections(userId: number): void {
     this.webSocketService.subscribeToRejections(userId, (data: any) => {
-      this.snackBar.open(`Korisnik ${data.opponentNickname} je odbio vaš izazov.`, 'OK', {
-        duration: 5000,  
-        panelClass: ['light-snackbar'] 
-      });
+      this.popupOkMessage = `Korisnik ${data.opponentNickname} je odbio Vaš izazov.`;
+      this.isPopupOkOpen = true;
     });
   }
 
