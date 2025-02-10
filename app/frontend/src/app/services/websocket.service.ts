@@ -39,11 +39,31 @@ export class WebsocketService {
     }
     
     const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
-    console.log(`Pretplaćen na kanal: private-user.${userId}`);
+    //console.log(`Pretplaćen na kanal: private-user.${userId}`);
   
     channel.bind('ChallengeRejected', (data: any) => {
-      console.log('Odbijen izazov primljen preko WebSockets-a:', data);
+      //console.log('Odbijen izazov primljen preko WebSockets-a:', data);
       callback(data);
+    });
+  }
+
+  subscribeToGameStart(userId: number, callback: (data: any) => void) {
+    const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
+
+    //console.log(`Pretplaćen na kanal za pokretanje igre: user.${userId}`);
+
+    channel.bind('GameStarted', (data: any) => {
+        //console.log('GameStarted event primljen:', data);
+        callback(data);
+    });
+  }
+
+  subscribeToPlayerDisconnect(gameId: string, callback: (data: any) => void) {
+    const channel = this.pusherService.subscribeToChannel(`game.${gameId}`);
+
+    channel.bind('PlayerDisconnected', (data: any) => {
+        //console.log('Igrač je napustio meč:', data);
+        callback(data);
     });
   }
 

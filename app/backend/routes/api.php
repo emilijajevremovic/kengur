@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ChallengeController;
+use App\Events\WebSocketDisconnected;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,5 +60,17 @@ Route::middleware('auth:sanctum')->get('/user-id', [UserController::class, 'getU
 Route::middleware('auth:sanctum')->post('/send-challenge', [UserController::class, 'sendChallenge']);
 
 Route::middleware('auth:sanctum')->post('/reject-challenge', [UserController::class, 'rejectChallenge']);
+
+Route::middleware('auth:sanctum')->post('/accept-challenge', [UserController::class, 'acceptChallenge']);
+
+
+Route::post('/test-disconnect', function (Request $request) {
+    $userId = $request->input('user_id');
+    $gameId = $request->input('game_id');
+
+    broadcast(new WebSocketDisconnected($userId, $gameId));
+
+    return response()->json(['message' => 'WebSocketDisconnected event emitted']);
+});
 
 

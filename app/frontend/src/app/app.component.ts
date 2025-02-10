@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserService } from './services/user.service';
@@ -41,9 +41,10 @@ export class AppComponent implements OnInit, OnDestroy {
   baseUrl = environment.apiUrl;
   isPopupOkOpen: boolean = false;
   popupOkMessage: string = '';
+  userId: any;
 
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar, private router: Router) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
@@ -56,14 +57,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
       this.authService.getUserData().subscribe({
         next: async (response) => {
-          const userId = response.user.id;
+          this.userId = response.user.id;
           this.myNickname = response.user.nickname;
-          this.subscribeToChallenges(userId);
+          this.subscribeToChallenges(this.userId);
           
           await this.webSocketService.initPusherService();
-          console.log('PusherService je sada inicijalizovan');
+          //console.log('PusherService je sada inicijalizovan');
 
-          this.subscribeToRejections(userId);
+          this.subscribeToRejections(this.userId);
+          this.subscribeToGameStart(this.userId);
         },
         error: (error) => console.error('Greška pri dohvatanju korisničkih podataka:', error)
       });
@@ -101,7 +103,24 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   acceptChallenge() {
+    if (!this.challengerId) return;
 
+  const challengeData = {
+    challenger_id: this.challengerId,
+    opponent_id: this.userId, 
+    category: this.category,
+    class: this.classSelected
+  };
+
+  //console.log("Šaljemo podatke na backend:", challengeData);
+
+  this.taskService.acceptChallenge(challengeData).subscribe({
+    next: (response) => {
+      //console.log('Izazov prihvaćen, čekamo GameStarted event...', response);
+      this.isPopupOpen = false; 
+    },
+    error: (err) => console.error('Greška pri prihvatanju izazova:', err)
+  });
   }
 
   rejectChallenge(): void {
@@ -111,8 +130,6 @@ export class AppComponent implements OnInit, OnDestroy {
       challenger_id: this.challengerId, 
       opponent_nickname: this.myNickname 
     };
-
-    console.log("ja sam:", this.myNickname," Probam da posaljem korisniku sa id=", this.challengerId, " da ne zelim da igram.");
   
     this.taskService.rejectChallenge(rejectionData).subscribe({
       next: () => {
@@ -121,7 +138,6 @@ export class AppComponent implements OnInit, OnDestroy {
           panelClass: ['light-snackbar'] 
         });
         this.isPopupOpen = false; 
-        console.log("poslala sam u task service da necu da igram");
       },
       error: (err) => console.error('Greška pri odbijanju izazova:', err)
     });
@@ -131,6 +147,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.webSocketService.subscribeToRejections(userId, (data: any) => {
       this.popupOkMessage = `Korisnik ${data.opponentNickname} je odbio Vaš izazov.`;
       this.isPopupOkOpen = true;
+    });
+  }
+
+  subscribeToGameStart(userId: number): void {
+    this.webSocketService.subscribeToGameStart(userId, (data: any) => {
+      //console.log(`Pokretanje igre za Game ID: ${data.gameId}, Kategorija: ${data.category}, Razred: ${data.class}`);
+  
+      const route = data.category === 'math' ? '/game-math/' : '/game-informatics/';
+      this.router.navigate([route, data.gameId]); 
     });
   }
 

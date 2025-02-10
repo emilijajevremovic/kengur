@@ -1,7 +1,8 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { interval } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-game-math',
@@ -21,9 +22,18 @@ export class GameMathComponent implements OnInit {
   endDate: Date | null = null;
   duration: string = '';
 
+  constructor(private websocketService: WebsocketService, private route: ActivatedRoute) {}
+
   ngOnInit() {
     this.startDate = new Date();
-    //console.log('Start time:', this.startDate);
+    
+    this.route.params.subscribe(params => {
+      const gameId = params['gameId'];
+      this.websocketService.subscribeToPlayerDisconnect(gameId, (data: any) => {
+          alert(`Igrač sa ID ${data.userId} je napustio meč!`);
+      });
+    });
+
   }
 
   tasks = [

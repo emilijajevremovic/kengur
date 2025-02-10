@@ -1,10 +1,10 @@
 <router-outlet></router-outlet>
 
-<div class="popup-overlay" (click)="closePopup()" *ngIf="isPopupOpen">
+<div class="popup-overlay" *ngIf="isPopupOpen">
     <div class="popup-content" (click)="$event.stopPropagation()">
-        <div id="close-popup" (click)="closePopup()">
+        <!-- <div id="close-popup" (click)="closePopup()">
             <img src="../../../assets/images/close-popup.png" alt="">
-        </div>
+        </div> -->
 
         <div class="popup-request">
             <div class="popup-opponent">

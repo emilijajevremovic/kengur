@@ -9,30 +9,29 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Support\Facades\Log;
 
-class ChallengeRejected implements ShouldBroadcast
+class WebSocketDisconnected implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $challengerId; 
-    public $opponentNickname; 
+    public $userId;
+    public $gameId;
 
-    public function __construct($challengerId, $opponentNickname)
+    public function __construct($userId, $gameId)
     {
-        $this->challengerId = $challengerId;
-        $this->opponentNickname = $opponentNickname;
-        $this->dontBroadcastToCurrentUser();
+        $this->userId = $userId;
+        $this->gameId = $gameId;
     }
 
     public function broadcastOn()
     {
-        return new Channel('user.' . $this->challengerId);
+        //Log::info("Emitovanje WebSocketDisconnected za user.{$this->userId}, game: {$this->gameId}");
+        return new Channel('game.' . $this->gameId);
     }
 
     public function broadcastAs()
     {
-        return 'ChallengeRejected'; 
+        return 'PlayerDisconnected';
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Events\ChallengeUser;
 use App\Events\ChallengeRejected;
+use App\Events\GameStarted;
 
 class UserController extends Controller
 {
@@ -310,11 +311,31 @@ class UserController extends Controller
             'opponent_nickname' => 'required|string',
         ]);
 
-        Log::info('Podaci o odbijenom izazovu:', $data);
-
         broadcast(new ChallengeRejected($data['challenger_id'], $data['opponent_nickname']));
 
         return response()->json(['message' => 'Challenge rejected']);
     }
+
+    public function acceptChallenge(Request $request)
+    {
+        $data = $request->validate([
+            'challenger_id' => 'required|integer',
+            'opponent_id' => 'required|integer',
+            'category' => 'required|string',
+            'class' => 'required|string',
+        ]);
+
+        $gameId = uniqid(); 
+
+        broadcast(new GameStarted(
+            $gameId,
+            $data['category'],
+            $data['class'],
+            [$data['challenger_id'], $data['opponent_id']]
+        ))->toOthers();
+
+        return response()->json(['message' => 'Game started', 'gameId' => $gameId]);
+    }
+
 
 }
