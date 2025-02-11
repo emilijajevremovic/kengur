@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\GameController;
 use App\Events\WebSocketDisconnected;
 
 /*
@@ -57,11 +58,11 @@ Route::middleware('auth:api')->get('/online-users', [UserController::class, 'get
 
 Route::middleware('auth:sanctum')->get('/user-id', [UserController::class, 'getUserId']);
 
-Route::middleware('auth:sanctum')->post('/send-challenge', [UserController::class, 'sendChallenge']);
+Route::middleware('auth:sanctum')->post('/send-challenge', [GameController::class, 'sendChallenge']);
 
-Route::middleware('auth:sanctum')->post('/reject-challenge', [UserController::class, 'rejectChallenge']);
+Route::middleware('auth:sanctum')->post('/reject-challenge', [GameController::class, 'rejectChallenge']);
 
-Route::middleware('auth:sanctum')->post('/accept-challenge', [UserController::class, 'acceptChallenge']);
+Route::middleware('auth:sanctum')->post('/accept-challenge', [GameController::class, 'acceptChallenge']);
 
 
 Route::post('/test-disconnect', function (Request $request) {
@@ -73,4 +74,5 @@ Route::post('/test-disconnect', function (Request $request) {
     return response()->json(['message' => 'WebSocketDisconnected event emitted']);
 });
 
+Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}', [GameController::class, 'getGameData']);
 

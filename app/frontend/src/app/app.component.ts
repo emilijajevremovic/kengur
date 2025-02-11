@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
 import { PusherService } from './services/pusher.service';
 import { PopupOkComponent } from './components/popup-ok/popup-ok.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -42,18 +43,17 @@ export class AppComponent implements OnInit, OnDestroy {
   isPopupOkOpen: boolean = false;
   popupOkMessage: string = '';
   userId: any;
+  gameId: string | null = null;
 
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar, private router: Router) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar, private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
-      this.userService.setUserOnline().subscribe({
-        // next: (data) => console.log('Korisnik postavljen kao online:', data),
-        // error: (error) => console.error('Greška pri postavljanju online statusa:', error)
-      });
+      this.userService.setUserOnline().subscribe();
 
-      window.addEventListener('beforeunload', this.setUserOffline.bind(this));
+      window.addEventListener('beforeunload', this.handleTabClose);
+      document.addEventListener('visibilitychange', this.handleTabClose);
 
       this.authService.getUserData().subscribe({
         next: async (response) => {
@@ -62,10 +62,13 @@ export class AppComponent implements OnInit, OnDestroy {
           this.subscribeToChallenges(this.userId);
           
           await this.webSocketService.initPusherService();
-          //console.log('PusherService je sada inicijalizovan');
 
           this.subscribeToRejections(this.userId);
           this.subscribeToGameStart(this.userId);
+
+          this.gameId = localStorage.getItem('game_id');
+          // window.addEventListener('beforeunload', this.handleTabClose.bind(this));
+          // document.addEventListener('visibilitychange', this.handleTabClose.bind(this));
         },
         error: (error) => console.error('Greška pri dohvatanju korisničkih podataka:', error)
       });
@@ -75,20 +78,27 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('beforeunload', this.setUserOffline.bind(this));
+      window.removeEventListener('beforeunload', this.handleTabClose);
+      document.removeEventListener('visibilitychange', this.handleTabClose);
+      localStorage.removeItem('gameId');
+      this.setUserOffline();
     }
   }
 
   setUserOffline() {
-    this.userService.setUserOffline().subscribe({
-      // next: (data) => console.log('Korisnik postavljen kao offline:', data),
-      // error: (error) => console.error('Greška pri postavljanju offline statusa:', error)
-    });
+    this.userService.setUserOffline().subscribe();
   }
+
+  handleTabClose = () => {
+    if (localStorage.getItem('gameId')) {
+      localStorage.removeItem('gameId');
+    }
+    const url = `${this.userService.baseUrl}/set-offline`;
+    navigator.sendBeacon(url);
+  };
 
   subscribeToChallenges(userId: number): void {
     this.webSocketService.subscribeToChallenge(userId, (data: any) => {
-      //console.log(data);
       this.challengerName = data.challengerName;
       this.category = data.category;
       this.classSelected = data.class;
@@ -105,22 +115,19 @@ export class AppComponent implements OnInit, OnDestroy {
   acceptChallenge() {
     if (!this.challengerId) return;
 
-  const challengeData = {
-    challenger_id: this.challengerId,
-    opponent_id: this.userId, 
-    category: this.category,
-    class: this.classSelected
-  };
+    const challengeData = {
+      challenger_id: this.challengerId,
+      opponent_id: this.userId, 
+      category: this.category,
+      class: this.classSelected
+    };
 
-  //console.log("Šaljemo podatke na backend:", challengeData);
-
-  this.taskService.acceptChallenge(challengeData).subscribe({
-    next: (response) => {
-      //console.log('Izazov prihvaćen, čekamo GameStarted event...', response);
-      this.isPopupOpen = false; 
-    },
-    error: (err) => console.error('Greška pri prihvatanju izazova:', err)
-  });
+    this.taskService.acceptChallenge(challengeData).subscribe({
+      next: (response) => {
+        this.isPopupOpen = false; 
+      },
+      error: (err) => console.error('Greška pri prihvatanju izazova:', err)
+    });
   }
 
   rejectChallenge(): void {
@@ -152,8 +159,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeToGameStart(userId: number): void {
     this.webSocketService.subscribeToGameStart(userId, (data: any) => {
-      //console.log(`Pokretanje igre za Game ID: ${data.gameId}, Kategorija: ${data.category}, Razred: ${data.class}`);
   
+      localStorage.setItem('gameId', data.gameId);
+      
       const route = data.category === 'math' ? '/game-math/' : '/game-informatics/';
       this.router.navigate([route, data.gameId]); 
     });

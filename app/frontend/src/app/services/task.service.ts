@@ -28,4 +28,8 @@ export class TaskService {
     return this.http.post(`${this.baseUrl}/api/reject-challenge`, rejectionData);
   }
 
+  validateGameAccess(gameId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/game/${gameId}`);
+  }
+
 }

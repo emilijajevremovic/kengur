@@ -1,8 +1,9 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../services/websocket.service';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-game-math',
@@ -11,7 +12,9 @@ import { WebsocketService } from '../../services/websocket.service';
   templateUrl: './game-math.component.html',
   styleUrl: './game-math.component.scss'
 })
-export class GameMathComponent implements OnInit {
+export class GameMathComponent implements OnInit, OnDestroy {
+
+  constructor(private websocketService: WebsocketService, private route: ActivatedRoute, private taskService: TaskService, private router: Router) {}
 
   currentQuestionIndex = 0;
   totalQuestions = 8;
@@ -21,20 +24,6 @@ export class GameMathComponent implements OnInit {
   startDate: Date | null = null;
   endDate: Date | null = null;
   duration: string = '';
-
-  constructor(private websocketService: WebsocketService, private route: ActivatedRoute) {}
-
-  ngOnInit() {
-    this.startDate = new Date();
-    
-    this.route.params.subscribe(params => {
-      const gameId = params['gameId'];
-      this.websocketService.subscribeToPlayerDisconnect(gameId, (data: any) => {
-          alert(`Igrač sa ID ${data.userId} je napustio meč!`);
-      });
-    });
-
-  }
 
   tasks = [
     {
@@ -46,6 +35,40 @@ export class GameMathComponent implements OnInit {
     },
     // Add other tasks here
   ];
+
+  ngOnInit() {
+    this.startDate = new Date();
+    
+    this.route.params.subscribe(params => {
+      const gameId = params['gameId'];
+
+      if (gameId) {
+        this.validateGameAccess(gameId);
+      }
+
+      this.websocketService.subscribeToPlayerDisconnect(gameId, (data: any) => {
+          alert(`Igrač sa ID ${data.userId} je napustio meč!`);
+      });
+    });
+
+    window.onbeforeunload = () => this.ngOnDestroy();
+
+  }
+
+  ngOnDestroy(): void {
+    localStorage.removeItem('gameId');
+  }
+
+  validateGameAccess(gameId: string) {
+    this.taskService.validateGameAccess(gameId).subscribe({
+      next: () => {
+        
+      },
+      error: () => {
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   get currentTask() {
     return this.tasks[this.currentQuestionIndex];
@@ -70,6 +93,7 @@ export class GameMathComponent implements OnInit {
     this.endDate = new Date(); 
     //console.log('End time:', this.endDate);
     this.calculateDuration();
+    localStorage.removeItem('game_id');
   }
 
   calculateDuration(): void {
