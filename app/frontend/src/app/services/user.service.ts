@@ -21,8 +21,8 @@ export class UserService {
     return this.http.post(`${this.baseUrl}/set-online`, {}); 
   }
 
-  setUserOffline(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/set-offline`, {});
+  setUserOffline(token: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/set-offline`, { token });
   }
 
   getOnlineUsers(): Observable<any> {

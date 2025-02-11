@@ -121,7 +121,8 @@ export class ProfileComponent implements OnInit {
   }
 
   setUserOffline() {
-    this.userService.setUserOffline().subscribe({
+    const token = localStorage.getItem('auth_token');
+    this.userService.setUserOffline(token).subscribe({
       next: (data) => console.log('Korisnik postavljen kao offline:', data),
       error: (error) => console.error('Greška pri postavljanju offline statusa:', error)
     });

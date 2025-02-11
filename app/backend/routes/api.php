@@ -52,7 +52,8 @@ Route::middleware('auth:sanctum')->get('/users', [UserController::class, 'getUse
 
 Route::middleware('auth:sanctum')->post('/set-online', [UserController::class, 'setOnline']);
 
-Route::middleware('auth:sanctum')->post('/set-offline', [UserController::class, 'setOffline']);
+// Route::middleware('auth:sanctum')->post('/set-offline', [UserController::class, 'setOffline']);
+Route::post('/set-offline', [UserController::class, 'setOffline']);
 
 Route::middleware('auth:api')->get('/online-users', [UserController::class, 'getOnlineUsers']);
 

@@ -52,8 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
       this.userService.setUserOnline().subscribe();
 
-      window.addEventListener('beforeunload', this.handleTabClose);
-      document.addEventListener('visibilitychange', this.handleTabClose);
+      window.addEventListener('beforeunload', this.handleTabClose.bind(this));
 
       this.authService.getUserData().subscribe({
         next: async (response) => {
@@ -78,24 +77,35 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('beforeunload', this.handleTabClose);
-      document.removeEventListener('visibilitychange', this.handleTabClose);
+      window.removeEventListener('beforeunload', this.handleTabClose.bind(this));
       localStorage.removeItem('gameId');
-      this.setUserOffline();
+      //this.setUserOffline();
     }
-  }
-
-  setUserOffline() {
-    this.userService.setUserOffline().subscribe();
   }
 
   handleTabClose = () => {
-    if (localStorage.getItem('gameId')) {
-      localStorage.removeItem('gameId');
-    }
+    localStorage.setItem("izlaz", "1");
+  
+    localStorage.removeItem('gameId');
+
+    const token = localStorage.getItem('auth_token');
+  
     const url = `${this.userService.baseUrl}/set-offline`;
-    navigator.sendBeacon(url);
+    const body = JSON.stringify({ token });
+    const headers = { type: "application/json" };
+
+    const sent = navigator.sendBeacon(url, new Blob([body], headers));
+    
+    if (sent) {
+        localStorage.setItem("izlaz", "2");
+    } else {
+        localStorage.setItem("error", "sendBeacon nije uspeo!");
+    }
   };
+
+  // setUserOffline() {
+  //   this.userService.setUserOffline().subscribe();
+  // }
 
   subscribeToChallenges(userId: number): void {
     this.webSocketService.subscribeToChallenge(userId, (data: any) => {

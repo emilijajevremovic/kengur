@@ -231,22 +231,53 @@ class UserController extends Controller
     }
 
 
-    public function setOffline()
-    {
-        $user = auth()->user();
+    // public function setOffline()
+    // {
+    //     $user = auth()->user();
 
-        if (!$user) {
-            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+    //     if (!$user) {
+    //         return response()->json(['error' => 'Niste autentifikovani.'], 401);
+    //     }
+
+    //     $onlineUsers = cache()->get('online_users', []);
+    //     $onlineUsers = array_diff($onlineUsers, [$user->id]); 
+
+    //     cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+
+    //     // Emituj događaj kada se korisnik odjavi
+    //     broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+    //     //Log::info("Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
+
+    //     return response()->json(['message' => 'Korisnik je offline']);
+    // }
+
+    public function setOffline(Request $request)
+    {
+        Log::info("📡 Prijem zahteva za setOffline", ['request_data' => $request->all()]);
+        $token = $request->input('token'); // Uzimamo token iz POST tela
+
+        if (!$token) {
+            return response()->json(['error' => 'Token nije poslat.'], 401);
         }
 
-        $onlineUsers = cache()->get('online_users', []);
-        $onlineUsers = array_diff($onlineUsers, [$user->id]); 
+        Log::info("🔍 Pronalaženje korisnika preko tokena...");
+        $accessToken = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
+        
+        if (!$accessToken || !$accessToken->tokenable) {
+            Log::error("❌ Nevažeći token.");
+            return response()->json(['error' => 'Nevažeći token.'], 401);
+        }
 
+        $user = $accessToken->tokenable;
+        Log::info("✅ Pronađen korisnik", ['user_id' => $user->id]);
+
+        $onlineUsers = cache()->get('online_users', []);
+        Log::info("👥 Pre setovanja offline: ", ['onlineUsers' => $onlineUsers]);
+        $onlineUsers = array_diff($onlineUsers, [$user->id]);
         cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
 
-        // Emituj događaj kada se korisnik odjavi
+        Log::info("📡 Emitovanje OnlineUsersUpdated eventa", ['updated_online_users' => $onlineUsers]);
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
-        //Log::info("Emitovan OnlineUsersUpdated event (setOffline)", ['onlineUsers' => $onlineUsers]);
 
         return response()->json(['message' => 'Korisnik je offline']);
     }
