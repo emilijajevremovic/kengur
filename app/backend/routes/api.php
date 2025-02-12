@@ -66,14 +66,19 @@ Route::middleware('auth:sanctum')->post('/reject-challenge', [GameController::cl
 Route::middleware('auth:sanctum')->post('/accept-challenge', [GameController::class, 'acceptChallenge']);
 
 
-Route::post('/test-disconnect', function (Request $request) {
-    $userId = $request->input('user_id');
-    $gameId = $request->input('game_id');
+// Route::post('/test-disconnect', function (Request $request) {
+//     $userId = $request->input('user_id');
+//     $gameId = $request->input('game_id');
 
-    broadcast(new WebSocketDisconnected($userId, $gameId));
+//     broadcast(new WebSocketDisconnected($userId, $gameId));
 
-    return response()->json(['message' => 'WebSocketDisconnected event emitted']);
-});
+//     return response()->json(['message' => 'WebSocketDisconnected event emitted']);
+// });
 
 Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}', [GameController::class, 'getGameData']);
+
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/assign-tasks/{gameId}/{class}', [GameController::class, 'assignTasksToGame']);
+
+Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}/tasks', [GameController::class, 'getGameTasks']);
+
 

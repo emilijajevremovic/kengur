@@ -33,7 +33,6 @@ export class GameMathComponent implements OnInit, OnDestroy {
       answersPictures: [],
       correctAnswerIndex: 3
     },
-    // Add other tasks here
   ];
 
   ngOnInit() {
@@ -61,9 +60,6 @@ export class GameMathComponent implements OnInit, OnDestroy {
 
   validateGameAccess(gameId: string) {
     this.taskService.validateGameAccess(gameId).subscribe({
-      next: () => {
-        
-      },
       error: () => {
         this.router.navigate(['/']);
       }

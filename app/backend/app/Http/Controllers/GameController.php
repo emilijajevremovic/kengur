@@ -10,6 +10,9 @@ use App\Models\Game;
 use App\Events\ChallengeUser;
 use App\Events\GameStarted;
 use App\Events\ChallengeRejected;
+use App\Models\Assignment;
+use App\Models\GameTask;
+use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller 
 {
@@ -111,6 +114,37 @@ class GameController extends Controller
             'class' => $game->class,
             'players' => [$game->player_1, $game->player_2]
         ]);
+    }
+
+    public function assignTasksToGame($gameId, $class)
+    {
+        $tasks = collect();
+
+        foreach ([3, 4, 5] as $level) {
+            $tasksForLevel = Assignment::where('class', (string) $class)
+                ->where('level', $level)
+                ->limit(3)
+                ->get();
+
+            $tasks = $tasks->merge($tasksForLevel);
+        }
+
+        foreach ($tasks as $task) {
+            GameTask::create([
+                'game_id' => $gameId,
+                'task_id' => $task->_id, 
+                'level' => $task->level,
+            ]);
+        }
+
+        return response()->json(['message' => 'Tasks assigned successfully']);
+    }
+
+    public function getGameTasks($gameId)
+    {
+        $tasks = GameTask::where('game_id', $gameId)->get();
+
+        return response()->json($tasks);
     }
 
 }
