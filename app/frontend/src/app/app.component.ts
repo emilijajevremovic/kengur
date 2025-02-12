@@ -79,33 +79,24 @@ export class AppComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       window.removeEventListener('beforeunload', this.handleTabClose.bind(this));
       localStorage.removeItem('gameId');
-      //this.setUserOffline();
     }
   }
 
   handleTabClose = () => {
-    localStorage.setItem("izlaz", "1");
-  
     localStorage.removeItem('gameId');
 
     const token = localStorage.getItem('auth_token');
-  
-    const url = `${this.userService.baseUrl}/set-offline`;
-    const body = JSON.stringify({ token });
-    const headers = { type: "application/json" };
+    if (!token) return;
 
-    const sent = navigator.sendBeacon(url, new Blob([body], headers));
-    
-    if (sent) {
-        localStorage.setItem("izlaz", "2");
-    } else {
-        localStorage.setItem("error", "sendBeacon nije uspeo!");
-    }
+    fetch(`${this.userService.baseUrl}/set-offline`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token }),
+        keepalive: true 
+    })
   };
-
-  // setUserOffline() {
-  //   this.userService.setUserOffline().subscribe();
-  // }
 
   subscribeToChallenges(userId: number): void {
     this.webSocketService.subscribeToChallenge(userId, (data: any) => {
