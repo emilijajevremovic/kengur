@@ -26,7 +26,6 @@ class WebSocketDisconnected implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        //Log::info("Emitovanje WebSocketDisconnected za user.{$this->userId}, game: {$this->gameId}");
         return new Channel('game.' . $this->gameId);
     }
 

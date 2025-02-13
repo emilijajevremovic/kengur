@@ -160,11 +160,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscribeToGameStart(userId: number): void {
     this.webSocketService.subscribeToGameStart(userId, (data: any) => {
-  
-      localStorage.setItem('gameId', data.gameId);
+      const gameId = data.gameId;
+      const gameClass = data.class;
       
-      const route = data.category === 'math' ? '/game-math/' : '/game-informatics/';
-      this.router.navigate([route, data.gameId]); 
+      this.taskService.assignTasksToGame(gameId, gameClass).subscribe({
+        next: () => {
+          localStorage.setItem('gameId', gameId);
+  
+          const route = data.category === 'math' ? '/game-math/' : '/game-informatics/';
+          this.router.navigate([route, gameId]);
+        },
+        error: (err) => console.error(`Greška pri dodeljivanju zadataka:`, err)
+      });
     });
   }
 

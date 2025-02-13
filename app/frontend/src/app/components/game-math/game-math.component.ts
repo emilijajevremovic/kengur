@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../services/websocket.service';
 import { TaskService } from '../../services/task.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-game-math',
@@ -17,23 +18,16 @@ export class GameMathComponent implements OnInit, OnDestroy {
   constructor(private websocketService: WebsocketService, private route: ActivatedRoute, private taskService: TaskService, private router: Router) {}
 
   currentQuestionIndex = 0;
-  totalQuestions = 8;
+  totalQuestions = 9;
   isLastQuestion = false;
   selectedAnswerIndex: number | null = null; 
+  tasks: any[] = [];
+  taskImagesUrl = environment.taskImagesUrl;
 
   startDate: Date | null = null;
   endDate: Date | null = null;
   duration: string = '';
 
-  tasks = [
-    {
-      taskText: 'Koliko ima krugova na slici desno?',
-      taskPicture: 'maths.png',
-      answersText: ['5', '6', '7', '8', '9'],
-      answersPictures: [],
-      correctAnswerIndex: 3
-    },
-  ];
 
   ngOnInit() {
     this.startDate = new Date();
@@ -43,6 +37,15 @@ export class GameMathComponent implements OnInit, OnDestroy {
 
       if (gameId) {
         this.validateGameAccess(gameId);
+        this.taskService.getGameTasks(gameId).subscribe({
+          next: (response) => {
+            //this.tasks = response.tasks;
+            // this.totalQuestions = this.tasks.length;
+            console.log(response);
+            this.tasks = response;
+          },
+          error: (err) => console.error("Greška pri dohvatanju zadataka:", err)
+        });
       }
 
       this.websocketService.subscribeToPlayerDisconnect(gameId, (data: any) => {
@@ -67,7 +70,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
   }
 
   get currentTask() {
-    return this.tasks[this.currentQuestionIndex];
+    return this.tasks && this.tasks.length > 0 ? this.tasks[0] : null;
   }
 
   selectAnswer(index: number) {

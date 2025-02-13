@@ -29,7 +29,6 @@ class GameStarted implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        //Log::info("📡 Emitovanje GameStarted eventa za igrače: " . implode(', ', $this->players));
         return [
             new Channel('user.' . $this->players[0]), 
             new Channel('user.' . $this->players[1])

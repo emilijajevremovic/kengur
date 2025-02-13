@@ -23,7 +23,6 @@ Broadcast::channel('user.{id}', function ($user, $id) {
 });
 
 Broadcast::on('pusher:member_removed', function ($event) {
-    //Log::info("pusher:member_removed triggered", ['event' => $event]);
     if (isset($event['channel']) && strpos($event['channel'], 'game.') === 0) {
         $gameId = str_replace('game.', '', $event['channel']);
         broadcast(new WebSocketDisconnected($event['user_id'], $gameId));

@@ -118,6 +118,12 @@ class GameController extends Controller
 
     public function assignTasksToGame($gameId, $class)
     {
+        $existingTasks = GameTask::where('game_id', $gameId)->exists();
+
+        if ($existingTasks) {
+            return response()->json(['message' => 'Tasks already assigned for this game']);
+        }
+        
         $tasks = collect();
 
         foreach ([3, 4, 5] as $level) {
@@ -144,7 +150,10 @@ class GameController extends Controller
     {
         $tasks = GameTask::where('game_id', $gameId)->get();
 
-        return response()->json($tasks);
+        $taskDetails = Assignment::whereIn('_id', $tasks->pluck('task_id'))->get();
+
+        return response()->json($taskDetails);
     }
+
 
 }

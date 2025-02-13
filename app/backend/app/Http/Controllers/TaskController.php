@@ -15,4 +15,13 @@ class TaskController extends Controller
     
         return response()->json($classes);
     }
+
+    public function getTasksByIds(Request $request)
+    {
+        $taskIds = $request->input('task_ids');
+
+        $tasks = Assignment::whereIn('_id', $taskIds)->get();
+
+        return response()->json($tasks);
+    }
 }

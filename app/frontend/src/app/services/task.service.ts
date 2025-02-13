@@ -32,4 +32,12 @@ export class TaskService {
     return this.http.get(`${this.baseUrl}/api/game/${gameId}`);
   }
 
+  assignTasksToGame(gameId: string, gameClass: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/assign-tasks/${gameId}/${gameClass}`, {});
+  }
+
+  getGameTasks(gameId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/game/${gameId}/tasks`);
+  }  
+
 }

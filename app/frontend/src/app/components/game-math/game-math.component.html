@@ -1,7 +1,6 @@
 <div class="background">
-  <div class="quiz-container">
+  <div class="quiz-container" *ngIf="tasks.length > 0">
 
-    <!-- Question Counter -->
     <div class="question-counter">
       <div class="radio-input">
         <label><input value="value-1" name="value-radio" id="value-1" type="radio" checked=""><span>1</span></label>
@@ -17,17 +16,18 @@
       </div>
     </div>
 
-    <!-- Task Text -->
-    <div class="task-text">
+    <div class="task-text" *ngIf="currentTask; else loading">
       <p>{{ currentTask.taskText }}</p>
     </div>
 
-    <!-- Task Image -->
-    <div class="task-image" *ngIf="currentTask.taskPicture">
-      <img style="height: 200px;" [src]="'assets/images/' + currentTask.taskPicture" alt="Task Image" />
+    <ng-template #loading>
+      <p>Učitavanje zadatka...</p>
+    </ng-template>
+
+    <div class="task-image" *ngIf="currentTask?.taskPicture">
+      <img style="height: 200px;" [src]="taskImagesUrl + '/' + currentTask.class + '/' + currentTask.level + '/' + currentTask.taskPicture" alt="Task Image" />
     </div>
 
-    <!-- Answers -->
     <div class="answers">
       <h5>Ponuđeni odgovori</h5>
       <div class="form-div">
@@ -59,7 +59,6 @@
     </div>
     
 
-    <!-- Next Button -->
     <div class="next-button" *ngIf="!isLastQuestion">
       <button (click)="goToNextQuestion()"><img src="../../../assets/images/check.png" alt=""></button>
     </div>
