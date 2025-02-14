@@ -118,7 +118,11 @@ export class GameMathComponent implements OnInit, OnDestroy {
     const gameId = localStorage.getItem('gameId');
     if (!gameId) return;
 
-    this.taskService.checkAnswers(gameId, this.selectedAnswers).subscribe({
+    const answersData = {
+      answers: this.selectedAnswers
+    };
+
+    this.taskService.checkAnswers(gameId, answersData).subscribe({
       next: (response: any) => {
         alert(`Tačnih odgovora: ${response.correctAnswers} / ${response.totalQuestions}`);
         //this.router.navigate(['/']);
