@@ -56,6 +56,11 @@
     width: 50%;
   }
 
+  .answers {
+    margin: 10px;
+    margin-bottom: 20px;
+  }
+
   .form-div {
     margin: auto;
     display: flex;
@@ -100,12 +105,38 @@
     transition: background-color 0.3s ease;
   }
 
-  .next-button img {
+  .next-button i {
     width: 25px;
     height: 25px;
+    display: inherit;
   }
 
   .next-button button:hover {
+    background-color: #aa1818;
+  }
+
+  .previous-button {
+    margin-right: auto;
+  }
+
+  .previous-button i {
+    width: 25px;
+    height: 25px;
+    display: inherit;
+  }
+  
+  .previous-button button {
+    padding: 10px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 50%;
+    background-color: #134275;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .previous-button button:hover {
     background-color: #aa1818;
   }
 

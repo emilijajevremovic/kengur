@@ -51,7 +51,7 @@
                 [value]="i" 
                 (change)="selectAnswer(i)" 
                 [checked]="selectedAnswerIndex === i" />
-              <img [src]="'assets/images/' + answer" alt="Answer Image" />
+              <img [src]="taskImagesUrl + '/' + currentTask.class + '/' + currentTask.level + '/' + answer" alt="Answer Image" />
             </label>
           </ng-container>
         </form>
@@ -59,11 +59,16 @@
     </div>
     
 
-    <div class="next-button" *ngIf="!isLastQuestion">
-      <button (click)="goToNextQuestion()"><img src="../../../assets/images/check.png" alt=""></button>
-    </div>
-    <div class="done-button" *ngIf="isLastQuestion">
-      <button (click)="endQuiz()">Gotovo</button>
+    <div style="display: flex;">
+      <div class="previous-button" *ngIf="currentQuestionIndex > 0">
+        <button (click)="goToPreviousQuestion()" matTooltip="Prethodno pitanje" matTooltipPosition="above"><i class="bi bi-chevron-left"></i></button>
+      </div>
+      <div class="next-button" *ngIf="!isLastQuestion">
+        <button (click)="goToNextQuestion()" matTooltip="Sledeće pitanje" matTooltipPosition="above"><i class="bi bi-chevron-right"></i></button>
+      </div>
+      <div class="done-button" *ngIf="isLastQuestion" matTooltip="Završi kviz" matTooltipPosition="above">
+        <button (click)="endQuiz()"><img src="../../../assets/images/check.png" alt=""></button>
+      </div>
     </div>
   </div>
 </div>

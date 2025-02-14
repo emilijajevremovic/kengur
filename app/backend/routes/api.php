@@ -61,5 +61,7 @@ Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}/tas
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/tasks-by-ids', [TaskController::class, 'getTasksByIds']);
 
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/check-answers/{gameId}', [GameController::class, 'checkAnswers']);
+
 
 

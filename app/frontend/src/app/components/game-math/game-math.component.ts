@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../services/websocket.service';
 import { TaskService } from '../../services/task.service';
 import { environment } from '../../../environments/environment';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-game-math',
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule, RouterModule],
+  imports: [NgIf, NgFor, CommonModule, RouterModule, MatTooltipModule],
   templateUrl: './game-math.component.html',
   styleUrl: './game-math.component.scss'
 })
@@ -23,6 +24,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
   selectedAnswerIndex: number | null = null; 
   tasks: any[] = [];
   taskImagesUrl = environment.taskImagesUrl;
+  selectedAnswers: { taskId: string, selectedIndex: number | null }[] = [];
 
   startDate: Date | null = null;
   endDate: Date | null = null;
@@ -39,9 +41,6 @@ export class GameMathComponent implements OnInit, OnDestroy {
         this.validateGameAccess(gameId);
         this.taskService.getGameTasks(gameId).subscribe({
           next: (response) => {
-            //this.tasks = response.tasks;
-            // this.totalQuestions = this.tasks.length;
-            console.log(response);
             this.tasks = response;
           },
           error: (err) => console.error("Greška pri dohvatanju zadataka:", err)
@@ -70,28 +69,63 @@ export class GameMathComponent implements OnInit, OnDestroy {
   }
 
   get currentTask() {
-    return this.tasks && this.tasks.length > 0 ? this.tasks[0] : null;
+    return this.tasks && this.tasks.length > 0 ? this.tasks[this.currentQuestionIndex] : null;
   }
 
   selectAnswer(index: number) {
     this.selectedAnswerIndex = index; 
-    //console.log('Selected answer index:', index);
+    
+    const currentTaskId = this.tasks[this.currentQuestionIndex]._id;
+
+    const existingAnswer = this.selectedAnswers.find(a => a.taskId === currentTaskId);
+    
+    if (existingAnswer) {
+      existingAnswer.selectedIndex = index; 
+    } else {
+      this.selectedAnswers.push({ taskId: currentTaskId, selectedIndex: index }); 
+    }
+
   }
 
   goToNextQuestion() {
     if (this.currentQuestionIndex < this.tasks.length - 1) {
       this.currentQuestionIndex++;
-      this.selectedAnswerIndex = null; 
+      this.restoreSelectedAnswer();
     } 
-    else {
-      this.endQuiz();
+    if (this.currentQuestionIndex == this.tasks.length - 1){
+      this.isLastQuestion = true;
     }
+  }
+
+  goToPreviousQuestion() {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+      this.isLastQuestion = false;
+      this.restoreSelectedAnswer();
+    } 
+  }
+
+  restoreSelectedAnswer() {
+    const currentTaskId = this.tasks[this.currentQuestionIndex]._id;
+    const savedAnswer = this.selectedAnswers.find(a => a.taskId === currentTaskId);
+    this.selectedAnswerIndex = savedAnswer ? savedAnswer.selectedIndex : null;
   }
 
   endQuiz() {
     this.endDate = new Date(); 
-    //console.log('End time:', this.endDate);
     this.calculateDuration();
+
+    const gameId = localStorage.getItem('gameId');
+    if (!gameId) return;
+
+    this.taskService.checkAnswers(gameId, this.selectedAnswers).subscribe({
+      next: (response: any) => {
+        alert(`Tačnih odgovora: ${response.correctAnswers} / ${response.totalQuestions}`);
+        //this.router.navigate(['/']);
+      },
+      error: (err) => console.error("Greška pri slanju odgovora:", err)
+    });
+    
     localStorage.removeItem('game_id');
   }
 

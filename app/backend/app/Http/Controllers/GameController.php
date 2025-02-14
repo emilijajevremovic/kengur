@@ -155,5 +155,31 @@ class GameController extends Controller
         return response()->json($taskDetails);
     }
 
+    public function checkAnswers(Request $request)
+    {
+        $data = $request->validate([
+            'answers' => 'required|array',
+            'answers.*.taskId' => 'required|string',
+            'answers.*.selectedIndex' => 'required|integer',
+        ]);
+
+        $correctAnswers = 0;
+        $totalQuestions = 9;
+
+        foreach ($data['answers'] as $answer) {
+            $task = Assignment::find($answer['taskId']);
+
+            if ($task && $task->correctAnswerIndex == $answer['selectedIndex']) {
+                $correctAnswers++;
+            }
+        }
+
+        return response()->json([
+            'message' => 'Quiz finished',
+            'correctAnswers' => $correctAnswers,
+            'totalQuestions' => $totalQuestions
+        ]);
+    }
+
 
 }

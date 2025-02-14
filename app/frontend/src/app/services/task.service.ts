@@ -40,4 +40,8 @@ export class TaskService {
     return this.http.get(`${this.baseUrl}/api/game/${gameId}/tasks`);
   }  
 
+  checkAnswers(gameId: string, answersData: any) {
+    return this.http.post(`${environment.apiUrl}/api/check-answers/${gameId}`, answersData);
+  }
+
 }
