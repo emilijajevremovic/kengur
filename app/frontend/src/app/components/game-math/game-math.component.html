@@ -3,21 +3,23 @@
 
     <div class="question-counter">
       <div class="radio-input">
-        <label><input value="value-1" name="value-radio" id="value-1" type="radio" checked=""><span>1</span></label>
-        <label><input value="value-2" name="value-radio" id="value-2" type="radio"><span>2</span></label>
-        <label><input value="value-3" name="value-radio" id="value-3" type="radio"><span>3</span></label>
-        <label><input value="value-4" name="value-radio" id="value-4" type="radio"><span>4</span></label>
-        <label><input value="value-5" name="value-radio" id="value-5" type="radio"><span>5</span></label>
-        <label><input value="value-6" name="value-radio" id="value-6" type="radio"><span>6</span></label>
-        <label><input value="value-7" name="value-radio" id="value-7" type="radio"><span>7</span></label>
-        <label><input value="value-8" name="value-radio" id="value-8" type="radio"><span>8</span></label>
-        <label><input value="value-9" name="value-radio" id="value-9" type="radio"><span>9</span></label>
+        <label *ngFor="let task of tasks; let i = index">
+          <input 
+            type="radio" 
+            name="value-radio" 
+            [value]="i" 
+            [checked]="currentQuestionIndex === i"
+            (change)="goToQuestion(i)" 
+          />
+          <span>{{ i + 1 }}</span>
+        </label>
         <span class="selection"></span>
       </div>
     </div>
+    
 
     <div class="task-text" *ngIf="currentTask; else loading">
-      <p>{{ currentTask.taskText }}</p>
+      <p style="width: 70%; margin: auto;">{{ currentTask.taskText }}</p>
     </div>
 
     <ng-template #loading>

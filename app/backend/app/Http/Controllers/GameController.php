@@ -127,10 +127,12 @@ class GameController extends Controller
         $tasks = collect();
 
         foreach ([3, 4, 5] as $level) {
-            $tasksForLevel = Assignment::where('class', (string) $class)
-                ->where('level', $level)
-                ->limit(3)
-                ->get();
+            $tasksForLevel = Assignment::raw(function ($collection) use ($class, $level) {
+                return $collection->aggregate([
+                    ['$match' => ['class' => (string) $class, 'level' => $level]],
+                    ['$sample' => ['size' => 3]] 
+                ]);
+            });
 
             $tasks = $tasks->merge($tasksForLevel);
         }
@@ -152,7 +154,9 @@ class GameController extends Controller
 
         $taskDetails = Assignment::whereIn('_id', $tasks->pluck('task_id'))->get();
 
-        return response()->json($taskDetails);
+        $sortedTasks = $taskDetails->sortBy('level')->values();
+
+        return response()->json($sortedTasks);
     }
 
     public function checkAnswers(Request $request)

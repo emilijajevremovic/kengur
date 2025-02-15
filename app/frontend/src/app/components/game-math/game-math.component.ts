@@ -57,7 +57,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    localStorage.removeItem('gameId');
+    //localStorage.removeItem('gameId');
   }
 
   validateGameAccess(gameId: string) {
@@ -131,6 +131,12 @@ export class GameMathComponent implements OnInit, OnDestroy {
     });
     
     localStorage.removeItem('game_id');
+  }
+
+  goToQuestion(index: number) {
+    if (index >= 0 && index < this.tasks.length) {
+      this.currentQuestionIndex = index;
+    }
   }
 
   calculateDuration(): void {

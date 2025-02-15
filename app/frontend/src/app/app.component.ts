@@ -78,12 +78,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
       window.removeEventListener('beforeunload', this.handleTabClose.bind(this));
-      localStorage.removeItem('gameId');
+      //localStorage.removeItem('gameId');
     }
   }
 
   handleTabClose = () => {
-    localStorage.removeItem('gameId');
+    //localStorage.removeItem('gameId');
 
     const token = localStorage.getItem('auth_token');
     if (!token) return;
