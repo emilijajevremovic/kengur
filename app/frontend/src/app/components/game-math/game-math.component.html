@@ -35,7 +35,7 @@
       <div class="form-div">
         <form>
           <ng-container *ngIf="currentTask.answersText.length > 0">
-            <label *ngFor="let answer of currentTask.answersText; let i = index">
+            <label *ngFor="let answer of currentTask.answersText; let i = index" style="height: fit-content; width: fit-content;">
               <input 
                 type="radio" 
                 name="answers" 
@@ -46,7 +46,7 @@
             </label>
           </ng-container>
           <ng-container *ngIf="currentTask.answersPictures.length > 0">
-            <label *ngFor="let answer of currentTask.answersPictures; let i = index">
+            <label *ngFor="let answer of currentTask.answersPictures; let i = index" style="height: fit-content; width: fit-content;">
               <input 
                 type="radio" 
                 name="answers" 

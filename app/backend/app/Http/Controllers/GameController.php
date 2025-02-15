@@ -162,19 +162,21 @@ class GameController extends Controller
     public function checkAnswers(Request $request)
     {
         $data = $request->validate([
-            'answers' => 'required|array',
-            'answers.*.taskId' => 'required|string',
-            'answers.*.selectedIndex' => 'required|integer',
+            'answers' => 'array',
+            'answers.*.taskId' => 'string',
+            'answers.*.selectedIndex' => 'integer',
         ]);
 
         $correctAnswers = 0;
         $totalQuestions = 9;
 
-        foreach ($data['answers'] as $answer) {
-            $task = Assignment::find($answer['taskId']);
-
-            if ($task && $task->correctAnswerIndex == $answer['selectedIndex']) {
-                $correctAnswers++;
+        if (!empty($data['answers'])) {
+            foreach ($data['answers'] as $answer) {
+                $task = Assignment::find($answer['taskId']);
+    
+                if ($task && $task->correctAnswerIndex == $answer['selectedIndex']) {
+                    $correctAnswers++;
+                }
             }
         }
 

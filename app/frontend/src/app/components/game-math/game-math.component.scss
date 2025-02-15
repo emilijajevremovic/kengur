@@ -54,7 +54,8 @@
   }
 
   .answers form {
-    width: 50%;
+    //width: 50%;
+    width: fit-content;
   }
 
   .answers {
@@ -212,7 +213,7 @@
 }
 
 .radio-input label:has(input:checked) ~ .selection {
-  background-color: rgb(11 117 223);
+  background-color: #134275;
   display: inline-block;
 }
 
