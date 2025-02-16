@@ -63,5 +63,13 @@ Route::middleware(['auth:sanctum', 'game.participant'])->post('/tasks-by-ids', [
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/check-answers/{gameId}', [GameController::class, 'checkAnswers']);
 
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/submit-game-result/{gameId}', [GameController::class, 'submitGameResult']);
+
+Route::middleware(['auth:sanctum', 'game.participant'])->get('/game-results/{gameId}', [GameController::class, 'getGameResults']);
+
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/finish-game/{gameId}', [GameController::class, 'finishGame']);
+
+
+
 
 

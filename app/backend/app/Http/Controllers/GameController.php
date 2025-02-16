@@ -13,6 +13,8 @@ use App\Events\ChallengeRejected;
 use App\Models\Assignment;
 use App\Models\GameTask;
 use Illuminate\Support\Facades\Log;
+use App\Events\GameFinished;
+use App\Models\GameResult;
 
 class GameController extends Controller 
 {
@@ -159,7 +161,7 @@ class GameController extends Controller
         return response()->json($sortedTasks);
     }
 
-    public function checkAnswers(Request $request)
+    public function checkAnswers(Request $request, $gameId)
     {
         $data = $request->validate([
             'answers' => 'array',
@@ -180,6 +182,8 @@ class GameController extends Controller
             }
         }
 
+        broadcast(new GameFinished($gameId, Auth::id(), $correctAnswers, $totalQuestions));
+
         return response()->json([
             'message' => 'Quiz finished',
             'correctAnswers' => $correctAnswers,
@@ -187,5 +191,55 @@ class GameController extends Controller
         ]);
     }
 
+    public function submitGameResult(Request $request, $gameId)
+    {
+        $data = $request->validate([
+            'correctAnswers' => 'required|integer',
+            'duration' => 'required|string'
+        ]);
+
+        $userId = Auth::id();
+
+        $gameResult = GameResult::updateOrCreate(
+            ['game_id' => $gameId, 'user_id' => $userId],
+            ['correct_answers' => $data['correctAnswers'], 'duration' => $data['duration']]
+        );
+
+        return response()->json(['message' => 'Result saved successfully']);
+    }
+
+    public function getGameResults($gameId)
+    {
+        $results = GameResult::where('game_id', $gameId)->get();
+        return response()->json($results);
+    }
+
+    public function finishGame(Request $request, $gameId)
+    {
+        $userId = Auth::id();
+        
+        $data = $request->validate([
+            'correctAnswers' => 'required|integer',
+            'totalQuestions' => 'required|integer',
+            'timeTaken' => 'required|integer',
+        ]);
+
+        $game = Game::where('game_id', $gameId)->first();
+
+        if (!$game) {
+            return response()->json(['error' => 'Game not found'], 404);
+        }
+
+        $playerResults = [
+            'userId' => $userId,
+            'correctAnswers' => $data['correctAnswers'],
+            'totalQuestions' => $data['totalQuestions'],
+            'timeTaken' => $data['timeTaken'],
+        ];
+
+        broadcast(new GameFinished($gameId, $playerResults));
+
+        return response()->json(['message' => 'Game results sent']);
+    }
 
 }

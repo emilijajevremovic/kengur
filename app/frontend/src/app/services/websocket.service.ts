@@ -67,4 +67,12 @@ export class WebsocketService {
     });
   }
 
+  subscribeToGameFinish(gameId: string, callback: (data: any) => void) {
+    const channel = this.pusherService.subscribeToChannel(`game-results.${gameId}`);
+
+    channel.bind('GameFinished', (data: any) => {
+        callback(data);
+    });
+}
+
 }

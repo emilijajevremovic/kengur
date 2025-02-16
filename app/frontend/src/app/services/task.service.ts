@@ -41,7 +41,19 @@ export class TaskService {
   }  
 
   checkAnswers(gameId: string, answersData: any) {
-    return this.http.post(`${environment.apiUrl}/api/check-answers/${gameId}`, answersData);
+    return this.http.post(`${this.baseUrl}/api/check-answers/${gameId}`, answersData);
+  }
+
+  submitGameResult(resultData: any, gameId: string) {
+    return this.http.post(`${this.baseUrl}/api/submit-game-result/${gameId}`, resultData);
+  }
+
+  getGameResults(gameId: string) {
+    return this.http.get(`${this.baseUrl}/api/game-results/${gameId}`);
+  }
+
+  finishGame(gameId: string, resultData: any) {
+    return this.http.post(`${this.baseUrl}/api/finish-game/${gameId}`, resultData);
   }
 
 }

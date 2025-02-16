@@ -6,6 +6,7 @@ import { WebsocketService } from '../../services/websocket.service';
 import { TaskService } from '../../services/task.service';
 import { environment } from '../../../environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-game-math',
@@ -124,8 +125,20 @@ export class GameMathComponent implements OnInit, OnDestroy {
 
     this.taskService.checkAnswers(gameId, answersData).subscribe({
       next: (response: any) => {
-        alert(`Tačnih odgovora: ${response.correctAnswers} / ${response.totalQuestions}`);
+        //alert(`Tačnih odgovora: ${response.correctAnswers} / ${response.totalQuestions}`);
         //this.router.navigate(['/']);
+        const resultData = {
+          correctAnswers: response.correctAnswers, 
+          duration: this.duration
+        };
+
+        this.taskService.submitGameResult(resultData, gameId).subscribe({
+          next: () => {
+            this.router.navigate(['/game-result', gameId]); 
+          },
+          error: (err) => console.error("Greška pri slanju rezultata:", err)
+        });
+
       },
       error: (err) => console.error("Greška pri slanju odgovora:", err)
     });

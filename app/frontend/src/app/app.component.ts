@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
   baseUrl = environment.apiUrl;
   isPopupOkOpen: boolean = false;
   popupOkMessage: string = '';
-  userId: any;
+  public userId: any;
   gameId: string | null = null;
 
 
