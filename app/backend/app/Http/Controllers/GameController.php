@@ -205,7 +205,7 @@ class GameController extends Controller
             ['correct_answers' => $data['correctAnswers'], 'duration' => $data['duration']]
         );
 
-        return response()->json(['message' => 'Result saved successfully']);
+        return $this->deleteGameInfo($gameId);
     }
 
     public function getGameResults($gameId)
@@ -240,6 +240,20 @@ class GameController extends Controller
         broadcast(new GameFinished($gameId, $playerResults));
 
         return response()->json(['message' => 'Game results sent']);
+    }
+
+    public function deleteGameInfo($gameId)
+    {
+        $playersFinished = GameResult::where('game_id', $gameId)->count();
+
+        if ($playersFinished >= 2) { 
+            GameTask::where('game_id', $gameId)->delete();
+            Game::where('game_id', $gameId)->delete();
+            
+            return response()->json(['message' => 'Game deleted successfully']);
+        }
+
+        return response()->json(['message' => 'Waiting for the second player']);
     }
 
 }

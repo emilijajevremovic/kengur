@@ -27,7 +27,7 @@
     </ng-template>
 
     <div class="task-image" *ngIf="currentTask?.taskPicture">
-      <img style="height: 200px;" [src]="taskImagesUrl + '/' + currentTask.class + '/' + currentTask.level + '/' + currentTask.taskPicture" alt="Task Image" />
+      <img style="height: 200px;" [src]="getSafeImageUrl(currentTask.taskPicture)" alt="Task Image" />
     </div>
 
     <div class="answers">
@@ -53,7 +53,7 @@
                 [value]="i" 
                 (change)="selectAnswer(i)" 
                 [checked]="selectedAnswerIndex === i" />
-              <img [src]="taskImagesUrl + '/' + currentTask.class + '/' + currentTask.level + '/' + answer" alt="Answer Image" />
+              <img [src]="getSafeImageUrl(answer)" alt="Answer Image" />
             </label>
           </ng-container>
         </form>

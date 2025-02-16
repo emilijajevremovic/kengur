@@ -176,4 +176,10 @@ export class GameMathComponent implements OnInit, OnDestroy {
   formatNumber(time: number): string {
     return time < 10 ? '0' + time : time.toString();
   }
+
+  getSafeImageUrl(fileName: string): string {
+    if (!fileName) return ''; 
+  
+    return encodeURI(`assets/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`);
+  }
 }
