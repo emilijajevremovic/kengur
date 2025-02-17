@@ -21,13 +21,6 @@ export class GameResultComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const gameId = params['gameId'];
-  
-      if (gameId) {
-        this.websocketService.subscribeToGameFinish(gameId, (data: any) => {
-          console.log('Rezultat meča:', data);
-          this.matchResults = data;
-        });
-      }
     });
   }
 

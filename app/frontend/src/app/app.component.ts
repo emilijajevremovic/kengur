@@ -44,6 +44,9 @@ export class AppComponent implements OnInit, OnDestroy {
   popupOkMessage: string = '';
   public userId: any;
   gameId: string | null = null;
+  isResultPopupOpen: boolean = false;
+  gameResultData: any = null;
+  opponentData: any = null;
 
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar, private router: Router, private http: HttpClient) {}
@@ -59,6 +62,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.userId = response.user.id;
           this.myNickname = response.user.nickname;
           this.subscribeToChallenges(this.userId);
+          //this.subscribeToGameFinish();
           
           await this.webSocketService.initPusherService();
 
@@ -80,6 +84,20 @@ export class AppComponent implements OnInit, OnDestroy {
       window.removeEventListener('beforeunload', this.handleTabClose.bind(this));
       //localStorage.removeItem('gameId');
     }
+  }
+
+  subscribeToGameFinish(): void {
+    this.webSocketService.subscribeToGameFinish((data: any) => {
+      if (data.gameId === this.gameId) {
+        this.gameResultData = {
+          correctAnswers: data.correctAnswers,
+          totalQuestions: data.totalQuestions,
+          duration: data.duration,
+          opponentData: data.opponent
+        };
+        this.isResultPopupOpen = true;
+      }
+    });
   }
 
   handleTabClose = () => {
@@ -111,6 +129,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   closePopup() {
     this.isPopupOpen = false; 
+  }
+
+  closeResultPopup(): void {
+    this.isResultPopupOpen = false;
   }
 
   acceptChallenge() {

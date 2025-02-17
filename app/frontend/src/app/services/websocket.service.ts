@@ -67,12 +67,13 @@ export class WebsocketService {
     });
   }
 
-  subscribeToGameFinish(gameId: string, callback: (data: any) => void) {
-    const channel = this.pusherService.subscribeToChannel(`game-results.${gameId}`);
-
+  subscribeToGameFinish(callback: (data: any) => void) {
+    const channel = this.pusherService.subscribeToChannel('game-finish');
+  
     channel.bind('GameFinished', (data: any) => {
-        callback(data);
+      console.log('Igra završena:', data);
+      callback(data);
     });
-}
+  }
 
 }

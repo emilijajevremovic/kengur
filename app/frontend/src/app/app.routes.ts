@@ -17,7 +17,7 @@ export const routes: Routes = [
     { path: 'lobby', component: FriendRequestsComponent, canActivate: [authGuard] }, 
     { path: 'game-math/:gameId', component: GameMathComponent, canActivate: [authGuard] }, 
     { path: 'game-informatics/:gameId', component: GameInfComponent, canActivate: [authGuard] }, 
-    { path: 'game-result', component: GameResultComponent,canActivate: [authGuard] }, 
+    // { path: 'game-result', component: GameResultComponent,canActivate: [authGuard] }, 
     { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }, 
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [loggedGuard] }, 
     { path: 'new-password/:token', component: NewPasswordComponent },
