@@ -1,25 +1,23 @@
 <div class="background">
   <div class="quiz-container" *ngIf="tasks.length > 0">
-
     <div class="question-counter">
       <div class="radio-input">
         <label *ngFor="let task of tasks; let i = index">
-          <input 
-            type="radio" 
-            name="value-radio" 
-            [value]="i" 
+          <input
+            type="radio"
+            name="value-radio"
+            [value]="i"
             [checked]="currentQuestionIndex === i"
-            (change)="goToQuestion(i)" 
+            (change)="goToQuestion(i)"
           />
           <span>{{ i + 1 }}</span>
         </label>
         <span class="selection"></span>
       </div>
     </div>
-    
 
     <div class="task-text" *ngIf="currentTask; else loading">
-      <p style="width: 70%; margin: auto;">{{ currentTask.taskText }}</p>
+      <p style="width: 70%; margin: auto">{{ currentTask.taskText }}</p>
     </div>
 
     <ng-template #loading>
@@ -27,7 +25,11 @@
     </ng-template>
 
     <div class="task-image" *ngIf="currentTask?.taskPicture">
-      <img style="height: 200px;" [src]="getSafeImageUrl(currentTask.taskPicture)" alt="Task Image" />
+      <img
+        style="height: 200px"
+        [src]="getSafeImageUrl(currentTask.taskPicture)"
+        alt="Task Image"
+      />
     </div>
 
     <div class="answers">
@@ -35,42 +37,77 @@
       <div class="form-div">
         <form>
           <ng-container *ngIf="currentTask.answersText.length > 0">
-            <label *ngFor="let answer of currentTask.answersText; let i = index" style="height: fit-content; width: fit-content;">
-              <input 
-                type="radio" 
-                name="answers" 
-                [value]="i" 
-                (change)="selectAnswer(i)" 
-                [checked]="selectedAnswerIndex === i" />
+            <label
+              *ngFor="let answer of currentTask.answersText; let i = index"
+              style="height: fit-content; width: fit-content"
+            >
+              <input
+                type="radio"
+                name="answers"
+                [value]="i"
+                (change)="selectAnswer(i)"
+                [checked]="selectedAnswerIndex === i"
+              />
               {{ answer }}
             </label>
           </ng-container>
           <ng-container *ngIf="currentTask.answersPictures.length > 0">
-            <label *ngFor="let answer of currentTask.answersPictures; let i = index" style="height: fit-content; width: fit-content;">
-              <input 
-                type="radio" 
-                name="answers" 
-                [value]="i" 
-                (change)="selectAnswer(i)" 
-                [checked]="selectedAnswerIndex === i" />
+            <label
+              *ngFor="let answer of currentTask.answersPictures; let i = index"
+              style="height: fit-content; width: fit-content"
+            >
+              <input
+                type="radio"
+                name="answers"
+                [value]="i"
+                (change)="selectAnswer(i)"
+                [checked]="selectedAnswerIndex === i"
+              />
               <img [src]="getSafeImageUrl(answer)" alt="Answer Image" />
             </label>
           </ng-container>
         </form>
       </div>
     </div>
-    
 
-    <div style="display: flex;">
+    <div style="display: flex">
       <div class="previous-button" *ngIf="currentQuestionIndex > 0">
-        <button (click)="goToPreviousQuestion()" matTooltip="Prethodno pitanje" matTooltipPosition="above"><i class="bi bi-chevron-left"></i></button>
+        <button
+          (click)="goToPreviousQuestion()"
+          matTooltip="Prethodno pitanje"
+          matTooltipPosition="above"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
       </div>
       <div class="next-button" *ngIf="!isLastQuestion">
-        <button (click)="goToNextQuestion()" matTooltip="Sledeće pitanje" matTooltipPosition="above"><i class="bi bi-chevron-right"></i></button>
+        <button
+          (click)="goToNextQuestion()"
+          matTooltip="Sledeće pitanje"
+          matTooltipPosition="above"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
-      <div class="done-button" *ngIf="isLastQuestion" matTooltip="Završi kviz" matTooltipPosition="above">
-        <button (click)="endQuiz()"><img src="../../../assets/images/check.png" alt=""></button>
+      <div
+        class="done-button"
+        *ngIf="isLastQuestion"
+        matTooltip="Završi kviz"
+        matTooltipPosition="above"
+      >
+        <button (click)="popupYesNo()">
+          <img src="../../../assets/images/check.png" alt="" />
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+<app-popup-yes-no
+  *ngIf="showPopupYesNo"
+  [message]="
+    'Da li ste sigurni da želite da završite kviz? Rezultat će se prikazati nakon što oba igrača završe igru.'
+  "
+  (close)="showPopupYesNo = false"
+  (confirm)="endQuiz()"
+></app-popup-yes-no>

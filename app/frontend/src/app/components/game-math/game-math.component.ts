@@ -7,11 +7,19 @@ import { TaskService } from '../../services/task.service';
 import { environment } from '../../../environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from '../../app.component';
+import { PopupYesNoComponent } from '../../popup-yes-no/popup-yes-no.component';
 
 @Component({
   selector: 'app-game-math',
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule, RouterModule, MatTooltipModule],
+  imports: [
+    NgIf,
+    NgFor,
+    CommonModule,
+    RouterModule,
+    MatTooltipModule,
+    PopupYesNoComponent,
+  ],
   templateUrl: './game-math.component.html',
   styleUrl: './game-math.component.scss',
 })
@@ -30,6 +38,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
   tasks: any[] = [];
   taskImagesUrl = environment.taskImagesUrl;
   selectedAnswers: { taskId: string; selectedIndex: number | null }[] = [];
+  showPopupYesNo: boolean = false;
 
   startDate: Date | null = null;
   endDate: Date | null = null;
@@ -122,7 +131,12 @@ export class GameMathComponent implements OnInit, OnDestroy {
     this.selectedAnswerIndex = savedAnswer ? savedAnswer.selectedIndex : null;
   }
 
+  popupYesNo() {
+    this.showPopupYesNo = true;
+  }
+
   endQuiz() {
+    //console.log('endQuiz() je pozvan');
     this.endDate = new Date();
     this.calculateDuration();
 
