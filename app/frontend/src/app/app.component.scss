@@ -1,320 +1,323 @@
 .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .popup-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    height: 60%;
-    text-align: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  height: 60%;
+  text-align: center;
 }
 
 #close-popup {
-    cursor: pointer;
-    width: fit-content;
-    margin-left: auto;
-    margin-bottom: 10px;
+  cursor: pointer;
+  width: fit-content;
+  margin-left: auto;
+  margin-bottom: 10px;
 }
 
 #close-popup img {
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
 }
 
 .popup-request {
-    margin-top: 5%;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    height: 60%;
+  margin-top: 5%;
+  margin-bottom: 1%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 60%;
 }
 
 #accept-button {
-    padding: 10px 10px;
-    font-size: 14px;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 15px;
-    background-color: #0C3C5C;
-    color: white;
-    cursor: pointer;
+  padding: 10px 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 15px;
+  background-color: #0c3c5c;
+  color: white;
+  cursor: pointer;
 }
 
 #accept-button:hover {
-    background-color: #aa1818;
+  background-color: #aa1818;
 }
 
 #decline-button {
-    padding: 10px 10px;
-    font-size: 14px;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 15px;
-    background-color: #aa1818;
-    color: white;
-    cursor: pointer;
+  padding: 10px 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 15px;
+  background-color: #aa1818;
+  color: white;
+  cursor: pointer;
 }
 
 #decline-button:hover {
-    background-color: #0C3C5C;
+  background-color: #0c3c5c;
 }
 
 .popup-opponent {
-    background-color: white;
-    border-radius: 15px;
-    border: 2px solid  #1d4e70;
-    height: 100%;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding-bottom: 2%;
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid #1d4e70;
+  height: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 2%;
 }
 
 .popup-opponent:hover {
-    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2),
+    -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
 .profile-picture {
-    height: 80%;
+  height: 80%;
 }
 
 .profile-picture img {
-    width: 50%;
-    border-radius: 50%;
+  width: 50%;
+  border-radius: 50%;
 }
 
 .card-header {
-    margin-bottom: auto;
-    margin-top: 2%;
+  margin-bottom: auto;
+  margin-top: 2%;
 }
 
 .popup-subject {
-    background-color: white;
-    border-radius: 15px;
-    border: 2px solid  #1d4e70;
-    height: 100%;
-    width: 20%;
-    min-width: fit-content;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid #1d4e70;
+  height: 100%;
+  width: 20%;
+  min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .popup-subject:hover {
-    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2),
+    -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
 .subjects {
-    display: flex;
-    flex-direction: row;
-    justify-items: center;
-    align-items: baseline;
-    height: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: baseline;
+  height: 80%;
 }
 
 .subject {
-    border-radius: 15px;
-    padding: 2%;
-    margin: 2%;
+  border-radius: 15px;
+  padding: 2%;
+  margin: 2%;
 }
 
 .subject img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
 
 .popup-class {
-    background-color: white;
-    border-radius: 15px;
-    border: 2px solid  #1d4e70;
-    height: 100%;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid #1d4e70;
+  height: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .popup-class:hover {
-    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2),
+    -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
 .class-select {
-    height: 80%;
-    display: flex;
-    justify-items: center;
+  height: 80%;
+  display: flex;
+  justify-items: center;
 }
 
 .class-select select {
-    align-self: baseline;
-    width: 120px;
-    height: 50px;
-    border: 2px solid #0C3C5C;
-    border-radius: 5px; 
+  align-self: baseline;
+  width: 120px;
+  height: 50px;
+  border: 2px solid #0c3c5c;
+  border-radius: 5px;
 }
 
 .class-select select:focus {
-    border-color: #0C3C5C;
-    outline: none;
+  border-color: #0c3c5c;
+  outline: none;
 }
 
 .buttons {
-    margin-left: auto;
-    gap: 1%;
+  margin-left: auto;
+  gap: 1%;
 }
 
 .buttons button {
-    margin-right: 5px;
-    margin-left: auto;
-    padding: 10px 10px;
-    font-size: 14px;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 50%;
-    background-color: #134275;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  margin-right: 5px;
+  margin-left: auto;
+  padding: 10px 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50%;
+  background-color: #134275;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button img {
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
 }
 
 #red {
-    background-color: #aa1818;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #aa1818;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 #red img {
-    padding: 5px;
+  padding: 5px;
 }
 
 .popup-overlay-result {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-width: fit-content;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-width: fit-content;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  margin: auto;
 }
 
 .popup-content-result {
-    background-image: url("../assets/images/opponent-background.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 70%;
-    height: 70%;
-    text-align: center;
-    align-self: center;
+  background-image: url("../assets/images/opponent-background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 70%;
+  height: 50%;
+  text-align: center;
+  align-self: center;
 }
 
 .popup-request-result {
-    margin-top: 5%;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    height: 60%;
+  margin-top: 5%;
+  margin-bottom: 1%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 60%;
 }
 
 .popup-opponent-result {
-    background-color: white;
-    border-radius: 15px;
-    height: fit-content;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding-bottom: 2%;
+  background-color: white;
+  border-radius: 15px;
+  height: fit-content;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 2%;
 }
 
 .card-header-result {
-    margin-bottom: auto;
-    margin-top: 2%;
+  margin-bottom: auto;
+  margin-top: 2%;
 }
 
 .profile-picture-result {
-    height: 80%;
+  height: 80%;
 }
 
 .profile-picture-result img {
-    width: 50%;
+  width: 50%;
 }
 
 .popup-class-result {
-    background-color: white;
-    border-radius: 15px;
-    border: 2px solid  #1d4e70;
-    height: 100%;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid #1d4e70;
+  height: 100%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .popup-class-result:hover {
-    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
+  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2),
+    -20px -20px 60px rgba(255, 255, 255, 0.7);
 }
 
 @media (max-width: 800px) {
-    .popup-content-result {
-        height: fit-content;
-    }
+  .popup-content-result {
+    height: fit-content;
+  }
 
-    .popup-request-result {
-        flex-direction: column;
-        gap: 3vw;
-        height: 80%;
-        width: 100%;
-    }
+  .popup-request-result {
+    flex-direction: column;
+    gap: 3vw;
+    height: 80%;
+    width: 100%;
+  }
 
-    .popup-opponent-result {
-        margin-top: 0;
-        width: 90%;
-    }
+  .popup-opponent-result {
+    margin-top: 0;
+    width: 90%;
+  }
 
-    .profile-picture-result img {
-        width: 20%;
-    }
+  .profile-picture-result img {
+    width: 20%;
+  }
 
-    .popup-class-result {
-        width: 90%;
-        padding-bottom: 5%;
-    }
-
+  .popup-class-result {
+    width: 90%;
+    padding-bottom: 5%;
+  }
 }

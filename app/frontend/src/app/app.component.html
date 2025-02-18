@@ -1,86 +1,137 @@
 <router-outlet></router-outlet>
 
 <div class="popup-overlay" *ngIf="isPopupOpen">
-    <div class="popup-content" (click)="$event.stopPropagation()">
-        <!-- <div id="close-popup" (click)="closePopup()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <!-- <div id="close-popup" (click)="closePopup()">
             <img src="../../../assets/images/close-popup.png" alt="">
         </div> -->
 
-        <div class="popup-request">
-            <div class="popup-opponent">
-                <div class="card-header"><h5>Protivnik</h5></div>
-                <div class="profile-picture">
-                    <img src="{{baseUrl}}/{{challengerPicture}}" alt="">
-                    <h5>{{challengerName}}</h5>
-                </div>
-            </div>
-            <div class="popup-subject">
-                <div class="card-header">
-                    <h5>Predmet</h5>
-                </div>
-                <div class="subjects">
-                    <div class="subject" *ngIf="category == 'math'">
-                        <label for="radio-maths">
-                            <span>Matematika</span><br>
-                            <span><img style="margin-top: 15px;" src="../../../assets/images/maths.png" alt=""></span>
-                        </label>
-                    </div>
-                    <div class="subject" *ngIf="category == 'info'">
-                        <label for="radio-info">
-                            <span>Informatika</span><br>
-                            <span><img style="margin-top: 15px;" src="../../../assets/images/programming.png" alt=""></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="popup-class">
-                <div class="card-header">
-                    <h5>Razred</h5>
-                </div>
-                <div class="class-select">
-                    <select name="classes" id="classes" disabled>
-                        <option [value]="classSelected">
-                            {{ classSelected }}
-                        </option>
-                    </select>
-                </div>
-            </div>
+    <div class="popup-request">
+      <div class="popup-opponent">
+        <div class="card-header"><h5>Protivnik</h5></div>
+        <div class="profile-picture">
+          <img src="{{ baseUrl }}/{{ challengerPicture }}" alt="" />
+          <h5>{{ challengerName }}</h5>
         </div>
-
-        <div class="buttons">
-            <button matTooltip="Prihvati" matTooltipPosition="above" (click)="acceptChallenge()">
-                <img src="../../../assets/images/check.png" alt="">
-            </button>
-            <button matTooltip="Odbij" matTooltipPosition="above" id="red" (click)="rejectChallenge()">
-                <img src="../../../assets/images/cross.png" alt="">
-            </button>
+      </div>
+      <div class="popup-subject">
+        <div class="card-header">
+          <h5>Predmet</h5>
         </div>
+        <div class="subjects">
+          <div class="subject" *ngIf="category == 'math'">
+            <label for="radio-maths">
+              <span>Matematika</span><br />
+              <span
+                ><img
+                  style="margin-top: 15px"
+                  src="../../../assets/images/maths.png"
+                  alt=""
+              /></span>
+            </label>
+          </div>
+          <div class="subject" *ngIf="category == 'info'">
+            <label for="radio-info">
+              <span>Informatika</span><br />
+              <span
+                ><img
+                  style="margin-top: 15px"
+                  src="../../../assets/images/programming.png"
+                  alt=""
+              /></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="popup-class">
+        <div class="card-header">
+          <h5>Razred</h5>
+        </div>
+        <div class="class-select">
+          <select name="classes" id="classes" disabled>
+            <option [value]="classSelected">
+              {{ classSelected }}
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
+
+    <div class="buttons">
+      <button
+        matTooltip="Prihvati"
+        matTooltipPosition="above"
+        (click)="acceptChallenge()"
+      >
+        <img src="../../../assets/images/check.png" alt="" />
+      </button>
+      <button
+        matTooltip="Odbij"
+        matTooltipPosition="above"
+        id="red"
+        (click)="rejectChallenge()"
+      >
+        <img src="../../../assets/images/cross.png" alt="" />
+      </button>
+    </div>
+  </div>
 </div>
 
 <div class="popup-overlay-result" *ngIf="isResultPopupOpen">
-    <div class="popup-content-result">
-        <div style="width: 100%; justify-content: end; display: flex;"><img (click)="closeResultPopup()" style="width: 15px; height: 15px;" src="../../../assets/images/cross.png" alt=""></div>
-        <div class="popup-request-result">
-            <div class="popup-opponent-result">
-                <img style="width: 100px;" src="" alt="">
-                <div class="profile-picture-result">
-                    <img src="" alt="">
-                    <h5>nickname</h5>
-                    <span style="font-weight: bold;">5/7 <i class="bi bi-check2-circle"></i> 12:02 <i class="bi bi-alarm"></i></span>
-                </div>
-            </div>
-            <div class="popup-opponent-result">
-                <img style="width: 100px;" src="" alt="">
-                <div class="profile-picture-result">
-                    <img src="" alt="">
-                    <h5>nickname</h5>
-                    <span style="font-weight: bold;">6/7 <i class="bi bi-check2-circle"></i> 12:58 <i class="bi bi-alarm"></i></span>
-                </div>
-            </div>
-        </div>
+  <div class="popup-content-result">
+    <div style="width: 100%; justify-content: end; display: flex">
+      <img
+        (click)="closeResultPopup()"
+        style="width: 15px; height: 15px"
+        src="../../../assets/images/cross.png"
+        alt=""
+      />
     </div>
+    <div class="popup-request-result">
+      <div class="popup-opponent-result">
+        <img
+          style="width: 100px"
+          [src]="'../assets/images/' + gameResultData?.player1?.image"
+          alt=""
+        />
+        <div class="profile-picture-result">
+          <img
+            src="{{ baseUrl }}/{{ gameResultData?.player1?.profilePicture }}"
+            alt=""
+          />
+          <h5>{{ gameResultData?.player1?.nickname }}</h5>
+          <span style="font-weight: bold"
+            >{{ gameResultData?.player1?.correctAnswers }} / 9
+            <i class="bi bi-check2-circle"></i>
+            {{ gameResultData?.player1?.timeTaken }} <i class="bi bi-alarm"></i
+          ></span>
+        </div>
+      </div>
+      <div class="popup-opponent-result">
+        <img
+          style="width: 100px"
+          [src]="'../assets/images/' + gameResultData?.player2?.image"
+          alt=""
+        />
+        <div class="profile-picture-result">
+          <img
+            src="{{ baseUrl }}/{{ gameResultData?.player2?.profilePicture }}"
+            alt=""
+          />
+          <h5>{{ gameResultData?.player2?.nickname }}</h5>
+          <span style="font-weight: bold"
+            >{{ gameResultData?.player2?.correctAnswers }} / 9
+            <i class="bi bi-check2-circle"></i>
+            {{ gameResultData?.player2?.timeTaken }} <i class="bi bi-alarm"></i
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<app-popup-ok *ngIf="isPopupOkOpen" [message]="popupOkMessage" (close)="isPopupOkOpen = false"></app-popup-ok>
-
+<app-popup-ok
+  *ngIf="isPopupOkOpen"
+  [message]="popupOkMessage"
+  (close)="isPopupOkOpen = false"
+></app-popup-ok>

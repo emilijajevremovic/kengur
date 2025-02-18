@@ -13,29 +13,32 @@ import { AppComponent } from '../../app.component';
   standalone: true,
   imports: [NgIf, NgFor, CommonModule, RouterModule, MatTooltipModule],
   templateUrl: './game-math.component.html',
-  styleUrl: './game-math.component.scss'
+  styleUrl: './game-math.component.scss',
 })
 export class GameMathComponent implements OnInit, OnDestroy {
-
-  constructor(private websocketService: WebsocketService, private route: ActivatedRoute, private taskService: TaskService, private router: Router) {}
+  constructor(
+    private websocketService: WebsocketService,
+    private route: ActivatedRoute,
+    private taskService: TaskService,
+    private router: Router
+  ) {}
 
   currentQuestionIndex = 0;
   totalQuestions = 9;
   isLastQuestion = false;
-  selectedAnswerIndex: number | null = null; 
+  selectedAnswerIndex: number | null = null;
   tasks: any[] = [];
   taskImagesUrl = environment.taskImagesUrl;
-  selectedAnswers: { taskId: string, selectedIndex: number | null }[] = [];
+  selectedAnswers: { taskId: string; selectedIndex: number | null }[] = [];
 
   startDate: Date | null = null;
   endDate: Date | null = null;
   duration: string = '';
 
-
   ngOnInit() {
     this.startDate = new Date();
-    
-    this.route.params.subscribe(params => {
+
+    this.route.params.subscribe((params) => {
       const gameId = params['gameId'];
 
       if (gameId) {
@@ -44,17 +47,16 @@ export class GameMathComponent implements OnInit, OnDestroy {
           next: (response) => {
             this.tasks = response;
           },
-          error: (err) => console.error("Greška pri dohvatanju zadataka:", err)
+          error: (err) => console.error('Greška pri dohvatanju zadataka:', err),
         });
       }
 
       this.websocketService.subscribeToPlayerDisconnect(gameId, (data: any) => {
-          alert(`Igrač sa ID ${data.userId} je napustio meč!`);
+        alert(`Igrač sa ID ${data.userId} je napustio meč!`);
       });
     });
 
     window.onbeforeunload = () => this.ngOnDestroy();
-
   }
 
   ngOnDestroy(): void {
@@ -65,35 +67,41 @@ export class GameMathComponent implements OnInit, OnDestroy {
     this.taskService.validateGameAccess(gameId).subscribe({
       error: () => {
         this.router.navigate(['/']);
-      }
+      },
     });
   }
 
   get currentTask() {
-    return this.tasks && this.tasks.length > 0 ? this.tasks[this.currentQuestionIndex] : null;
+    return this.tasks && this.tasks.length > 0
+      ? this.tasks[this.currentQuestionIndex]
+      : null;
   }
 
   selectAnswer(index: number) {
-    this.selectedAnswerIndex = index; 
-    
+    this.selectedAnswerIndex = index;
+
     const currentTaskId = this.tasks[this.currentQuestionIndex]._id;
 
-    const existingAnswer = this.selectedAnswers.find(a => a.taskId === currentTaskId);
-    
-    if (existingAnswer) {
-      existingAnswer.selectedIndex = index; 
-    } else {
-      this.selectedAnswers.push({ taskId: currentTaskId, selectedIndex: index }); 
-    }
+    const existingAnswer = this.selectedAnswers.find(
+      (a) => a.taskId === currentTaskId
+    );
 
+    if (existingAnswer) {
+      existingAnswer.selectedIndex = index;
+    } else {
+      this.selectedAnswers.push({
+        taskId: currentTaskId,
+        selectedIndex: index,
+      });
+    }
   }
 
   goToNextQuestion() {
     if (this.currentQuestionIndex < this.tasks.length - 1) {
       this.currentQuestionIndex++;
       this.restoreSelectedAnswer();
-    } 
-    if (this.currentQuestionIndex == this.tasks.length - 1){
+    }
+    if (this.currentQuestionIndex == this.tasks.length - 1) {
       this.isLastQuestion = true;
     }
   }
@@ -103,47 +111,47 @@ export class GameMathComponent implements OnInit, OnDestroy {
       this.currentQuestionIndex--;
       this.isLastQuestion = false;
       this.restoreSelectedAnswer();
-    } 
+    }
   }
 
   restoreSelectedAnswer() {
     const currentTaskId = this.tasks[this.currentQuestionIndex]._id;
-    const savedAnswer = this.selectedAnswers.find(a => a.taskId === currentTaskId);
+    const savedAnswer = this.selectedAnswers.find(
+      (a) => a.taskId === currentTaskId
+    );
     this.selectedAnswerIndex = savedAnswer ? savedAnswer.selectedIndex : null;
   }
 
   endQuiz() {
-    this.endDate = new Date(); 
+    this.endDate = new Date();
     this.calculateDuration();
 
     const gameId = localStorage.getItem('gameId');
     if (!gameId) return;
 
     const answersData = {
-      answers: this.selectedAnswers
+      answers: this.selectedAnswers,
     };
 
     this.taskService.checkAnswers(gameId, answersData).subscribe({
       next: (response: any) => {
-        //alert(`Tačnih odgovora: ${response.correctAnswers} / ${response.totalQuestions}`);
-        //this.router.navigate(['/']);
-        const resultData = {
-          correctAnswers: response.correctAnswers, 
-          duration: this.duration
+        const finishGameData = {
+          correctAnswers: response.correctAnswers,
+          totalQuestions: response.totalQuestions,
+          timeTaken: this.duration,
         };
 
-        this.taskService.submitGameResult(resultData, gameId).subscribe({
+        this.taskService.finishGame(gameId, finishGameData).subscribe({
           next: () => {
-            this.router.navigate(['/game-result', gameId]); 
+            //console.log('Game finished, event emitted.');
+            this.router.navigate(['/lobby']);
           },
-          error: (err) => console.error("Greška pri slanju rezultata:", err)
+          error: (err) =>
+            console.error('Greška pri slanju završetka igre:', err),
         });
-
       },
-      error: (err) => console.error("Greška pri slanju odgovora:", err)
+      error: (err) => console.error('Greška pri slanju odgovora:', err),
     });
-    
-    localStorage.removeItem('game_id');
   }
 
   goToQuestion(index: number) {
@@ -154,8 +162,8 @@ export class GameMathComponent implements OnInit, OnDestroy {
 
   calculateDuration(): void {
     if (this.startDate && this.endDate) {
-      const timeDifference = this.endDate.getTime() - this.startDate.getTime(); 
-      const totalSeconds = Math.floor(timeDifference / 1000); 
+      const timeDifference = this.endDate.getTime() - this.startDate.getTime();
+      const totalSeconds = Math.floor(timeDifference / 1000);
       this.duration = this.formatTime(totalSeconds);
       //console.log(this.duration);
     }
@@ -165,11 +173,13 @@ export class GameMathComponent implements OnInit, OnDestroy {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     const hours = Math.floor(minutes / 60);
-    
+
     if (hours > 0) {
-      return `${this.formatNumber(hours)}:${this.formatNumber(minutes % 60)}:${this.formatNumber(seconds)}`;
+      return `${this.formatNumber(hours)}:${this.formatNumber(
+        minutes % 60
+      )}:${this.formatNumber(seconds)}`;
     }
-    
+
     return `${this.formatNumber(minutes)}:${this.formatNumber(seconds)}`;
   }
 
@@ -178,8 +188,10 @@ export class GameMathComponent implements OnInit, OnDestroy {
   }
 
   getSafeImageUrl(fileName: string): string {
-    if (!fileName) return ''; 
-  
-    return encodeURI(`assets/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`);
+    if (!fileName) return '';
+
+    return encodeURI(
+      `assets/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`
+    );
   }
 }

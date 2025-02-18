@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,16 +25,16 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, 
-    FormsModule, 
-    ReactiveFormsModule, 
+    RouterOutlet,
+    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     HttpClientModule,
     MatTooltipModule,
-    PopupOkComponent
+    PopupOkComponent,
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'kengur';
@@ -48,11 +54,22 @@ export class AppComponent implements OnInit, OnDestroy {
   gameResultData: any = null;
   opponentData: any = null;
 
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private userService: UserService, private authService: AuthService, private webSocketService: WebsocketService, private taskService: TaskService, private snackBar: MatSnackBar, private router: Router, private http: HttpClient) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private userService: UserService,
+    private authService: AuthService,
+    private webSocketService: WebsocketService,
+    private taskService: TaskService,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId) && localStorage.getItem('auth_token')) {
+    if (
+      isPlatformBrowser(this.platformId) &&
+      localStorage.getItem('auth_token')
+    ) {
       this.userService.setUserOnline().subscribe();
 
       window.addEventListener('beforeunload', this.handleTabClose.bind(this));
@@ -62,8 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.userId = response.user.id;
           this.myNickname = response.user.nickname;
           this.subscribeToChallenges(this.userId);
-          //this.subscribeToGameFinish();
-          
+
           await this.webSocketService.initPusherService();
 
           this.subscribeToRejections(this.userId);
@@ -73,30 +89,38 @@ export class AppComponent implements OnInit, OnDestroy {
           // window.addEventListener('beforeunload', this.handleTabClose.bind(this));
           // document.addEventListener('visibilitychange', this.handleTabClose.bind(this));
         },
-        error: (error) => console.error('Greška pri dohvatanju korisničkih podataka:', error)
+        error: (error) =>
+          console.error('Greška pri dohvatanju korisničkih podataka:', error),
       });
-
     }
   }
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('beforeunload', this.handleTabClose.bind(this));
+      window.removeEventListener(
+        'beforeunload',
+        this.handleTabClose.bind(this)
+      );
       //localStorage.removeItem('gameId');
     }
   }
 
-  subscribeToGameFinish(): void {
-    this.webSocketService.subscribeToGameFinish((data: any) => {
-      if (data.gameId === this.gameId) {
-        this.gameResultData = {
-          correctAnswers: data.correctAnswers,
-          totalQuestions: data.totalQuestions,
-          duration: data.duration,
-          opponentData: data.opponent
-        };
-        this.isResultPopupOpen = true;
-      }
+  subscribeToGameFinish() {
+    const gameId = localStorage.getItem('gameId');
+    //console.log('subscribe na game finished');
+    if (!gameId) return;
+
+    this.webSocketService.subscribeToGameFinish(gameId, (data: any) => {
+      this.gameResultData = {
+        gameId: data.gameId,
+        player1: data.player1,
+        player2: data.player2,
+      };
+      this.determineWinnerAndLoser();
+
+      console.log(this.gameResultData);
+
+      this.isResultPopupOpen = true;
     });
   }
 
@@ -107,13 +131,13 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!token) return;
 
     fetch(`${this.userService.baseUrl}/set-offline`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ token }),
-        keepalive: true 
-    })
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+      keepalive: true,
+    });
   };
 
   subscribeToChallenges(userId: number): void {
@@ -128,11 +152,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   closePopup() {
-    this.isPopupOpen = false; 
+    this.isPopupOpen = false;
   }
 
   closeResultPopup(): void {
     this.isResultPopupOpen = false;
+    this.router.navigate(['/lobby']);
+    localStorage.removeItem('game_id');
   }
 
   acceptChallenge() {
@@ -140,36 +166,36 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const challengeData = {
       challenger_id: this.challengerId,
-      opponent_id: this.userId, 
+      opponent_id: this.userId,
       category: this.category,
-      class: this.classSelected
+      class: this.classSelected,
     };
 
     this.taskService.acceptChallenge(challengeData).subscribe({
       next: (response) => {
-        this.isPopupOpen = false; 
+        this.isPopupOpen = false;
       },
-      error: (err) => console.error('Greška pri prihvatanju izazova:', err)
+      error: (err) => console.error('Greška pri prihvatanju izazova:', err),
     });
   }
 
   rejectChallenge(): void {
     if (!this.challengerName) return;
-  
+
     const rejectionData = {
-      challenger_id: this.challengerId, 
-      opponent_nickname: this.myNickname 
+      challenger_id: this.challengerId,
+      opponent_nickname: this.myNickname,
     };
-  
+
     this.taskService.rejectChallenge(rejectionData).subscribe({
       next: () => {
         this.snackBar.open('Izazov odbijen.', 'OK', {
-          duration: 5000,  
-          panelClass: ['light-snackbar'] 
+          duration: 5000,
+          panelClass: ['light-snackbar'],
         });
-        this.isPopupOpen = false; 
+        this.isPopupOpen = false;
       },
-      error: (err) => console.error('Greška pri odbijanju izazova:', err)
+      error: (err) => console.error('Greška pri odbijanju izazova:', err),
     });
   }
 
@@ -184,17 +210,45 @@ export class AppComponent implements OnInit, OnDestroy {
     this.webSocketService.subscribeToGameStart(userId, (data: any) => {
       const gameId = data.gameId;
       const gameClass = data.class;
-      
+
       this.taskService.assignTasksToGame(gameId, gameClass).subscribe({
         next: () => {
           localStorage.setItem('gameId', gameId);
-  
-          const route = data.category === 'math' ? '/game-math/' : '/game-informatics/';
+          this.subscribeToGameFinish();
+
+          const route =
+            data.category === 'math' ? '/game-math/' : '/game-informatics/';
           this.router.navigate([route, gameId]);
         },
-        error: (err) => console.error(`Greška pri dodeljivanju zadataka:`, err)
+        error: (err) => console.error(`Greška pri dodeljivanju zadataka:`, err),
       });
     });
   }
 
+  determineWinnerAndLoser() {
+    if (!this.gameResultData?.player1 || !this.gameResultData?.player2) return;
+
+    const player1 = this.gameResultData.player1;
+    const player2 = this.gameResultData.player2;
+
+    let winner, loser;
+
+    if (player1.correct_answers > player2.correct_answers) {
+      winner = player1;
+      loser = player2;
+    } else if (player1.correct_answers < player2.correct_answers) {
+      winner = player2;
+      loser = player1;
+    } else {
+      // Ako su isti tačni odgovori, pobeđuje onaj ko je ranije završio
+      winner = player1.duration < player2.duration ? player1 : player2;
+      loser = winner === player1 ? player2 : player1;
+    }
+
+    // Dodavanje property-ja za prikaz slika
+    this.gameResultData.player1.image =
+      this.gameResultData.player1 === winner ? 'king.png' : 'loser.png';
+    this.gameResultData.player2.image =
+      this.gameResultData.player2 === winner ? 'king.png' : 'loser.png';
+  }
 }

@@ -3,10 +3,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { PusherService } from './pusher.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebsocketService {
-  private pusherService!: PusherService; 
+  private pusherService!: PusherService;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -18,7 +18,7 @@ export class WebsocketService {
   }
 
   async subscribeToChallenge(userId: number, callback: (data: any) => void) {
-    await this.initPusherService(); 
+    await this.initPusherService();
 
     if (!this.pusherService) {
       console.error('PusherService nije inicijalizovan!');
@@ -34,13 +34,15 @@ export class WebsocketService {
 
   subscribeToRejections(userId: number, callback: (data: any) => void) {
     if (!this.pusherService) {
-      console.error('Greška: PusherService nije inicijalizovan pre poziva subscribeToRejections!');
+      console.error(
+        'Greška: PusherService nije inicijalizovan pre poziva subscribeToRejections!'
+      );
       return;
     }
-    
+
     const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
     //console.log(`Pretplaćen na kanal: private-user.${userId}`);
-  
+
     channel.bind('ChallengeRejected', (data: any) => {
       //console.log('Odbijen izazov primljen preko WebSockets-a:', data);
       callback(data);
@@ -53,8 +55,8 @@ export class WebsocketService {
     //console.log(`Pretplaćen na kanal za pokretanje igre: user.${userId}`);
 
     channel.bind('GameStarted', (data: any) => {
-        //console.log('GameStarted event primljen:', data);
-        callback(data);
+      //console.log('GameStarted event primljen:', data);
+      callback(data);
     });
   }
 
@@ -62,18 +64,19 @@ export class WebsocketService {
     const channel = this.pusherService.subscribeToChannel(`game.${gameId}`);
 
     channel.bind('PlayerDisconnected', (data: any) => {
-        //console.log('Igrač je napustio meč:', data);
-        callback(data);
-    });
-  }
-
-  subscribeToGameFinish(callback: (data: any) => void) {
-    const channel = this.pusherService.subscribeToChannel('game-finish');
-  
-    channel.bind('GameFinished', (data: any) => {
-      console.log('Igra završena:', data);
+      //console.log('Igrač je napustio meč:', data);
       callback(data);
     });
   }
 
+  subscribeToGameFinish(gameId: any, callback: (data: any) => void) {
+    const channel = this.pusherService.subscribeToChannel(
+      `game-results.${gameId}`
+    );
+
+    channel.bind('GameFinished', (data: any) => {
+      //console.log('Igra završena:', data);
+      callback(data);
+    });
+  }
 }

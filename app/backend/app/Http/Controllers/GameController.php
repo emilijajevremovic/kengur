@@ -182,8 +182,6 @@ class GameController extends Controller
             }
         }
 
-        broadcast(new GameFinished($gameId, Auth::id(), $correctAnswers, $totalQuestions));
-
         return response()->json([
             'message' => 'Quiz finished',
             'correctAnswers' => $correctAnswers,
@@ -221,7 +219,7 @@ class GameController extends Controller
         $data = $request->validate([
             'correctAnswers' => 'required|integer',
             'totalQuestions' => 'required|integer',
-            'timeTaken' => 'required|integer',
+            'timeTaken' => 'required|string',
         ]);
 
         $game = Game::where('game_id', $gameId)->first();
@@ -230,14 +228,46 @@ class GameController extends Controller
             return response()->json(['error' => 'Game not found'], 404);
         }
 
-        $playerResults = [
-            'userId' => $userId,
-            'correctAnswers' => $data['correctAnswers'],
-            'totalQuestions' => $data['totalQuestions'],
-            'timeTaken' => $data['timeTaken'],
-        ];
+        GameResult::updateOrCreate(
+            ['game_id' => $gameId, 'user_id' => $userId],
+            ['correct_answers' => $data['correctAnswers'], 'duration' => $data['timeTaken']]
+        );
+    
+        // Provera da li su oba igrača završila
+        $results = GameResult::where('game_id', $gameId)->get();
+        
+        if ($results->count() === 2) {
+            // Pronađi rezultate oba igrača
+            $player1 = $results->where('user_id', $game->player_1)->first();
+            $player2 = $results->where('user_id', $game->player_2)->first();
 
-        broadcast(new GameFinished($gameId, $playerResults));
+            // Pronađi korisnike iz baze
+            $player1Data = User::find($game->player_1);
+            $player2Data = User::find($game->player_2);
+
+            $gameData = [
+                'gameId' => $gameId,
+                'player1' => [
+                    'id' => $player1->user_id,
+                    'correctAnswers' => $player1->correct_answers,
+                    'totalQuestions' => $player1->total_questions,
+                    'timeTaken' => $player1->duration,
+                    'profilePicture' => $player1Data ? $player1Data->profile_picture : null, // Dodavanje profilne slike
+                    'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
+                ],
+                'player2' => [
+                    'id' => $player2->user_id,
+                    'correctAnswers' => $player2->correct_answers,
+                    'totalQuestions' => $player2->total_questions,
+                    'timeTaken' => $player2->duration,
+                    'profilePicture' => $player2Data ? $player2Data->profile_picture : null, // Dodavanje profilne slike
+                    'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'
+                ]
+            ];
+    
+            broadcast(new GameFinished($gameData));
+            $this->deleteGameInfo($gameId);
+        }
 
         return response()->json(['message' => 'Game results sent']);
     }
