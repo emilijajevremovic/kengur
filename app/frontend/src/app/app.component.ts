@@ -118,7 +118,7 @@ export class AppComponent implements OnInit, OnDestroy {
       };
       this.determineWinnerAndLoser();
 
-      console.log(this.gameResultData);
+      //console.log(this.gameResultData);
 
       this.isResultPopupOpen = true;
     });
