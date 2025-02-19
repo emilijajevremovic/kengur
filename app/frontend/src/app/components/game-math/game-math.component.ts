@@ -1,5 +1,11 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../../services/websocket.service';
@@ -8,6 +14,8 @@ import { environment } from '../../../environments/environment';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from '../../app.component';
 import { PopupYesNoComponent } from '../../popup-yes-no/popup-yes-no.component';
+import { PopupOkComponent } from '../popup-ok/popup-ok.component';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-game-math',
@@ -19,12 +27,14 @@ import { PopupYesNoComponent } from '../../popup-yes-no/popup-yes-no.component';
     RouterModule,
     MatTooltipModule,
     PopupYesNoComponent,
+    PopupOkComponent,
   ],
   templateUrl: './game-math.component.html',
   styleUrl: './game-math.component.scss',
 })
 export class GameMathComponent implements OnInit, OnDestroy {
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private websocketService: WebsocketService,
     private route: ActivatedRoute,
     private taskService: TaskService,
@@ -39,6 +49,10 @@ export class GameMathComponent implements OnInit, OnDestroy {
   taskImagesUrl = environment.taskImagesUrl;
   selectedAnswers: { taskId: string; selectedIndex: number | null }[] = [];
   showPopupYesNo: boolean = false;
+  gameId: any = null;
+  isPopupOkOpen: boolean = false;
+  popupOkMessage: string = '';
+  isGameFinished: boolean = false;
 
   startDate: Date | null = null;
   endDate: Date | null = null;
@@ -51,6 +65,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
       const gameId = params['gameId'];
 
       if (gameId) {
+        this.gameId = gameId;
         this.validateGameAccess(gameId);
         this.taskService.getGameTasks(gameId).subscribe({
           next: (response) => {
@@ -65,12 +80,30 @@ export class GameMathComponent implements OnInit, OnDestroy {
       });
     });
 
-    window.onbeforeunload = () => this.ngOnDestroy();
+    if (isPlatformBrowser(this.platformId)) {
+      // 1. Poziv funkcije kada se zatvori tab ili osveži stranica
+      window.addEventListener('beforeunload', this.handlePageExit);
+
+      // 2. Poziv funkcije kada korisnik napusti stranicu preko Angular rute
+      this.router.events.subscribe((event) => {
+        if (event.constructor.name === 'NavigationStart') {
+          this.handlePageExit();
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
-    //localStorage.removeItem('gameId');
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('beforeunload', this.handlePageExit);
+    }
   }
+
+  handlePageExit = () => {
+    if (!this.gameId) return;
+    if (this.isGameFinished) return;
+    this.forfeitGame();
+  };
 
   validateGameAccess(gameId: string) {
     this.taskService.validateGameAccess(gameId).subscribe({
@@ -135,8 +168,32 @@ export class GameMathComponent implements OnInit, OnDestroy {
     this.showPopupYesNo = true;
   }
 
+  forfeitGame = () => {
+    if (!this.gameId) return;
+
+    fetch(`${this.taskService.baseUrl}/api/forfeit-game/${this.gameId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+      },
+      body: JSON.stringify({
+        correctAnswers: 0,
+        totalQuestions: 9,
+        timeTaken: '-1',
+      }),
+      keepalive: true,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.isGameFinished = true;
+        this.popupOkMessage = 'Predali ste meč.';
+        this.isPopupOkOpen = true;
+      })
+      .catch((error) => console.error('Greška pri predaji meča:', error));
+  };
+
   endQuiz() {
-    //console.log('endQuiz() je pozvan');
     this.endDate = new Date();
     this.calculateDuration();
 
@@ -158,6 +215,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
         this.taskService.finishGame(gameId, finishGameData).subscribe({
           next: () => {
             //console.log('Game finished, event emitted.');
+            this.isGameFinished = true;
             this.router.navigate(['/lobby']);
           },
           error: (err) =>

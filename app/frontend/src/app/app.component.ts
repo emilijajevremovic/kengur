@@ -111,15 +111,19 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!gameId) return;
 
     this.webSocketService.subscribeToGameFinish(gameId, (data: any) => {
+      if (
+        (data.player1.timeTaken === '-1' && data.player1.id != this.userId) ||
+        (data.player2.timeTaken === '-1' && data.player2.id != this.userId)
+      ) {
+        this.popupOkMessage = 'Vaš protivnik je predao meč!';
+        this.isPopupOkOpen = true;
+      }
       this.gameResultData = {
         gameId: data.gameId,
         player1: data.player1,
         player2: data.player2,
       };
       this.determineWinnerAndLoser();
-
-      //console.log(this.gameResultData);
-
       this.isResultPopupOpen = true;
     });
   }
@@ -233,22 +237,30 @@ export class AppComponent implements OnInit, OnDestroy {
 
     let winner, loser;
 
-    if (player1.correct_answers > player2.correct_answers) {
-      winner = player1;
-      loser = player2;
-    } else if (player1.correct_answers < player2.correct_answers) {
+    if (player1.timeTaken === '-1' && player2.timeTaken === '-1') {
+      player1.image = 'loser.png';
+      player2.image = 'loser.png';
+      return;
+    } else if (player1.timeTaken === '-1') {
       winner = player2;
       loser = player1;
+    } else if (player2.timeTaken === '-1') {
+      winner = player1;
+      loser = player2;
     } else {
-      // Ako su isti tačni odgovori, pobeđuje onaj ko je ranije završio
-      winner = player1.duration < player2.duration ? player1 : player2;
-      loser = winner === player1 ? player2 : player1;
+      if (player1.correct_answers > player2.correct_answers) {
+        winner = player1;
+        loser = player2;
+      } else if (player1.correct_answers < player2.correct_answers) {
+        winner = player2;
+        loser = player1;
+      } else {
+        winner = player1.duration < player2.duration ? player1 : player2;
+        loser = winner === player1 ? player2 : player1;
+      }
     }
 
-    // Dodavanje property-ja za prikaz slika
-    this.gameResultData.player1.image =
-      this.gameResultData.player1 === winner ? 'king.png' : 'loser.png';
-    this.gameResultData.player2.image =
-      this.gameResultData.player2 === winner ? 'king.png' : 'loser.png';
+    player1.image = player1 === winner ? 'king.png' : 'loser.png';
+    player2.image = player2 === winner ? 'king.png' : 'loser.png';
   }
 }

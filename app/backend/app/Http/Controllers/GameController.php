@@ -286,4 +286,62 @@ class GameController extends Controller
         return response()->json(['message' => 'Waiting for the second player']);
     }
 
+    public function forfeitGame($gameId)
+    {
+        $userId = Auth::id();
+
+        $existingResult = GameResult::where('game_id', $gameId)->where('user_id', $userId)->first();
+
+        if ($existingResult) {
+            return response()->json(['message' => 'Player already finished or forfeited'], 200);
+        }
+
+        GameResult::create([
+            'game_id' => $gameId,
+            'user_id' => $userId,
+            'correct_answers' => 0,
+            'duration' => '-1'
+        ]);
+
+        $game = Game::where('game_id', $gameId)->first();
+        if (!$game) {
+            return response()->json(['error' => 'Game not found'], 404);
+        }
+
+        $results = GameResult::where('game_id', $gameId)->get();
+
+        if ($results->count() === 2) {
+            $player1 = $results->where('user_id', $game->player_1)->first();
+            $player2 = $results->where('user_id', $game->player_2)->first();
+
+            $player1Data = User::find($game->player_1);
+            $player2Data = User::find($game->player_2);
+
+            $gameData = [
+                'gameId' => $gameId,
+                'player1' => [
+                    'id' => $player1->user_id,
+                    'correctAnswers' => $player1->correct_answers,
+                    'totalQuestions' => 9,
+                    'timeTaken' => $player1->duration,
+                    'profilePicture' => $player1Data ? $player1Data->profile_picture : null,
+                    'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
+                ],
+                'player2' => [
+                    'id' => $player2->user_id,
+                    'correctAnswers' => $player2->correct_answers,
+                    'totalQuestions' => 9,
+                    'timeTaken' => $player2->duration,
+                    'profilePicture' => $player2Data ? $player2Data->profile_picture : null,
+                    'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'
+                ]
+            ];
+
+            broadcast(new GameFinished($gameData));
+            $this->deleteGameInfo($gameId);
+        }
+
+        return response()->json(['message' => 'Player forfeited']);
+    }
+
 }

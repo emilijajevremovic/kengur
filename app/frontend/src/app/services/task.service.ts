@@ -4,13 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
+  public baseUrl = environment.apiUrl;
 
-  private baseUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getDistinctClassesMath(): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/distinct-classes`);
@@ -21,11 +20,17 @@ export class TaskService {
   }
 
   acceptChallenge(challengeData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/accept-challenge`, challengeData);
+    return this.http.post(
+      `${this.baseUrl}/api/accept-challenge`,
+      challengeData
+    );
   }
 
   rejectChallenge(rejectionData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/reject-challenge`, rejectionData);
+    return this.http.post(
+      `${this.baseUrl}/api/reject-challenge`,
+      rejectionData
+    );
   }
 
   validateGameAccess(gameId: string): Observable<any> {
@@ -33,19 +38,28 @@ export class TaskService {
   }
 
   assignTasksToGame(gameId: string, gameClass: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/assign-tasks/${gameId}/${gameClass}`, {});
+    return this.http.post(
+      `${this.baseUrl}/api/assign-tasks/${gameId}/${gameClass}`,
+      {}
+    );
   }
 
   getGameTasks(gameId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/game/${gameId}/tasks`);
-  }  
+  }
 
   checkAnswers(gameId: string, answersData: any) {
-    return this.http.post(`${this.baseUrl}/api/check-answers/${gameId}`, answersData);
+    return this.http.post(
+      `${this.baseUrl}/api/check-answers/${gameId}`,
+      answersData
+    );
   }
 
   submitGameResult(resultData: any, gameId: string) {
-    return this.http.post(`${this.baseUrl}/api/submit-game-result/${gameId}`, resultData);
+    return this.http.post(
+      `${this.baseUrl}/api/submit-game-result/${gameId}`,
+      resultData
+    );
   }
 
   getGameResults(gameId: string) {
@@ -53,7 +67,13 @@ export class TaskService {
   }
 
   finishGame(gameId: string, resultData: any) {
-    return this.http.post(`${this.baseUrl}/api/finish-game/${gameId}`, resultData);
+    return this.http.post(
+      `${this.baseUrl}/api/finish-game/${gameId}`,
+      resultData
+    );
   }
 
+  forfeitGame(gameId: string) {
+    return this.http.post(`${this.baseUrl}/api/forfeit-game/${gameId}`, {});
+  }
 }

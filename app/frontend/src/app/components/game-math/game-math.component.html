@@ -111,3 +111,9 @@
   (close)="showPopupYesNo = false"
   (confirm)="endQuiz()"
 ></app-popup-yes-no>
+
+<app-popup-ok
+  *ngIf="isPopupOkOpen"
+  [message]="popupOkMessage"
+  (close)="isPopupOkOpen = false"
+></app-popup-ok>

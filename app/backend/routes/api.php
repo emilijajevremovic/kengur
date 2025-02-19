@@ -69,6 +69,9 @@ Route::middleware(['auth:sanctum', 'game.participant'])->get('/game-results/{gam
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/finish-game/{gameId}', [GameController::class, 'finishGame']);
 
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/forfeit-game/{gameId}', [GameController::class, 'forfeitGame']);
+
+
 
 
 
