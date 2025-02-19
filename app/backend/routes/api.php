@@ -42,7 +42,6 @@ Route::middleware('auth:sanctum')->get('/users', [UserController::class, 'getUse
 Route::middleware('auth:sanctum')->post('/set-online', [UserController::class, 'setOnline']);
 
 Route::post('/set-offline', [UserController::class, 'setOffline']);
-//Route::middleware('auth:sanctum')->post('/set-offline', [UserController::class, 'setOffline']);
 
 Route::middleware('auth:api')->get('/online-users', [UserController::class, 'getOnlineUsers']);
 
@@ -71,6 +70,8 @@ Route::middleware(['auth:sanctum', 'game.participant'])->get('/game-results/{gam
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/finish-game/{gameId}', [GameController::class, 'finishGame']);
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/forfeit-game/{gameId}', [GameController::class, 'forfeitGame']);
+
+Route::middleware('auth:sanctum')->post('/ping', [UserController::class, 'pingUser']);
 
 
 

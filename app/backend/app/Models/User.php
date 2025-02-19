@@ -28,7 +28,8 @@ class User extends Authenticatable
         'nickname',
         'profile_picture',
         'online', 
-        'role'
+        'role',
+        'last_ping'
     ];
 
     /**

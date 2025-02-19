@@ -276,9 +276,22 @@ class UserController extends Controller
         $onlineUsers = User::where('online', true)
                         ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city')
                         ->get();
-                        
+
         return response()->json($onlineUsers);
     }
 
+    public function pingUser()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        // Postavi korisnika kao online i ažuriraj timestamp
+        $user->update(['online' => true, 'last_ping' => now()]);
+
+        return response()->json(['message' => 'Ping primljen']);
+    }
 
 }

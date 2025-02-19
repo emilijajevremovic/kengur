@@ -88,6 +88,9 @@ export class AppComponent implements OnInit, OnDestroy {
           this.gameId = localStorage.getItem('game_id');
           // window.addEventListener('beforeunload', this.handleTabClose.bind(this));
           // document.addEventListener('visibilitychange', this.handleTabClose.bind(this));
+          setInterval(() => {
+            this.pingServer();
+          }, 30000);
         },
         error: (error) =>
           console.error('Greška pri dohvatanju korisničkih podataka:', error),
@@ -103,6 +106,13 @@ export class AppComponent implements OnInit, OnDestroy {
       );
       //localStorage.removeItem('gameId');
     }
+  }
+
+  pingServer() {
+    this.userService.pingUser().subscribe({
+      //next: () => console.log('Ping poslat'),
+      error: (err) => console.error('Greška pri slanju pinga:', err),
+    });
   }
 
   subscribeToGameFinish() {
