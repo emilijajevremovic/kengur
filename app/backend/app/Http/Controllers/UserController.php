@@ -211,17 +211,21 @@ class UserController extends Controller
         }
 
         // Dohvatanje trenutnih online korisnika
-        $onlineUsers = cache()->get('online_users', []);
+        //$onlineUsers = cache()->get('online_users', []);
+        $user->update(['online' => true]);
 
         // Dodavanje novog korisnika u listu
-        if (!in_array($user->id, $onlineUsers)) {
-            $onlineUsers[] = $user->id;
-        }
+        // if (!in_array($user->id, $onlineUsers)) {
+        //     $onlineUsers[] = $user->id;
+        // }
 
         // Ažuriranje liste u cache-u
-        cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+        //cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
 
         // Emitovanje ažurirane liste online korisnika
+        //broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+        
+        $onlineUsers = User::where('online', true)->pluck('id')->toArray();
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
         return response()->json(['message' => 'Korisnik je online']);
@@ -243,10 +247,19 @@ class UserController extends Controller
 
         $user = $accessToken->tokenable;
 
-        $onlineUsers = cache()->get('online_users', []);
-        $onlineUsers = array_diff($onlineUsers, [$user->id]);
-        cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+        // $onlineUsers = cache()->get('online_users', []);
+        // $onlineUsers = array_diff($onlineUsers, [$user->id]);
+        // cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
 
+        // broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+
+        // Ažuriraj status u bazi
+        $user->update(['online' => false]);
+
+        // Dohvati sve online korisnike iz baze
+        $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+
+        // Emituj event sa ažuriranom listom
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
         return response()->json(['message' => 'Korisnik je offline']);
@@ -260,14 +273,10 @@ class UserController extends Controller
             return response()->json(['error' => 'Niste autentifikovani.'], 401);
         }
 
-        // Dohvatanje svih online korisnika iz cache-a
-        $onlineUserIds = cache()->get('online_users', []);
-
-        // Dohvatanje podataka o online korisnicima
-        $onlineUsers = User::whereIn('id', $onlineUserIds)
-                            ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city')
-                            ->get();
-
+        $onlineUsers = User::where('online', true)
+                        ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city')
+                        ->get();
+                        
         return response()->json($onlineUsers);
     }
 

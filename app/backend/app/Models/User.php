@@ -26,7 +26,9 @@ class User extends Authenticatable
         'school',
         'city',
         'nickname',
-        'profile_picture'
+        'profile_picture',
+        'online', 
+        'role'
     ];
 
     /**
@@ -48,10 +50,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // public function getIsOnlineAttribute()
+    // {
+    //     $onlineUsers = Cache::get('online_users', []);
+    //     return in_array($this->id, $onlineUsers);
+    // }
     public function getIsOnlineAttribute()
     {
-        $onlineUsers = Cache::get('online_users', []);
-        return in_array($this->id, $onlineUsers);
+        return $this->online; 
     }
     
 }

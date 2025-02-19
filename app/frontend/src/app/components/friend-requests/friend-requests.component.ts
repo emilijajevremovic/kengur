@@ -14,13 +14,25 @@ import { TaskService } from '../../services/task.service';
 @Component({
   selector: 'app-friend-requests',
   standalone: true,
-  imports: [RouterModule, NavbarComponent, NgIf, CommonModule, FormsModule, MatTooltipModule],
+  imports: [
+    RouterModule,
+    NavbarComponent,
+    NgIf,
+    CommonModule,
+    FormsModule,
+    MatTooltipModule,
+  ],
   templateUrl: './friend-requests.component.html',
-  styleUrl: './friend-requests.component.scss'
+  styleUrl: './friend-requests.component.scss',
 })
-export class FriendRequestsComponent implements OnInit{
-
-  constructor(private authService: AuthService, private snackBar: MatSnackBar, private pusherService: PusherService, private userService: UserService, private taskService: TaskService) {}
+export class FriendRequestsComponent implements OnInit {
+  constructor(
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private pusherService: PusherService,
+    private userService: UserService,
+    private taskService: TaskService
+  ) {}
 
   baseUrl = environment.apiUrl;
   searchQuery: string = '';
@@ -46,8 +58,10 @@ export class FriendRequestsComponent implements OnInit{
       // next: (data) => console.log('Korisnik postavljen kao online:', data),
       // error: (error) => console.error('Greška pri postavljanju online statusa:', error)
     });
-    
-    const channel = this.pusherService.subscribeToChannel('online-users-channel');
+
+    const channel = this.pusherService.subscribeToChannel(
+      'online-users-channel'
+    );
 
     channel.bind('OnlineUsersUpdated', (data: any) => {
       if (data.onlineUsers && Array.isArray(data.onlineUsers)) {
@@ -55,7 +69,7 @@ export class FriendRequestsComponent implements OnInit{
         //console.log("Ažurirana lista online korisnika:", this.onlineUsers);
         this.updateUserLists();
       } else {
-        console.error("Stigao neispravan WebSocket događaj:", data);
+        console.error('Stigao neispravan WebSocket događaj:', data);
       }
       this.updateUserLists();
     });
@@ -66,10 +80,14 @@ export class FriendRequestsComponent implements OnInit{
     this.loadMathClasses();
 
     const userId = this.authService.getUserId();
-    const privateChannel = this.pusherService.subscribeToChannel(`user.${userId}`);
+    const privateChannel = this.pusherService.subscribeToChannel(
+      `user.${userId}`
+    );
 
     privateChannel.bind('ChallengeUser', (data: any) => {
-      alert(`${data.challengerName} izaziva te na meč iz ${data.category} za razred ${data.class}`);
+      alert(
+        `${data.challengerName} izaziva te na meč iz ${data.category} za razred ${data.class}`
+      );
     });
 
     this.authService.getUserData().subscribe({
@@ -80,41 +98,42 @@ export class FriendRequestsComponent implements OnInit{
         //console.error('Error fetching user data:', error);
       },
     });
-
-}
+  }
 
   sendChallenge(): void {
     const challengeData = {
       challenger_name: this.user,
       opponent_id: this.opponent.id,
       category: this.selectedSubject,
-      class: this.classSelected
+      class: this.classSelected,
     };
 
-    this.taskService.sendChallenge(challengeData)
-      .subscribe({
-        next: () => {
-          this.snackBar.open('Izazov uspešno poslat.', 'OK', {
-            duration: 5000,  
-            panelClass: ['light-snackbar'] 
-          });
-          // this.closePopup();
-          //console.log('Izazov uspešno poslat!');
-          //alert(`Poslali ste izazov korisniku ID: ${challengeData.opponent_id} za predmet ${challengeData.category} i razred ${challengeData.class}`);
-        },
-        error: (err) => {
-          //console.error('Greška prilikom slanja izazova:', err);
-        }
+    this.taskService.sendChallenge(challengeData).subscribe({
+      next: () => {
+        this.snackBar.open('Izazov uspešno poslat.', 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar'],
+        });
+        // this.closePopup();
+        //console.log('Izazov uspešno poslat!');
+        //alert(`Poslali ste izazov korisniku ID: ${challengeData.opponent_id} za predmet ${challengeData.category} i razred ${challengeData.class}`);
+      },
+      error: (err) => {
+        //console.error('Greška prilikom slanja izazova:', err);
+      },
     });
 
     this.closePopup();
   }
 
   loadMathClasses(): void {
-    this.taskService.getDistinctClassesMath().subscribe(data => {
-      this.distinctClassesMath = data.map(cls => JSON.parse(cls)); 
+    this.taskService.getDistinctClassesMath().subscribe((data) => {
+      this.distinctClassesMath = data.map((cls) => JSON.parse(cls));
       //console.log(this.distinctClassesMath);
-      if(this.selectedSubject == "math" && this.distinctClassesMath.length > 0) {
+      if (
+        this.selectedSubject == 'math' &&
+        this.distinctClassesMath.length > 0
+      ) {
         this.classSelected = this.distinctClassesMath[0][0];
       }
     });
@@ -122,10 +141,10 @@ export class FriendRequestsComponent implements OnInit{
 
   onSubjectChange(subject: string): void {
     this.selectedSubject = subject;
-    if(this.selectedSubject == "math" && this.distinctClassesMath.length > 0) {
+    if (this.selectedSubject == 'math' && this.distinctClassesMath.length > 0) {
       this.classSelected = this.distinctClassesMath[0][0];
     }
-    if(this.selectedSubject == "info" && this.distinctClassesInfo.length > 0) {
+    if (this.selectedSubject == 'info' && this.distinctClassesInfo.length > 0) {
       this.classSelected = this.distinctClassesInfo[0][0];
     }
   }
@@ -140,26 +159,25 @@ export class FriendRequestsComponent implements OnInit{
 
   fetchOnlineUsers(): void {
     this.userService.getOnlineUsers().subscribe((users) => {
-        this.onlineUsers = users.map((user: any) => user.id.toString());
-        //console.log("Online korisnici osveženi:", this.onlineUsers);
-        this.updateUserLists();
+      this.onlineUsers = users.map((user: any) => user.id.toString());
+      //console.log("Online korisnici osveženi:", this.onlineUsers);
+      this.updateUserLists();
     });
-}
+  }
 
   updateUserLists(): void {
     //console.log("Pristigli podaci o korisnicima:", this.users);
     //console.log("Lista online korisnika sa WebSocket-a:", this.onlineUsers);
-  
+
     this.users.forEach((user) => {
       user.is_online = this.onlineUsers.includes(user.id.toString());
     });
-  
+
     //console.log("Ažurirana lista korisnika:", this.users);
-  
+
     // Sortiraj korisnike tako da su online korisnici prvi
     this.users.sort((a, b) => Number(b.is_online) - Number(a.is_online));
   }
-  
 
   searchUsers() {
     this.searchPerformed = false;
@@ -174,14 +192,14 @@ export class FriendRequestsComponent implements OnInit{
           this.searchedUsers = [];
           //console.error('Greška prilikom pretrage:', error);
           //console.log('Detalji greške:', error?.error);
-        }
+        },
       });
     } else {
       this.searchPerformed = false;
       this.searchedUsers = [];
       this.snackBar.open('Unesite korisničko ime za pretragu.', 'OK', {
-        duration: 5000,  
-        panelClass: ['light-snackbar'] 
+        duration: 5000,
+        panelClass: ['light-snackbar'],
       });
     }
   }
@@ -190,24 +208,23 @@ export class FriendRequestsComponent implements OnInit{
     this.authService.sendFriendRequest(user.id).subscribe({
       next: (response) => {
         this.snackBar.open('Zahtev za prijateljstvo je poslat.', 'OK', {
-          duration: 5000,  
-          panelClass: ['light-snackbar'] 
+          duration: 5000,
+          panelClass: ['light-snackbar'],
         });
       },
       error: (error) => {
         if (error.status === 400) {
           this.snackBar.open('Već ste poslali zahtev ovom korisniku.', 'OK', {
             duration: 5000,
-            panelClass: ['light-snackbar']
+            panelClass: ['light-snackbar'],
           });
-        }
-        else {
+        } else {
           this.snackBar.open('Došlo je do greške, pokušajte ponovo.', 'OK', {
             duration: 5000,
-            panelClass: ['light-snackbar']
+            panelClass: ['light-snackbar'],
           });
         }
-      }
+      },
     });
   }
 
@@ -219,7 +236,7 @@ export class FriendRequestsComponent implements OnInit{
       },
       error: (error) => {
         console.error('Greška pri dobijanju zahteva:', error);
-      }
+      },
     });
   }
 
@@ -228,15 +245,15 @@ export class FriendRequestsComponent implements OnInit{
       next: (requests) => {
         this.snackBar.open('Prihvatili ste zahtev za prijateljstvo.', 'OK', {
           duration: 5000,
-          panelClass: ['light-snackbar']
+          panelClass: ['light-snackbar'],
         });
       },
       error: (error) => {
         this.snackBar.open('Došlo je do greške, pokušajte ponovo.', 'OK', {
           duration: 5000,
-          panelClass: ['light-snackbar']
+          panelClass: ['light-snackbar'],
         });
-      }
+      },
     });
   }
 
@@ -246,16 +263,16 @@ export class FriendRequestsComponent implements OnInit{
         this.loadFriendRequests();
         this.snackBar.open('Odbili ste zahtev za prijateljstvo.', 'OK', {
           duration: 5000,
-          panelClass: ['light-snackbar']
+          panelClass: ['light-snackbar'],
         });
       },
       error: (error) => {
         this.loadFriendRequests();
         this.snackBar.open('Došlo je do greške, pokušajte ponovo.', 'OK', {
           duration: 5000,
-          panelClass: ['light-snackbar']
+          panelClass: ['light-snackbar'],
         });
-      }
+      },
     });
   }
 
@@ -273,18 +290,18 @@ export class FriendRequestsComponent implements OnInit{
 
   openPopup(user: any) {
     this.opponent = user;
-    this.isPopupOpen = true; 
+    this.isPopupOpen = true;
   }
 
   closePopup() {
-    this.isPopupOpen = false; 
+    this.isPopupOpen = false;
   }
 
   closePopup2() {
-    this.isPopup2Open = false; 
+    this.isPopup2Open = false;
   }
 
   closePopup3() {
-    this.isPopup3Open = false; 
+    this.isPopup3Open = false;
   }
 }

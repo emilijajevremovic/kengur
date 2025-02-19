@@ -2,7 +2,7 @@
 
 use BeyondCode\LaravelWebSockets\Facades\WebSocketRouter;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
+use App\Models\User;
 
 WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
 
@@ -12,15 +12,20 @@ WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
             $userId = str_replace('private-user-', '', $channelName);
 
             // Dohvati listu online korisnika iz cache-a
-            $onlineUsers = Cache::get('online_users', []);
+            //$onlineUsers = Cache::get('online_users', []);
+            User::where('id', $userId)->update(['online' => true]);
+
+            $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+
+            broadcastToAllUsers($onlineUsers);
 
             // Dodaj korisnika ako ga nema
-            if (!in_array($userId, $onlineUsers)) {
-                $onlineUsers[] = $userId;
-                Cache::put('online_users', $onlineUsers, now()->addMinutes(30)); // Čuvamo online status 30 min
-            }
+            // if (!in_array($userId, $onlineUsers)) {
+            //     $onlineUsers[] = $userId;
+            //     Cache::put('online_users', $onlineUsers, now()->addMinutes(30)); // Čuvamo online status 30 min
+            // }
 
-            broadcastToAllUsers($onlineUsers); // Emituj ažuriranu listu
+            // broadcastToAllUsers($onlineUsers); // Emituj ažuriranu listu
         }
     });
 
@@ -29,14 +34,19 @@ WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
             $userId = str_replace('private-user-', '', $channelName);
 
             // Dohvati trenutnu listu online korisnika
-            $onlineUsers = Cache::get('online_users', []);
+            //$onlineUsers = Cache::get('online_users', []);
+            User::where('id', $userId)->update(['online' => false]);
+
+            $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+
+            broadcastToAllUsers($onlineUsers);
 
             // Ukloni korisnika ako postoji
-            $onlineUsers = array_diff($onlineUsers, [$userId]);
+            // $onlineUsers = array_diff($onlineUsers, [$userId]);
 
-            Cache::put('online_users', $onlineUsers, now()->addMinutes(30));
+            // Cache::put('online_users', $onlineUsers, now()->addMinutes(30));
 
-            broadcastToAllUsers($onlineUsers); // Emituj ažuriranu listu
+            // broadcastToAllUsers($onlineUsers); // Emituj ažuriranu listu
         }
     });
 });

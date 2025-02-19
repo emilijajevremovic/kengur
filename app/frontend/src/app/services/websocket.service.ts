@@ -25,9 +25,11 @@ export class WebsocketService {
       return;
     }
 
+    //console.log(`Pretplaćujem korisnika na izazove: user.${userId}`);
     const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
 
     channel.bind('ChallengeReceived', (data: any) => {
+      //console.log(`Izazov primljen za user.${userId}:`, data);
       callback(data);
     });
   }
