@@ -229,6 +229,11 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  parseDuration(duration: string): number {
+    const [minutes, seconds] = duration.split(':').map(Number);
+    return minutes * 60 + seconds;
+  }
+
   determineWinnerAndLoser() {
     if (!this.gameResultData?.player1 || !this.gameResultData?.player2) return;
 
@@ -236,6 +241,9 @@ export class AppComponent implements OnInit, OnDestroy {
     const player2 = this.gameResultData.player2;
 
     let winner, loser;
+
+    //console.log(this.gameResultData);
+    //console.log(player1);
 
     if (player1.timeTaken === '-1' && player2.timeTaken === '-1') {
       player1.image = 'loser.png';
@@ -248,14 +256,17 @@ export class AppComponent implements OnInit, OnDestroy {
       winner = player1;
       loser = player2;
     } else {
-      if (player1.correct_answers > player2.correct_answers) {
+      if (player1.correctAnswers > player2.correctAnswers) {
         winner = player1;
         loser = player2;
-      } else if (player1.correct_answers < player2.correct_answers) {
+      } else if (player1.correctAnswers < player2.correctAnswers) {
         winner = player2;
         loser = player1;
       } else {
-        winner = player1.duration < player2.duration ? player1 : player2;
+        const player1Time = this.parseDuration(player1.timeTaken);
+        const player2Time = this.parseDuration(player2.timeTaken);
+
+        winner = player1Time < player2Time ? player1 : player2;
         loser = winner === player1 ? player2 : player1;
       }
     }
