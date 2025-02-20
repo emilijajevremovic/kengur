@@ -73,6 +73,8 @@ Route::middleware(['auth:sanctum', 'game.participant'])->post('/forfeit-game/{ga
 
 Route::middleware('auth:sanctum')->post('/ping', [UserController::class, 'pingUser']);
 
+Route::middleware('auth:api')->get('/in-game-users', [UserController::class, 'getInGameUsers']);
+
 
 
 

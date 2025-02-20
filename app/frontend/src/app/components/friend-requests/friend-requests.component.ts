@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PusherService } from '../../services/pusher.service';
 import { UserService } from '../../services/user.service';
 import { TaskService } from '../../services/task.service';
+import { PopupOkComponent } from '../popup-ok/popup-ok.component';
 
 @Component({
   selector: 'app-friend-requests',
@@ -21,6 +22,7 @@ import { TaskService } from '../../services/task.service';
     CommonModule,
     FormsModule,
     MatTooltipModule,
+    PopupOkComponent,
   ],
   templateUrl: './friend-requests.component.html',
   styleUrl: './friend-requests.component.scss',
@@ -39,6 +41,8 @@ export class FriendRequestsComponent implements OnInit {
   isPopupOpen = false;
   isPopup2Open = false;
   isPopup3Open = false;
+  isPopupOkOpen = false;
+  popupOkMessage = '';
   searchedUsers: any[] = [];
   searchPerformed = false;
   selectedUser: any;
@@ -66,7 +70,7 @@ export class FriendRequestsComponent implements OnInit {
     channel.bind('OnlineUsersUpdated', (data: any) => {
       if (data.onlineUsers && Array.isArray(data.onlineUsers)) {
         this.onlineUsers = data.onlineUsers.map((id: number) => id.toString());
-        //console.log("Ažurirana lista online korisnika:", this.onlineUsers);
+        //console.log('Ažurirana lista online korisnika:', this.onlineUsers);
         this.updateUserLists();
       } else {
         console.error('Stigao neispravan WebSocket događaj:', data);
@@ -114,9 +118,6 @@ export class FriendRequestsComponent implements OnInit {
           duration: 5000,
           panelClass: ['light-snackbar'],
         });
-        // this.closePopup();
-        //console.log('Izazov uspešno poslat!');
-        //alert(`Poslali ste izazov korisniku ID: ${challengeData.opponent_id} za predmet ${challengeData.category} i razred ${challengeData.class}`);
       },
       error: (err) => {
         //console.error('Greška prilikom slanja izazova:', err);
@@ -160,23 +161,32 @@ export class FriendRequestsComponent implements OnInit {
   fetchOnlineUsers(): void {
     this.userService.getOnlineUsers().subscribe((users) => {
       this.onlineUsers = users.map((user: any) => user.id.toString());
-      //console.log("Online korisnici osveženi:", this.onlineUsers);
       this.updateUserLists();
     });
   }
 
   updateUserLists(): void {
-    //console.log("Pristigli podaci o korisnicima:", this.users);
-    //console.log("Lista online korisnika sa WebSocket-a:", this.onlineUsers);
-
     this.users.forEach((user) => {
       user.is_online = this.onlineUsers.includes(user.id.toString());
     });
 
-    //console.log("Ažurirana lista korisnika:", this.users);
-
-    // Sortiraj korisnike tako da su online korisnici prvi
     this.users.sort((a, b) => Number(b.is_online) - Number(a.is_online));
+    this.updateInGameUsers();
+  }
+
+  updateInGameUsers() {
+    this.userService.getInGameUsers().subscribe({
+      next: (usersInGame) => {
+        this.users.forEach((user) => {
+          const matchingUser = usersInGame.find(
+            (gameUser: any) => gameUser.id === user.id
+          );
+          user.game = matchingUser ? matchingUser.game : false;
+        });
+      },
+      error: (err) =>
+        console.error('Greška pri dohvatanju igrača u igri:', err),
+    });
   }
 
   searchUsers() {
@@ -289,8 +299,12 @@ export class FriendRequestsComponent implements OnInit {
   }
 
   openPopup(user: any) {
-    this.opponent = user;
-    this.isPopupOpen = true;
+    if (user.game) {
+      this.isPopupOkOpen = true;
+    } else {
+      this.opponent = user;
+      this.isPopupOpen = true;
+    }
   }
 
   closePopup() {

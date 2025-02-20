@@ -73,10 +73,8 @@ class GameController extends Controller
             'class' => 'required|string',
         ]);
 
-        // Generišemo jedinstveni game_id
         $gameId = uniqid();
 
-        // Kreiramo igru i čuvamo je u bazi
         $game = Game::create([
             'game_id' => $gameId,
             'category' => $data['category'],
@@ -86,12 +84,18 @@ class GameController extends Controller
             'status' => 'active'
         ]);
 
+        User::whereIn('id', [$data['challenger_id'], $data['opponent_id']])->update(['game' => true]);
+
         broadcast(new GameStarted(
             $game->game_id, 
             $game->category, 
             $game->class, 
             [$game->player_1, $game->player_2]
         ));
+
+        $onlineUsers = User::where('online', true)->pluck('id')->toArray(); 
+            
+        broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
         return response()->json(['message' => 'Game started', 'gameId' => $game->game_id]);
     }
@@ -232,16 +236,22 @@ class GameController extends Controller
             ['game_id' => $gameId, 'user_id' => $userId],
             ['correct_answers' => $data['correctAnswers'], 'duration' => $data['timeTaken']]
         );
+
+        $user = User::find($userId);
+        if ($user) {
+            $user->update(['online' => true, 'game' => false]);
+
+            $onlineUsers = User::where('online', true)->pluck('id')->toArray(); 
+            
+            broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+        }
     
-        // Provera da li su oba igrača završila
         $results = GameResult::where('game_id', $gameId)->get();
         
         if ($results->count() === 2) {
-            // Pronađi rezultate oba igrača
             $player1 = $results->where('user_id', $game->player_1)->first();
             $player2 = $results->where('user_id', $game->player_2)->first();
 
-            // Pronađi korisnike iz baze
             $player1Data = User::find($game->player_1);
             $player2Data = User::find($game->player_2);
 
@@ -252,7 +262,7 @@ class GameController extends Controller
                     'correctAnswers' => $player1->correct_answers,
                     'totalQuestions' => $player1->total_questions,
                     'timeTaken' => $player1->duration,
-                    'profilePicture' => $player1Data ? $player1Data->profile_picture : null, // Dodavanje profilne slike
+                    'profilePicture' => $player1Data ? $player1Data->profile_picture : null, 
                     'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
                 ],
                 'player2' => [
@@ -260,7 +270,7 @@ class GameController extends Controller
                     'correctAnswers' => $player2->correct_answers,
                     'totalQuestions' => $player2->total_questions,
                     'timeTaken' => $player2->duration,
-                    'profilePicture' => $player2Data ? $player2Data->profile_picture : null, // Dodavanje profilne slike
+                    'profilePicture' => $player2Data ? $player2Data->profile_picture : null, 
                     'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'
                 ]
             ];
@@ -309,6 +319,15 @@ class GameController extends Controller
         }
 
         $results = GameResult::where('game_id', $gameId)->get();
+
+        $user = User::find($userId);
+        if ($user) {
+            $user->update(['online' => true, 'game' => false]);
+
+            $onlineUsers = User::where('online', true)->pluck('id')->toArray(); 
+            
+            broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+        }
 
         if ($results->count() === 2) {
             $player1 = $results->where('user_id', $game->player_1)->first();

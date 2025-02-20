@@ -1,177 +1,310 @@
 <app-navbar></app-navbar>
 
 <div class="popup-overlay" *ngIf="isPopupOpen" (click)="closePopup()">
-    <div class="popup-content" (click)="$event.stopPropagation()">
-        <div id="close-popup" (click)="closePopup()"><img src="../../../assets/images/close-popup.png" alt=""></div>
-        <div class="popup-request">
-            <div class="popup-opponent">
-                <div class="card-header">
-                    <h5>Protivnik</h5>
-                </div>
-                <div class="profile-picture">
-                    <img src="{{baseUrl}}/{{opponent.profile_picture}}" alt="">
-                    <h5>{{opponent.nickname}}</h5>
-                    <span>{{opponent.email}}</span>
-                </div>
-            </div>
-            <div class="popup-subject">
-                <div class="card-header">
-                    <h5>Predmet</h5>
-                </div>
-                <div class="subjects">
-                    <div class="subject">
-                        <label for="radio-maths">
-                            <input type="radio" id="radio-maths" name="radio" value="math" [(ngModel)]="selectedSubject"
-                                (change)="onSubjectChange('math')">
-                            <span>Matematika</span><br>
-                            <span><img style="margin-top: 15px;" src="../../../assets/images/maths.png" alt=""></span>
-                        </label>
-                    </div>
-                    <div class="subject">
-                        <label for="radio-info">
-                            <input type="radio" id="radio-info" name="radio" value="info" [(ngModel)]="selectedSubject"
-                                (change)="onSubjectChange('info')">
-                            <span>Informatika</span><br>
-                            <span><img style="margin-top: 15px;" src="../../../assets/images/programming.png"
-                                    alt=""></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="popup-class">
-                <div class="card-header">
-                    <h5>Razred</h5>
-                </div>
-                <div class="class-select" *ngIf="selectedSubject === 'math'">
-                    <select name="classes" id="classes" [(ngModel)]="classSelected">
-                        <option *ngFor="let classItem of distinctClassesMath; let first = first" [value]="classItem" [selected]="first">
-                            {{ classItem }}
-                        </option>
-                    </select>
-                </div>
-                <div class="class-select" *ngIf="selectedSubject === 'info'">
-                    <select name="classes" id="classes" [(ngModel)]="classSelected">
-                        <option *ngFor="let classItem of distinctClassesInfo; let first = first" [value]="classItem" [selected]="first">
-                            {{ classItem }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div><button id="popup-send-button" (click)="sendChallenge()">Pošalji zahtev</button></div>
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <div id="close-popup" (click)="closePopup()">
+      <img src="../../../assets/images/close-popup.png" alt="" />
     </div>
+    <div class="popup-request">
+      <div class="popup-opponent">
+        <div class="card-header">
+          <h5>Protivnik</h5>
+        </div>
+        <div class="profile-picture">
+          <img src="{{ baseUrl }}/{{ opponent.profile_picture }}" alt="" />
+          <h5>{{ opponent.nickname }}</h5>
+          <span>{{ opponent.email }}</span>
+        </div>
+      </div>
+      <div class="popup-subject">
+        <div class="card-header">
+          <h5>Predmet</h5>
+        </div>
+        <div class="subjects">
+          <div class="subject">
+            <label for="radio-maths">
+              <input
+                type="radio"
+                id="radio-maths"
+                name="radio"
+                value="math"
+                [(ngModel)]="selectedSubject"
+                (change)="onSubjectChange('math')"
+              />
+              <span>Matematika</span><br />
+              <span
+                ><img
+                  style="margin-top: 15px"
+                  src="../../../assets/images/maths.png"
+                  alt=""
+              /></span>
+            </label>
+          </div>
+          <div class="subject">
+            <label for="radio-info">
+              <input
+                type="radio"
+                id="radio-info"
+                name="radio"
+                value="info"
+                [(ngModel)]="selectedSubject"
+                (change)="onSubjectChange('info')"
+              />
+              <span>Informatika</span><br />
+              <span
+                ><img
+                  style="margin-top: 15px"
+                  src="../../../assets/images/programming.png"
+                  alt=""
+              /></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="popup-class">
+        <div class="card-header">
+          <h5>Razred</h5>
+        </div>
+        <div class="class-select" *ngIf="selectedSubject === 'math'">
+          <select name="classes" id="classes" [(ngModel)]="classSelected">
+            <option
+              *ngFor="let classItem of distinctClassesMath; let first = first"
+              [value]="classItem"
+              [selected]="first"
+            >
+              {{ classItem }}
+            </option>
+          </select>
+        </div>
+        <div class="class-select" *ngIf="selectedSubject === 'info'">
+          <select name="classes" id="classes" [(ngModel)]="classSelected">
+            <option
+              *ngFor="let classItem of distinctClassesInfo; let first = first"
+              [value]="classItem"
+              [selected]="first"
+            >
+              {{ classItem }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button id="popup-send-button" (click)="sendChallenge()">
+        Pošalji zahtev
+      </button>
+    </div>
+  </div>
 </div>
 
 <div class="main-container">
-    <div class="flex-container-row">
-        <div class="friends-list">
-            <div id="p-div">
-                <p>Odaberi protivnika</p>
+  <div class="flex-container-row">
+    <div class="friends-list">
+      <div id="p-div">
+        <p>Odaberi protivnika</p>
+      </div>
+      <div id="scrollable-div">
+        <div *ngFor="let user of users">
+          <div
+            class="friend-status"
+            [ngClass]="user.is_online ? 'online' : 'offline'"
+            (click)="user.is_online ? openPopup(user) : null"
+          >
+            <div class="friend-status-img">
+              <img src="{{ baseUrl }}/{{ user.profile_picture }}" alt="" />
             </div>
-            <div id="scrollable-div">
-                <div *ngFor="let user of users">
-                    <div class="friend-status" [ngClass]="user.is_online ? 'online' : 'offline'"
-                        (click)="user.is_online ? openPopup(user) : null">
-                        <div class="friend-status-img"><img src="{{baseUrl}}/{{user.profile_picture}}" alt=""></div>
-                        <h5>{{ user.nickname }}</h5>
-                        <div class="status-indicator" [ngClass]="user.is_online ? 'online' : 'offline'"></div>
-                    </div>
-                </div>
+            <h5>{{ user.nickname }}</h5>
+            <div class="status-container">
+              <div
+                class="status-indicator"
+                [ngClass]="user.is_online ? 'online' : 'offline'"
+              ></div>
+              <div
+                *ngIf="user.is_online && user.game"
+                class="status-indicator game"
+              ></div>
             </div>
+          </div>
         </div>
-        <div class="search-and-requests">
-            <div class="search-area">
-                <p>Pretraži korisnike</p>
-                <div class="search">
-                    <div class="search-bar">
-                        <div class="input-group">
-                            <input [(ngModel)]="searchQuery" class="input"
-                                placeholder="Pretraži prema korisničkom imenu" autocomplete="off">
-                            <button (click)="searchUsers()" class="button--submit"><img
-                                    src="../../../assets/images/magnifying-glass.png" alt=""></button>
-                        </div>
-                    </div>
-                    <div class="search-results">
-                        <div *ngIf="searchedUsers.length > 0" class="friends-list" id="list1" style="padding: 0;">
-                            <div>
-                                <div class="friend-status" *ngFor="let user of searchedUsers" (click)="showMore(user)">
-                                    <div class="friend-status-img"><img src="{{ baseUrl }}/{{ user.profile_picture }}"
-                                            alt=""></div>
-                                    <h5>{{ user.name }} {{ user.surname }}</h5>
-                                    &nbsp;&nbsp;&nbsp;<span>{{ user.nickname }}</span>
-                                    <button (click)="addFriend(user); $event.stopPropagation()"
-                                        matTooltip="Dodaj za prijatelja" matTooltipPosition="above"
-                                        style="margin-right: 5px;"><img src="../../../assets/images/add-friend.png"
-                                            alt=""></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="searchedUsers.length === 0 && searchPerformed" style="text-align: center;">
-                            <span>Nema pronađenih korisnika.</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="requests">
-                <div class="request">
-                    <div class="friends-list" style="width: 100%;">
-                        <p>Zahtevi za prijateljstvo</p>
-                        <div id="list2">
-                            <div>
-                                <div class="friend-status" *ngFor="let request of friendRequests"
-                                    (click)="showMoreAboutRequest(request.sender)">
-                                    <div class="friend-status-img"><img
-                                            src="{{baseUrl}}/{{request.sender.profile_picture}}" alt=""></div>
-                                    <h5>{{request.sender.nickname}}</h5>
-                                    <div class="buttons">
-                                        <button (click)="acceptRequest(request.id); $event.stopPropagation()"
-                                            matTooltip="Prihvati" matTooltipPosition="above"><img
-                                                src="../../../assets/images/check.png" alt=""></button>
-                                        <button (click)="rejectRequest(request.id); $event.stopPropagation()"
-                                            matTooltip="Odbij" matTooltipPosition="above" id="red"><img
-                                                src="../../../assets/images/cross.png" alt=""></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="friendRequests.length === 0" style="text-align: center;"><span
-                                    style="color: rgba(57, 56, 56, 0.895);">Nema zahteva za prijateljstvo.</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="search-and-requests">
+      <div class="search-area">
+        <p>Pretraži korisnike</p>
+        <div class="search">
+          <div class="search-bar">
+            <div class="input-group">
+              <input
+                [(ngModel)]="searchQuery"
+                class="input"
+                placeholder="Pretraži prema korisničkom imenu"
+                autocomplete="off"
+              />
+              <button (click)="searchUsers()" class="button--submit">
+                <img src="../../../assets/images/magnifying-glass.png" alt="" />
+              </button>
+            </div>
+          </div>
+          <div class="search-results">
+            <div
+              *ngIf="searchedUsers.length > 0"
+              class="friends-list"
+              id="list1"
+              style="padding: 0"
+            >
+              <div>
+                <div
+                  class="friend-status"
+                  *ngFor="let user of searchedUsers"
+                  (click)="showMore(user)"
+                >
+                  <div class="friend-status-img">
+                    <img
+                      src="{{ baseUrl }}/{{ user.profile_picture }}"
+                      alt=""
+                    />
+                  </div>
+                  <h5>{{ user.name }} {{ user.surname }}</h5>
+                  &nbsp;&nbsp;&nbsp;<span>{{ user.nickname }}</span>
+                  <button
+                    (click)="addFriend(user); $event.stopPropagation()"
+                    matTooltip="Dodaj za prijatelja"
+                    matTooltipPosition="above"
+                    style="margin-right: 5px"
+                  >
+                    <img src="../../../assets/images/add-friend.png" alt="" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="searchedUsers.length === 0 && searchPerformed"
+              style="text-align: center"
+            >
+              <span>Nema pronađenih korisnika.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="requests">
+        <div class="request">
+          <div class="friends-list" style="width: 100%">
+            <p>Zahtevi za prijateljstvo</p>
+            <div id="list2">
+              <div>
+                <div
+                  class="friend-status"
+                  *ngFor="let request of friendRequests"
+                  (click)="showMoreAboutRequest(request.sender)"
+                >
+                  <div class="friend-status-img">
+                    <img
+                      src="{{ baseUrl }}/{{ request.sender.profile_picture }}"
+                      alt=""
+                    />
+                  </div>
+                  <h5>{{ request.sender.nickname }}</h5>
+                  <div class="buttons">
+                    <button
+                      (click)="
+                        acceptRequest(request.id); $event.stopPropagation()
+                      "
+                      matTooltip="Prihvati"
+                      matTooltipPosition="above"
+                    >
+                      <img src="../../../assets/images/check.png" alt="" />
+                    </button>
+                    <button
+                      (click)="
+                        rejectRequest(request.id); $event.stopPropagation()
+                      "
+                      matTooltip="Odbij"
+                      matTooltipPosition="above"
+                      id="red"
+                    >
+                      <img src="../../../assets/images/cross.png" alt="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                *ngIf="friendRequests.length === 0"
+                style="text-align: center"
+              >
+                <span style="color: rgba(57, 56, 56, 0.895)"
+                  >Nema zahteva za prijateljstvo.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="popup-overlay" *ngIf="isPopup2Open" (click)="closePopup2()">
-    <div class="popup-content2" (click)="$event.stopPropagation()">
-        <div id="close-popup" (click)="closePopup2()">
-            <img src="../../../assets/images/close-popup.png" alt="">
-        </div>
-        <div class="popup-request2">
-            <img src="{{baseUrl}}/{{selectedUser.profile_picture}}" alt=""
-                style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 10px;">
-            <h5> IME: </h5> <span>{{ selectedUser.name }} {{ selectedUser.surname }}</span>
-            <h5> KORISNIČKO IME: </h5><span>{{ selectedUser.nickname }}</span>
-            <h5> EMAIL: </h5><span>{{ selectedUser.email }}</span>
-            <h5> ŠKOLA: </h5><span>{{ selectedUser.school }}</span>
-            <h5> MESTO: </h5><span>{{ selectedUser.city }}</span>
-        </div>
+  <div class="popup-content2" (click)="$event.stopPropagation()">
+    <div id="close-popup" (click)="closePopup2()">
+      <img src="../../../assets/images/close-popup.png" alt="" />
     </div>
+    <div class="popup-request2">
+      <img
+        src="{{ baseUrl }}/{{ selectedUser.profile_picture }}"
+        alt=""
+        style="
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        "
+      />
+      <h5>IME:</h5>
+      <span>{{ selectedUser.name }} {{ selectedUser.surname }}</span>
+      <h5>KORISNIČKO IME:</h5>
+      <span>{{ selectedUser.nickname }}</span>
+      <h5>EMAIL:</h5>
+      <span>{{ selectedUser.email }}</span>
+      <h5>ŠKOLA:</h5>
+      <span>{{ selectedUser.school }}</span>
+      <h5>MESTO:</h5>
+      <span>{{ selectedUser.city }}</span>
+    </div>
+  </div>
 </div>
 
 <div class="popup-overlay" *ngIf="isPopup3Open" (click)="closePopup3()">
-    <div class="popup-content2" (click)="$event.stopPropagation()">
-        <div id="close-popup" (click)="closePopup3()">
-            <img src="../../../assets/images/close-popup.png" alt="">
-        </div>
-        <div class="popup-request2">
-            <img src="{{baseUrl}}/{{selectedRequest.profile_picture}}" alt=""
-                style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 10px;">
-            <h5> IME: </h5> <span>{{ selectedRequest.name }} {{ selectedRequest.surname }}</span>
-            <h5> KORISNIČKO IME: </h5><span>{{ selectedRequest.nickname }}</span>
-            <h5> EMAIL: </h5><span>{{ selectedRequest.email }}</span>
-            <h5> ŠKOLA: </h5><span>{{ selectedRequest.school }}</span>
-            <h5> MESTO: </h5><span>{{ selectedRequest.city }}</span>
-        </div>
+  <div class="popup-content2" (click)="$event.stopPropagation()">
+    <div id="close-popup" (click)="closePopup3()">
+      <img src="../../../assets/images/close-popup.png" alt="" />
     </div>
+    <div class="popup-request2">
+      <img
+        src="{{ baseUrl }}/{{ selectedRequest.profile_picture }}"
+        alt=""
+        style="
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          margin-bottom: 10px;
+        "
+      />
+      <h5>IME:</h5>
+      <span>{{ selectedRequest.name }} {{ selectedRequest.surname }}</span>
+      <h5>KORISNIČKO IME:</h5>
+      <span>{{ selectedRequest.nickname }}</span>
+      <h5>EMAIL:</h5>
+      <span>{{ selectedRequest.email }}</span>
+      <h5>ŠKOLA:</h5>
+      <span>{{ selectedRequest.school }}</span>
+      <h5>MESTO:</h5>
+      <span>{{ selectedRequest.city }}</span>
+    </div>
+  </div>
 </div>
+
+<app-popup-ok
+  *ngIf="isPopupOkOpen"
+  [message]="'Ovaj korisnik je trenutno u igri. Sačekajte da završi.'"
+  (close)="isPopupOkOpen = false"
+></app-popup-ok>

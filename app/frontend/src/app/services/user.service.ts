@@ -28,6 +28,10 @@ export class UserService {
     return this.http.get(`${this.baseUrl}/online-users`);
   }
 
+  getInGameUsers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/in-game-users`);
+  }
+
   pingUser(): Observable<any> {
     return this.http.post(`${this.baseUrl}/ping`, {});
   }

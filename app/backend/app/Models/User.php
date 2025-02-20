@@ -29,7 +29,8 @@ class User extends Authenticatable
         'profile_picture',
         'online', 
         'role',
-        'last_ping'
+        'last_ping',
+        'game'
     ];
 
     /**

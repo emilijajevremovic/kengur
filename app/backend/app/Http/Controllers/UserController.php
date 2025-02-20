@@ -17,7 +17,6 @@ class UserController extends Controller
 {
     public function create(Request $request)
     {
-        // Ukoliko korisnik sa tim emailom vec postoji, vrati poruku
         $existingUser = User::where('email', $request->email)->first();
         if ($existingUser) {
             return response()->json(['error' => 'Korisnik sa ovim emailom već postoji.'], 409); 
@@ -28,7 +27,6 @@ class UserController extends Controller
             return response()->json(['error' => 'Korisnik sa ovim nadimkom već postoji.'], 410); 
         }
 
-        // Validacija podataka
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
@@ -39,41 +37,36 @@ class UserController extends Controller
             'nickname' => 'required|string|min:4|max:255'
         ]);
 
-        // Ako validacija nije prošla
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Kreiranje korisnika
         $user = User::create([
             'name' => $request->name,
             'surname' => $request->surname,
             'school' => $request->school,
             'city' => $request->city,
             'email' => $request->email,
-            'password' => bcrypt($request->password), // enkriptovanje lozinke
+            'password' => bcrypt($request->password),
             'nickname' => $request->nickname,
             'profile_picture' => 'storage/profile_images/default_profile_picture.png',
         ]);
 
-        return response()->json(['user' => $user], 201); // vrati novog korisnika 
+        return response()->json(['user' => $user], 201); 
     }
 
     public function login(Request $request)
     {
-        // Validacija unetih podataka
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
 
-        // Pokušaj autentifikacije
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 'Neispravan email ili šifra.'], 401); // Unauthorized
+            return response()->json(['error' => 'Neispravan email ili šifra.'], 401); 
         }
 
-        // Kreiranje tokena za autentifikaciju
         $token = $user->createToken('UserLoginToken')->plainTextToken;
 
         return response()->json(['token' => $token], 200);
@@ -81,24 +74,19 @@ class UserController extends Controller
 
     public function getUserById($id)
     {
-        // Pronađi korisnika po ID-u
         $user = User::find($id);
 
-        // Ako korisnik ne postoji, vrati grešku
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
 
-        // Vratiti podatke o korisniku
         return response()->json($user, 200);
     }
 
     public function getUser(Request $request)
     {
-        // Dohvata trenutno autentifikovanog korisnika
         $user = $request->user();
 
-        // Vraća korisničke podatke
         return response()->json([
             'success' => true,
             'user' => $user,
@@ -107,10 +95,8 @@ class UserController extends Controller
 
     public function getUserId(Request $request)
     {
-        // Dohvata trenutno autentifikovanog korisnika
         $user = $request->user();
 
-        // Vraća korisničke podatke
         return response()->json([
             'id' => $user->id,
         ], 200);
@@ -127,7 +113,7 @@ class UserController extends Controller
         $searchTerm = $request->query('nickname');
 
         $users = User::where('nickname', 'like', '%' . $searchTerm . '%')
-                 ->where('id', '!=', $userAuth->id) // Isključivanje trenutno prijavljenog korisnika
+                 ->where('id', '!=', $userAuth->id) 
                  ->get();
 
         if ($users->isEmpty()) {
@@ -154,7 +140,6 @@ class UserController extends Controller
             'city' => 'required|string|max:255',
         ]);
 
-        // Provera da li već postoji korisnik sa istim nadimkom
         if (User::where('nickname', $request->nickname)->where('id', '!=', $user->id)->exists()) {
             return response()->json(['error' => 'Nickname već postoji.'], 400);
         }
@@ -163,7 +148,7 @@ class UserController extends Controller
             $oldImagePath = public_path($user->profile_picture); 
     
             if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);  // Brisanje stare slike
+                unlink($oldImagePath); 
             }
         }
 
@@ -192,7 +177,7 @@ class UserController extends Controller
         }
 
         $users = User::where('id', '!=', $userAuth->id)
-                     ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'email') 
+                     ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'email', 'game') 
                      ->get()
                      ->map(function ($user) {
                         $user->is_online = $user->is_online; 
@@ -210,20 +195,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Niste autentifikovani.'], 401);
         }
 
-        // Dohvatanje trenutnih online korisnika
-        //$onlineUsers = cache()->get('online_users', []);
-        $user->update(['online' => true]);
-
-        // Dodavanje novog korisnika u listu
-        // if (!in_array($user->id, $onlineUsers)) {
-        //     $onlineUsers[] = $user->id;
-        // }
-
-        // Ažuriranje liste u cache-u
-        //cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
-
-        // Emitovanje ažurirane liste online korisnika
-        //broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
+        $user->update(['online' => true, 'game' => false]);
         
         $onlineUsers = User::where('online', true)->pluck('id')->toArray();
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
@@ -247,19 +219,10 @@ class UserController extends Controller
 
         $user = $accessToken->tokenable;
 
-        // $onlineUsers = cache()->get('online_users', []);
-        // $onlineUsers = array_diff($onlineUsers, [$user->id]);
-        // cache()->put('online_users', $onlineUsers, now()->addMinutes(30));
+        $user->update(['online' => false, 'game' => false]);
 
-        // broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
-
-        // Ažuriraj status u bazi
-        $user->update(['online' => false]);
-
-        // Dohvati sve online korisnike iz baze
         $onlineUsers = User::where('online', true)->pluck('id')->toArray();
 
-        // Emituj event sa ažuriranom listom
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
         return response()->json(['message' => 'Korisnik je offline']);
@@ -274,7 +237,7 @@ class UserController extends Controller
         }
 
         $onlineUsers = User::where('online', true)
-                        ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city')
+                        ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'game')
                         ->get();
 
         return response()->json($onlineUsers);
@@ -288,10 +251,24 @@ class UserController extends Controller
             return response()->json(['error' => 'Niste autentifikovani.'], 401);
         }
 
-        // Postavi korisnika kao online i ažuriraj timestamp
         $user->update(['online' => true, 'last_ping' => now()]);
 
         return response()->json(['message' => 'Ping primljen']);
+    }
+
+    public function getInGameUsers()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Niste autentifikovani.'], 401);
+        }
+
+        $inGameUsers = User::where('game', true)
+                            ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'game')
+                            ->get();
+
+        return response()->json($inGameUsers);
     }
 
 }
