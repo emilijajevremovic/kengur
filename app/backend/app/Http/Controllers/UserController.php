@@ -125,6 +125,7 @@ class UserController extends Controller
 
     public function updateUserProfile(Request $request)
     {
+        Log::info('Request data:', $request->all());
         $user = auth()->user();
 
         if (!$user) {
@@ -132,7 +133,7 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'nickname' => 'required|string|min:4|max:255',
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
@@ -144,18 +145,30 @@ class UserController extends Controller
             return response()->json(['error' => 'Nickname već postoji.'], 400);
         }
 
-        if ($user->profile_picture && basename($user->profile_picture) !== 'default_profile_picture.png') {
-            $oldImagePath = public_path($user->profile_picture); 
+        // if ($user->profile_picture && basename($user->profile_picture) !== 'default_profile_picture.png') {
+        //     $oldImagePath = public_path($user->profile_picture); 
     
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath); 
+        //     if (file_exists($oldImagePath)) {
+        //         unlink($oldImagePath); 
+        //     }
+        // }
+
+        // $imageName = time() . '.' . $request->profile_picture->extension();
+        // $request->profile_picture->storeAs('public/profile_images', $imageName);
+        if ($request->hasFile('profile_picture')) {
+            if ($user->profile_picture && basename($user->profile_picture) !== 'default_profile_picture.png') {
+                $oldImagePath = public_path($user->profile_picture);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
+        
+            $imageName = time() . '.' . $request->file('profile_picture')->extension();
+            $request->file('profile_picture')->storeAs('public/profile_images', $imageName);
+            $user->profile_picture = 'storage/profile_images/' . $imageName;
         }
 
-        $imageName = time() . '.' . $request->profile_picture->extension();
-        $request->profile_picture->storeAs('public/profile_images', $imageName);
-
-        $user->profile_picture = 'storage/profile_images/' . $imageName;
+        //$user->profile_picture = 'storage/profile_images/' . $imageName;
 
         $user->nickname = $request->nickname;
         $user->name = $request->name;

@@ -101,20 +101,23 @@ export class ProfileComponent implements OnInit {
     if (this.profileForm.valid) {
       this.errorMessage = '';
       const formData = new FormData();
-      formData.append('profile_picture', this.profileImage);
+      if (this.profileImage && this.profileImage.type) {
+        formData.append('profile_picture', this.profileImage);
+      }
       formData.append('nickname', this.user.nickname);
       formData.append('name', this.user.name);
       formData.append('surname', this.user.surname);
       formData.append('school', this.user.school);
       formData.append('city', this.user.city);
 
+      console.log(formData);
       this.authService.updateUserProfile(formData).subscribe({
         next: (response) => {
           //console.log('Profil uspešno ažuriran:', response);
           // Ažuriraj sliku ili nickname na frontu ako je potrebno
         },
         error: (error) => {
-          //console.error('Greška prilikom ažuriranja profila:', error);
+          console.error('Greška prilikom ažuriranja profila:', error);
         },
       });
     } else {
