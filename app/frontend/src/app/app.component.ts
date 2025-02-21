@@ -89,7 +89,9 @@ export class AppComponent implements OnInit, OnDestroy {
           // window.addEventListener('beforeunload', this.handleTabClose.bind(this));
           // document.addEventListener('visibilitychange', this.handleTabClose.bind(this));
           setInterval(() => {
-            this.pingServer();
+            if (localStorage.getItem('auth_token')) {
+              this.pingServer();
+            }
           }, 30000);
         },
         error: (error) =>
