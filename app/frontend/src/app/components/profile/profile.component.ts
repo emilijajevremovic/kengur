@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit {
 
   triggerFileInput(): void {
     if (this.fileInput) {
-      this.fileInput.nativeElement.click(); // Pozivanje klik na file input
+      this.fileInput.nativeElement.click();
     }
   }
 
@@ -84,10 +84,7 @@ export class ProfileComponent implements OnInit {
     if (input?.files && input.files.length > 0) {
       const file = input.files[0];
 
-      // Store the selected file directly, no need to use FileReader
       this.profileImage = file;
-
-      // Optionally, you can display the image immediately if you want
       const reader = new FileReader();
       reader.onload = () => {
         this.profileImagePreview = reader.result as string; // This is for preview purposes
@@ -110,7 +107,6 @@ export class ProfileComponent implements OnInit {
       formData.append('school', this.user.school);
       formData.append('city', this.user.city);
 
-      console.log(formData);
       this.authService.updateUserProfile(formData).subscribe({
         next: (response) => {
           //console.log('Profil uspešno ažuriran:', response);
