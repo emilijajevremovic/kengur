@@ -87,4 +87,27 @@ class FriendRequestController extends Controller
 
         return response()->json($requests);
     }
+
+    public function getFriends()
+    {
+        $userId = auth()->id();
+
+        // Pronalazi sve ID-jeve prijatelja gde je korisnik ili sender ili receiver
+        $friendIds = FriendRequest::where(function ($query) use ($userId) {
+                $query->where('sender_id', $userId);
+            })
+            ->where('status', 'accepted') // Samo prihvaćeni prijatelji
+            ->pluck('receiver_id')
+            ->merge(FriendRequest::where(function ($query) use ($userId) {
+                $query->where('receiver_id', $userId);
+            })
+            ->where('status', 'accepted')
+            ->pluck('sender_id'))
+            ->unique()
+            ->values()
+            ->toArray();
+
+        return response()->json($friendIds);
+    }
+
 }

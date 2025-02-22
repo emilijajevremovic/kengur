@@ -75,6 +75,8 @@ Route::middleware('auth:sanctum')->post('/ping', [UserController::class, 'pingUs
 
 Route::middleware('auth:api')->get('/in-game-users', [UserController::class, 'getInGameUsers']);
 
+Route::middleware('auth:sanctum')->get('/friends', [FriendRequestController::class, 'getFriends']);
+
 
 
 

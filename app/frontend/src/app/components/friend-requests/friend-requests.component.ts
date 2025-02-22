@@ -56,6 +56,7 @@ export class FriendRequestsComponent implements OnInit {
   distinctClassesInfo: string[] = [];
   classSelected: string = '';
   user: any = {};
+  friends: string[] = [];
 
   ngOnInit(): void {
     this.userService.setUserOnline().subscribe({
@@ -82,6 +83,11 @@ export class FriendRequestsComponent implements OnInit {
     this.loadFriendRequests();
     this.fetchUsers();
     this.loadMathClasses();
+
+    this.userService.getFriends().subscribe((friends) => {
+      this.friends = friends.map((id: number) => id.toString());
+      this.updateUserLists();
+    });
 
     const userId = this.authService.getUserId();
     const privateChannel = this.pusherService.subscribeToChannel(
@@ -168,9 +174,16 @@ export class FriendRequestsComponent implements OnInit {
   updateUserLists(): void {
     this.users.forEach((user) => {
       user.is_online = this.onlineUsers.includes(user.id.toString());
+      user.is_friend = this.friends.includes(user.id.toString());
     });
 
-    this.users.sort((a, b) => Number(b.is_online) - Number(a.is_online));
+    this.users.sort((a, b) => {
+      return (
+        Number(b.is_online) - Number(a.is_online) || // Prvo po online statusu
+        Number(b.is_friend) - Number(a.is_friend) // Zatim po prijateljstvu
+      );
+    });
+
     this.updateInGameUsers();
   }
 

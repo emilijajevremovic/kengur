@@ -35,4 +35,8 @@ export class UserService {
   pingUser(): Observable<any> {
     return this.http.post(`${this.baseUrl}/ping`, {});
   }
+
+  getFriends(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/friends`);
+  }
 }
