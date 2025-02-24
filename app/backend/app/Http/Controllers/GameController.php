@@ -93,7 +93,7 @@ class GameController extends Controller
             [$game->player_1, $game->player_2]
         ));
 
-        $onlineUsers = User::where('online', true)->pluck('id')->toArray(); 
+        $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray(); 
             
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
@@ -241,7 +241,7 @@ class GameController extends Controller
         if ($user) {
             $user->update(['online' => true, 'game' => false]);
 
-            $onlineUsers = User::where('online', true)->pluck('id')->toArray(); 
+            $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray(); 
             
             broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
         }
@@ -324,7 +324,7 @@ class GameController extends Controller
         if ($user) {
             $user->update(['online' => true, 'game' => false]);
 
-            $onlineUsers = User::where('online', true)->pluck('id')->toArray(); 
+            $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray(); 
             
             broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
         }

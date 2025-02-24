@@ -15,7 +15,7 @@ WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
             //$onlineUsers = Cache::get('online_users', []);
             User::where('id', $userId)->update(['online' => true]);
 
-            $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+            $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray();
 
             broadcastToAllUsers($onlineUsers);
 
@@ -37,7 +37,7 @@ WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
             //$onlineUsers = Cache::get('online_users', []);
             User::where('id', $userId)->update(['online' => false]);
 
-            $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+            $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray();
 
             broadcastToAllUsers($onlineUsers);
 

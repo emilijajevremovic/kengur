@@ -69,7 +69,7 @@ class UserController extends Controller
 
         $token = $user->createToken('UserLoginToken')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json(['token' => $token, 'role' => $user->role], 200);
     }
 
     public function getUserById($id)
@@ -113,6 +113,7 @@ class UserController extends Controller
         $searchTerm = $request->query('nickname');
 
         $users = User::where('nickname', 'like', '%' . $searchTerm . '%')
+                 ->where('role', '!=', 'admin')
                  ->where('id', '!=', $userAuth->id) 
                  ->get();
 
@@ -177,6 +178,7 @@ class UserController extends Controller
         }
 
         $users = User::where('id', '!=', $userAuth->id)
+                    ->where('role', '!=', 'admin')
                      ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'email', 'game') 
                      ->get()
                      ->map(function ($user) {
@@ -197,7 +199,7 @@ class UserController extends Controller
 
         $user->update(['online' => true, 'game' => false]);
         
-        $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+        $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray();
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
         return response()->json(['message' => 'Korisnik je online']);
@@ -221,7 +223,7 @@ class UserController extends Controller
 
         $user->update(['online' => false, 'game' => false]);
 
-        $onlineUsers = User::where('online', true)->pluck('id')->toArray();
+        $onlineUsers = User::where('online', true)->where('role', '!=', 'admin')->pluck('id')->toArray();
 
         broadcast(new \App\Events\OnlineUsersUpdated($onlineUsers));
 
@@ -237,6 +239,7 @@ class UserController extends Controller
         }
 
         $onlineUsers = User::where('online', true)
+                        ->where('role', '!=', 'admin')
                         ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'game')
                         ->get();
 

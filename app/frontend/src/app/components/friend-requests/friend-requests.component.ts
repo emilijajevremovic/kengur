@@ -331,4 +331,8 @@ export class FriendRequestsComponent implements OnInit {
   closePopup3() {
     this.isPopup3Open = false;
   }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('role') === 'admin';
+  }
 }
