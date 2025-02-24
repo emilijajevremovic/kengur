@@ -515,6 +515,30 @@ button img {
   outline: none;
 }
 
+.main {
+  height: 100%;
+  margin: auto;
+  padding-top: 10%;
+}
+
+.admin-popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 50%;
+  height: 60%;
+  margin: auto;
+}
+
+.admin-popup div {
+  padding-bottom: 20px;
+}
+
+.form-group div {
+  text-align: left;
+}
+
 @media (max-width: 800px) {
   .main-container {
     height: fit-content;
@@ -621,5 +645,12 @@ button img {
 
   #popup-send-button {
     margin-top: 20px;
+  }
+
+  .admin-popup {
+    margin-top: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: fit-content;
   }
 }

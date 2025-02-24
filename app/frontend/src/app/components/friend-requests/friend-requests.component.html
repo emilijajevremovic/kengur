@@ -308,3 +308,36 @@
   [message]="'Ovaj korisnik je trenutno u igri. Sačekajte da završi.'"
   (close)="isPopupOkOpen = false"
 ></app-popup-ok>
+
+<div class="main" *ngIf="isAdmin()">
+  <div class="admin-popup">
+    <form>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Tekst zadatka</label>
+        <textarea
+          class="form-control"
+          id="exampleFormControlTextarea1"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleFormControlFile1">Slika zadatka (opcionalno)</label>
+        <input
+          type="file"
+          class="form-control-file"
+          id="exampleFormControlFile1"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Razred</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+          <option>5-6</option>
+          <option>7-8</option>
+          <option>Srednja skola</option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>
