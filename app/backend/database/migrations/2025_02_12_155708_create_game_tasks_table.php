@@ -12,7 +12,7 @@ class CreateGameTasksTable extends Migration
             $table->id();
             $table->string('game_id');
             $table->string('task_id'); 
-            $table->integer('level'); 
+            $table->integer('level')->nullable();
             $table->timestamps();
 
             $table->foreign('game_id')->references('game_id')->on('games')->onDelete('cascade');

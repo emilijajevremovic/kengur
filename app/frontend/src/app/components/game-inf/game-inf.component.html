@@ -2,8 +2,13 @@
     <div class="quiz-container">
   
       <!-- Task Text -->
-      <div class="task-text">
+      <div class="task-text" *ngIf="task">
         <p>{{ task.taskText }}</p>
+        <p><strong>ULAZ:</strong></p>
+        <pre>{{ task?.testCases?.[0]?.input }}</pre>
+
+        <p><strong>IZLAZ:</strong></p>
+        <pre>{{ task?.testCases?.[0]?.output }}</pre>
       </div>
   
       <!-- Task Image -->

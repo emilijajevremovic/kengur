@@ -11,6 +11,7 @@ use App\Events\ChallengeUser;
 use App\Events\GameStarted;
 use App\Events\ChallengeRejected;
 use App\Models\Assignment;
+use App\Models\AssignmentInformatics;
 use App\Models\GameTask;
 use Illuminate\Support\Facades\Log;
 use App\Events\GameFinished;
@@ -154,6 +155,36 @@ class GameController extends Controller
         return response()->json(['message' => 'Tasks assigned successfully']);
     }
 
+    public function assignInformaticsTaskToGame($gameId, $class)
+    {
+        $existingTask = GameTask::where('game_id', $gameId)->exists();
+
+        if ($existingTask) {
+            return response()->json(['message' => 'Task already assigned for this game']);
+        }
+
+        $task = AssignmentInformatics::raw(function ($collection) use ($class) {
+            return $collection->aggregate([
+                ['$match' => ['class' => (string) $class]],
+                ['$sample' => ['size' => 1]] 
+            ]);
+        })->first();
+
+        if (!$task) {
+            return response()->json(['message' => 'No available tasks'], 404);
+        }
+
+        GameTask::create([
+            'game_id' => $gameId,
+            'task_id' => $task->_id,
+            'level' => null,
+        ]);
+
+        return response()->json(['message' => 'Informatics task assigned successfully']);
+    }
+
+
+
     public function getGameTasks($gameId)
     {
         $tasks = GameTask::where('game_id', $gameId)->get();
@@ -163,6 +194,19 @@ class GameController extends Controller
         $sortedTasks = $taskDetails->sortBy('level')->values();
 
         return response()->json($sortedTasks);
+    }
+
+    public function getInformaticsGameTask($gameId)
+    {
+        $gameTask = GameTask::where('game_id', $gameId)->first();
+
+        if (!$gameTask) {
+            return response()->json(['message' => 'No task assigned'], 404);
+        }
+
+        $task = AssignmentInformatics::where('_id', $gameTask->task_id)->first();
+
+        return response()->json($task);
     }
 
     public function checkAnswers(Request $request, $gameId)

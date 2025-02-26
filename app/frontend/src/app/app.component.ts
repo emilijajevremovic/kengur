@@ -227,7 +227,12 @@ export class AppComponent implements OnInit, OnDestroy {
       const gameId = data.gameId;
       const gameClass = data.class;
 
-      this.taskService.assignTasksToGame(gameId, gameClass).subscribe({
+      const assignTasksObservable =
+        data.category === 'math'
+          ? this.taskService.assignTasksToGame(gameId, gameClass) // Matematika
+          : this.taskService.assignInformaticsTasksToGame(gameId, gameClass); // Informatika
+
+      assignTasksObservable.subscribe({
         next: () => {
           localStorage.setItem('gameId', gameId);
           this.subscribeToGameFinish();

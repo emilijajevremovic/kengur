@@ -53,7 +53,7 @@ export class FriendRequestsComponent implements OnInit {
   onlineUsers: string[] = [];
   selectedSubject: string = 'math';
   distinctClassesMath: string[] = [];
-  distinctClassesInfo: string[] = [];
+  distinctClassesInformatics: string[] = [];
   classSelected: string = '';
   user: any = {};
   friends: string[] = [];
@@ -83,6 +83,7 @@ export class FriendRequestsComponent implements OnInit {
     this.loadFriendRequests();
     this.fetchUsers();
     this.loadMathClasses();
+    this.loadInformaticsClasses();
 
     this.userService.getFriends().subscribe((friends) => {
       this.friends = friends.map((id: number) => id.toString());
@@ -135,7 +136,9 @@ export class FriendRequestsComponent implements OnInit {
 
   loadMathClasses(): void {
     this.taskService.getDistinctClassesMath().subscribe((data) => {
-      this.distinctClassesMath = data.map((cls) => JSON.parse(cls));
+      this.distinctClassesMath = data
+        .map((cls) => JSON.parse(cls))
+        .sort((a, b) => this.compareClasses(a[0], b[0]));
       //console.log(this.distinctClassesMath);
       if (
         this.selectedSubject == 'math' &&
@@ -146,13 +149,37 @@ export class FriendRequestsComponent implements OnInit {
     });
   }
 
+  compareClasses(classA: string, classB: string): number {
+    const numA = classA.split('-').map(Number);
+    const numB = classB.split('-').map(Number);
+
+    return numA[0] - numB[0];
+  }
+
+  loadInformaticsClasses(): void {
+    this.taskService.getDistinctClassesInformatics().subscribe((data) => {
+      this.distinctClassesInformatics = data.map((cls) => JSON.parse(cls));
+      //console.log(this.distinctClassesInformatics);
+
+      if (
+        this.selectedSubject == 'informatics' &&
+        this.distinctClassesInformatics.length > 0
+      ) {
+        this.classSelected = this.distinctClassesInformatics[0][0];
+      }
+    });
+  }
+
   onSubjectChange(subject: string): void {
     this.selectedSubject = subject;
     if (this.selectedSubject == 'math' && this.distinctClassesMath.length > 0) {
       this.classSelected = this.distinctClassesMath[0][0];
     }
-    if (this.selectedSubject == 'info' && this.distinctClassesInfo.length > 0) {
-      this.classSelected = this.distinctClassesInfo[0][0];
+    if (
+      this.selectedSubject == 'info' &&
+      this.distinctClassesInformatics.length > 0
+    ) {
+      this.classSelected = this.distinctClassesInformatics[0][0];
     }
   }
 
@@ -179,8 +206,8 @@ export class FriendRequestsComponent implements OnInit {
 
     this.users.sort((a, b) => {
       return (
-        Number(b.is_online) - Number(a.is_online) || // Prvo po online statusu
-        Number(b.is_friend) - Number(a.is_friend) // Zatim po prijateljstvu
+        Number(b.is_online) - Number(a.is_online) ||
+        Number(b.is_friend) - Number(a.is_friend)
       );
     });
 

@@ -28,3 +28,5 @@ Route::get('/first-task', function () {
 });
 
 Route::get('/distinct-classes', [TaskController::class, 'getDistinctClasses']);
+
+Route::get('/distinct-classes-informatics', [TaskController::class, 'getDistinctClassesInformatics']);

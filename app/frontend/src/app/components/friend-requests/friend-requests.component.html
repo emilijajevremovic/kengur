@@ -79,7 +79,10 @@
         <div class="class-select" *ngIf="selectedSubject === 'info'">
           <select name="classes" id="classes" [(ngModel)]="classSelected">
             <option
-              *ngFor="let classItem of distinctClassesInfo; let first = first"
+              *ngFor="
+                let classItem of distinctClassesInformatics;
+                let first = first
+              "
               [value]="classItem"
               [selected]="first"
             >

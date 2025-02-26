@@ -57,7 +57,11 @@ Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}', [
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/assign-tasks/{gameId}/{class}', [GameController::class, 'assignTasksToGame']);
 
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/assign-tasks-informatics/{gameId}/{class}', [GameController::class, 'assignInformaticsTaskToGame']);
+
 Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}/tasks', [GameController::class, 'getGameTasks']);
+
+Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}/informatics-task', [GameController::class, 'getInformaticsGameTask']);
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/tasks-by-ids', [TaskController::class, 'getTasksByIds']);
 
