@@ -132,9 +132,11 @@ export class AppComponent implements OnInit, OnDestroy {
       }
       this.gameResultData = {
         gameId: data.gameId,
+        category: data.category,
         player1: data.player1,
         player2: data.player2,
       };
+      
       this.determineWinnerAndLoser();
       this.isResultPopupOpen = true;
     });

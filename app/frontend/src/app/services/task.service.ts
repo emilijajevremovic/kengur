@@ -70,4 +70,10 @@ export class TaskService {
   forfeitGame(gameId: string) {
     return this.http.post(`${this.baseUrl}/api/forfeit-game/${gameId}`, {});
   }
+
+  submitInformaticsGameResult(gameId: string, code: string, language: string, duration: string): Observable<any> {
+    const payload = { code, language, duration };
+    return this.http.post(`${this.baseUrl}/api/check-informatics-answers/${gameId}`, payload);
+  }
+  
 }

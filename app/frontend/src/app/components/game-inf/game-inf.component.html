@@ -55,8 +55,22 @@
   
       <!-- Done Button -->
       <div class="done-button">
-        <button (click)="endQuiz()"><img src="../../../assets/images/check.png" alt=""></button>
+        <button (click)="popupYesNo()"><img src="../../../assets/images/check.png" alt=""></button>
       </div>
     </div>
 </div>
+
+<app-popup-yes-no
+  *ngIf="showPopupYesNo"
+  [message]="
+    'Da li ste sigurni da želite da završite kviz? Rezultat će se prikazati nakon što oba igrača završe igru.'
+  "
+  (close)="showPopupYesNo = false"
+  (confirm)="endQuiz()"
+></app-popup-yes-no>
   
+<app-popup-ok
+  *ngIf="isPopupOkOpen"
+  [message]="popupOkMessage"
+  (close)="isPopupOkOpen = false"
+></app-popup-ok>

@@ -13,12 +13,14 @@ class GameFinished implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $gameId;
+    public $category;
     public $player1;
     public $player2;
 
     public function __construct($gameData)
     {
         $this->gameId = $gameData['gameId'];
+        $this->category = $gameData['category'];
         $this->player1 = $gameData['player1'];
         $this->player2 = $gameData['player2'];
     }

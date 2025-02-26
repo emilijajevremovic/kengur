@@ -15,11 +15,14 @@ import * as CodeMirror from 'codemirror';
 import { HttpClient } from '@angular/common/http';
 import 'codemirror/lib/codemirror.css';
 import { TaskService } from '../../services/task.service';
+import { WebsocketService } from '../../services/websocket.service';
+import { PopupOkComponent } from '../popup-ok/popup-ok.component';
+import { PopupYesNoComponent } from '../../popup-yes-no/popup-yes-no.component';
 
 @Component({
   selector: 'app-game-inf',
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule, RouterModule, FormsModule],
+  imports: [NgIf, NgFor, CommonModule, RouterModule, FormsModule, PopupOkComponent, PopupYesNoComponent],
   templateUrl: './game-inf.component.html',
   styleUrls: ['./game-inf.component.scss'],
 })
@@ -39,6 +42,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private taskService: TaskService,
+    private websocketService: WebsocketService,
     private router: Router
   ) {}
 
@@ -46,6 +50,8 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   isGameFinished: boolean = false;
   isPopupOkOpen: boolean = false;
   popupOkMessage: string = '';
+  showPopupYesNo: boolean = false;
+  popupYesNoMessage: string = '';
   task: any = null;
 
   ngOnInit() {
@@ -69,6 +75,12 @@ export class GameInfComponent implements OnInit, AfterViewInit {
 
     if (isPlatformBrowser(this.platformId)) {
       window.addEventListener('beforeunload', this.handlePageExit);
+
+      this.router.events.subscribe((event) => {
+        if (event.constructor.name === 'NavigationStart') {
+          this.handlePageExit();
+        }
+      });
     }
   }
 
@@ -179,10 +191,62 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   }
 
   endQuiz() {
+    this.showPopupYesNo = true;
     this.endDate = new Date();
-    //console.log('End time:', this.endDate);
     this.calculateDuration();
+  
+    if (!this.gameId) return;
+  
+    const code = this.editor?.getValue();
+    const language = this.language;
+    const duration = this.duration;
+  
+    if (!code) {
+      this.popupOkMessage = "Molimo unesite kod pre predaje!";
+      this.isPopupOkOpen = true;
+      return;
+    }
+  
+    this.taskService.submitInformaticsGameResult(this.gameId, code, language, duration).subscribe({
+      next: (response) => {
+        const finishGameData = {
+          correctAnswers: response.correctAnswers,
+          totalQuestions: response.totalQuestions,
+          timeTaken: this.duration,
+        };
+  
+        this.taskService.finishGame(this.gameId, finishGameData).subscribe({
+          next: () => {
+            this.isGameFinished = true;
+            this.router.navigate(['/lobby']); 
+          },
+          error: (err) =>
+            console.error("Greška pri slanju završetka igre:", err),
+        });
+      },
+      error: (err) => {
+        console.error("Greška pri predaji rešenja:", err);
+        this.popupOkMessage = "Došlo je do greške, pokušajte ponovo!";
+        this.isPopupOkOpen = true;
+      }
+    });
   }
+  
+
+  subscribeToGameFinish(): void {
+    this.websocketService.subscribeToGameFinish(this.gameId, (data: any) => {
+      this.isGameFinished = true;
+      this.popupOkMessage = `Igra je završena! 
+      Igrač 1: ${data.player1.correctAnswers}/${data.player1.totalQuestions} 
+      Igrač 2: ${data.player2.correctAnswers}/${data.player2.totalQuestions}`;
+      this.isPopupOkOpen = true;
+  
+      setTimeout(() => {
+        this.router.navigate(['/lobby']);
+      }, 5000);
+    });
+  }
+  
 
   calculateDuration(): void {
     if (this.startDate && this.endDate) {
@@ -208,5 +272,9 @@ export class GameInfComponent implements OnInit, AfterViewInit {
 
   formatNumber(time: number): string {
     return time < 10 ? '0' + time : time.toString();
+  }
+
+  popupYesNo() {
+    this.showPopupYesNo = true;
   }
 }

@@ -237,6 +237,58 @@ class GameController extends Controller
         ]);
     }
 
+    public function checkInformaticsAnswers(Request $request, $gameId)
+    {
+        $gameTask = GameTask::where('game_id', $gameId)->first();
+
+        if (!$gameTask) {
+            return response()->json(['error' => 'Game task not found'], 404);
+        }
+
+        $task = AssignmentInformatics::find($gameTask->task_id);
+
+        if (!$task) {
+            return response()->json(['error' => 'Task not found'], 404);
+        }
+
+        $userCode = $request->input('code');
+        $language = $request->input('language');
+
+        $correctAnswers = 0;
+        $totalQuestions = count($task->testCases);
+        $errors = [];
+
+        foreach ($task->testCases as $testCase) {
+            $input = $testCase['input'];
+            $expectedOutput = trim($testCase['output']);
+
+            $executionResult = $this->executeUserCode($userCode, $input, $language);
+
+            if ($executionResult['error']) {
+                return response()->json(['error' => $executionResult['error']], 400);
+            }
+
+            $userOutput = trim($executionResult['output']);
+
+            if ($userOutput === $expectedOutput) {
+                $correctAnswers++;
+            } else {
+                $errors[] = [
+                    'input' => $input,
+                    'expected' => $expectedOutput,
+                    'got' => $userOutput
+                ];
+            }
+        }
+
+        return response()->json([
+            'correctAnswers' => $correctAnswers,
+            'totalQuestions' => $totalQuestions,
+            'errors' => $errors
+        ]);
+    }
+
+
     public function submitGameResult(Request $request, $gameId)
     {
         $data = $request->validate([
@@ -299,25 +351,54 @@ class GameController extends Controller
             $player1Data = User::find($game->player_1);
             $player2Data = User::find($game->player_2);
 
-            $gameData = [
-                'gameId' => $gameId,
-                'player1' => [
-                    'id' => $player1->user_id,
-                    'correctAnswers' => $player1->correct_answers,
-                    'totalQuestions' => $player1->total_questions,
-                    'timeTaken' => $player1->duration,
-                    'profilePicture' => $player1Data ? $player1Data->profile_picture : null, 
-                    'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
-                ],
-                'player2' => [
-                    'id' => $player2->user_id,
-                    'correctAnswers' => $player2->correct_answers,
-                    'totalQuestions' => $player2->total_questions,
-                    'timeTaken' => $player2->duration,
-                    'profilePicture' => $player2Data ? $player2Data->profile_picture : null, 
-                    'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'
-                ]
-            ];
+            if($game->category == 'info') {
+                $gameTask = GameTask::where('game_id', $gameId)->first();
+                $task = $gameTask ? AssignmentInformatics::find($gameTask->task_id) : null;
+
+                $totalQuestions = $task ? count($task->testCases) : 0;
+                $gameData = [
+                    'gameId' => $gameId,
+                    'category' => $game->category,
+                    'player1' => [
+                        'id' => $player1->user_id,
+                        'correctAnswers' => $player1->correct_answers,
+                        'totalQuestions' => $totalQuestions,
+                        'timeTaken' => $player1->duration,
+                        'profilePicture' => $player1Data ? $player1Data->profile_picture : null, 
+                        'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
+                    ],
+                    'player2' => [
+                        'id' => $player2->user_id,
+                        'correctAnswers' => $player2->correct_answers,
+                        'totalQuestions' => $totalQuestions,
+                        'timeTaken' => $player2->duration,
+                        'profilePicture' => $player2Data ? $player2Data->profile_picture : null, 
+                        'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'
+                    ]
+                ];
+            }
+            else {
+                $gameData = [
+                    'gameId' => $gameId,
+                    'category' => $game->category,
+                    'player1' => [
+                        'id' => $player1->user_id,
+                        'correctAnswers' => $player1->correct_answers,
+                        'totalQuestions' => $player1->total_questions,
+                        'timeTaken' => $player1->duration,
+                        'profilePicture' => $player1Data ? $player1Data->profile_picture : null, 
+                        'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
+                    ],
+                    'player2' => [
+                        'id' => $player2->user_id,
+                        'correctAnswers' => $player2->correct_answers,
+                        'totalQuestions' => $player2->total_questions,
+                        'timeTaken' => $player2->duration,
+                        'profilePicture' => $player2Data ? $player2Data->profile_picture : null, 
+                        'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'
+                    ]
+                ];
+            }
     
             broadcast(new GameFinished($gameData));
             $this->deleteGameInfo($gameId);
@@ -382,6 +463,7 @@ class GameController extends Controller
 
             $gameData = [
                 'gameId' => $gameId,
+                'category' => $game->category,
                 'player1' => [
                     'id' => $player1->user_id,
                     'correctAnswers' => $player1->correct_answers,

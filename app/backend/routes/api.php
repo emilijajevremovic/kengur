@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\CodeExecutorController;
 use App\Http\Controllers\GameController;
 use App\Events\WebSocketDisconnected;
 
@@ -66,6 +67,8 @@ Route::middleware(['auth:sanctum', 'game.participant'])->get('/game/{gameId}/inf
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/tasks-by-ids', [TaskController::class, 'getTasksByIds']);
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/check-answers/{gameId}', [GameController::class, 'checkAnswers']);
+
+Route::middleware(['auth:sanctum', 'game.participant'])->post('/check-informatics-answers/{gameId}', [CodeExecutorController::class, 'checkInformaticsAnswers']);
 
 Route::middleware(['auth:sanctum', 'game.participant'])->post('/submit-game-result/{gameId}', [GameController::class, 'submitGameResult']);
 
