@@ -4,17 +4,15 @@
       <!-- Task Text -->
       <div class="task-text" *ngIf="task">
         <p>{{ task.taskText }}</p>
+        <div class="task-image" *ngIf="task.taskPicture">
+          <img style="height: 200px;" [src]="getSafeImageUrl(task.taskPicture, task.class)" alt="Task Image" />
+        </div>
         <p><strong>ULAZ:</strong></p>
         <pre>{{ task?.testCases?.[0]?.input }}</pre>
 
         <p><strong>IZLAZ:</strong></p>
         <pre>{{ task?.testCases?.[0]?.output }}</pre>
       </div>
-  
-      <!-- Task Image -->
-      <!-- <div class="task-image" *ngIf="currentTask.taskPicture">
-        <img style="height: 200px;" [src]="'assets/images/' + currentTask.taskPicture" alt="Task Image" />
-      </div> -->
   
       <!-- Code -->
       

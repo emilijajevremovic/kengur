@@ -18,6 +18,7 @@ import { TaskService } from '../../services/task.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { PopupOkComponent } from '../popup-ok/popup-ok.component';
 import { PopupYesNoComponent } from '../../popup-yes-no/popup-yes-no.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-game-inf',
@@ -53,6 +54,7 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   showPopupYesNo: boolean = false;
   popupYesNoMessage: string = '';
   task: any = null;
+  baseUrl = environment.apiUrl;
 
   ngOnInit() {
     this.startDate = new Date();
@@ -277,4 +279,11 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   popupYesNo() {
     this.showPopupYesNo = true;
   }
+
+  getSafeImageUrl(fileName: string, taskClass: string): string {
+    if (!fileName) return '';
+
+    return encodeURI(`${this.baseUrl}/TaskImagesInformatics/${taskClass}/${fileName}`);
+}
+
 }

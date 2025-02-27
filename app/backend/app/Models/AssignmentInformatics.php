@@ -14,7 +14,7 @@ class AssignmentInformatics extends Model
         'class', 
         'testCases', 
         'taskPicture'
-    ];
+    ];   
 
     public $timestamps = false;
 }

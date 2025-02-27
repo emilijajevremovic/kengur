@@ -87,6 +87,8 @@ Route::middleware('auth:sanctum')->get('/friends', [FriendRequestController::cla
 
 Route::middleware(['auth:sanctum', 'admin'])->post('/add-informatics-task', [TaskController::class, 'storeInformaticsTask']);
 
+Route::middleware(['auth:sanctum', 'admin'])->post('/add-math-task', [TaskController::class, 'storeMathTask']);
+
 
 
 

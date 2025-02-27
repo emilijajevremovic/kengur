@@ -362,8 +362,13 @@
 
       <div class="form-group">
         <label>Razred</label>
-        <input type="text" class="form-control" [(ngModel)]="taskClass" name="taskClass" />
-      </div>
+        <select class="form-control" [(ngModel)]="taskClass" name="taskClass">
+          <option *ngFor="let className of getAvailableClasses()" [value]="className">
+            {{ className }}
+          </option>
+        </select>
+      </div>      
+      
 
       <!-- Polja specifična za matematiku -->
       <div *ngIf="selectedSubjectAdmin === 'math'">

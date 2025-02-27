@@ -70,10 +70,7 @@ export class FriendRequestsComponent implements OnInit {
   testCases: { input: string; output: string }[] = [{ input: '', output: '' }];
 
   ngOnInit(): void {
-    this.userService.setUserOnline().subscribe({
-      // next: (data) => console.log('Korisnik postavljen kao online:', data),
-      // error: (error) => console.error('Greška pri postavljanju online statusa:', error)
-    });
+    this.userService.setUserOnline().subscribe();
 
     const channel = this.pusherService.subscribeToChannel(
       'online-users-channel'
@@ -151,11 +148,9 @@ export class FriendRequestsComponent implements OnInit {
         .map((cls) => JSON.parse(cls))
         .sort((a, b) => this.compareClasses(a[0], b[0]));
       //console.log(this.distinctClassesMath);
-      if (
-        this.selectedSubject == 'math' &&
-        this.distinctClassesMath.length > 0
-      ) {
+      if (this.selectedSubject == 'math' && this.distinctClassesMath.length > 0) {
         this.classSelected = this.distinctClassesMath[0][0];
+        this.taskClass = this.distinctClassesMath[0][0];
       }
     });
   }
@@ -172,10 +167,7 @@ export class FriendRequestsComponent implements OnInit {
       this.distinctClassesInformatics = data.map((cls) => JSON.parse(cls));
       //console.log(this.distinctClassesInformatics);
 
-      if (
-        this.selectedSubject == 'informatics' &&
-        this.distinctClassesInformatics.length > 0
-      ) {
+      if (this.selectedSubject == 'informatics' && this.distinctClassesInformatics.length > 0) {
         this.classSelected = this.distinctClassesInformatics[0][0];
       }
     });
@@ -378,6 +370,13 @@ export class FriendRequestsComponent implements OnInit {
   onSubjectChangeAdmin(subject: string) {
     this.selectedSubjectAdmin = subject;
     this.resetForm();
+    
+    if(subject == 'math') {
+      this.taskClass = this.distinctClassesMath[0][0];
+    }
+    else {
+      this.taskClass = this.distinctClassesInformatics[0][0];
+    }
   }
 
   onFileSelect(event: any) {
@@ -415,7 +414,6 @@ export class FriendRequestsComponent implements OnInit {
   resetForm() {
     this.taskText = '';
     this.taskPicture = null;
-    this.taskClass = '';
     this.taskLevel = 3;
     this.answerType = 'text';
     this.answersText = [''];
@@ -427,42 +425,74 @@ export class FriendRequestsComponent implements OnInit {
   submitTask() {
     const formData = new FormData();
     formData.append('taskText', this.taskText);
-    
-    if (this.taskPicture) {
-      formData.append('taskPicture', this.taskPicture.name); // Čuvamo samo naziv slike
-    }
+    const normalizedClass = this.normalizeClassName(this.taskClass);
+    formData.append('class', normalizedClass);
 
-    formData.append('class', this.taskClass);
+    if (this.taskPicture) {
+        formData.append('taskPicture', this.taskPicture);
+    }
 
     if (this.selectedSubjectAdmin === 'math') {
-      formData.append('level', this.taskLevel.toString());
-      formData.append('answerType', this.answerType);
-      if (this.answerType === 'text') {
-        formData.append('answersText', JSON.stringify(this.answersText));
-      } else {
-        const pictureNames = this.answersPictures.map(file => file.name); // Samo nazivi slika
-        formData.append('answersPictures', JSON.stringify(pictureNames));
-      }
-      formData.append('correctAnswerIndex', this.correctAnswerIndex!.toString());
+        formData.append('level', this.taskLevel.toString());
+        formData.append('answerType', this.answerType);
 
-      this.taskService.addMathTask(formData).subscribe({
-        next: () => alert('Matematički zadatak uspešno dodat!'),
-        error: (err) => console.error('Greška pri dodavanju zadatka:', err),
-      });
+        if (this.answerType === 'text') {
+            this.answersText.forEach((answer, index) => {
+                formData.append(`answersText[${index}]`, answer);
+            });
+        } else {
+            this.answersPictures.forEach((file, index) => {
+                formData.append(`answersPictures[${index}]`, file);
+            });
+        }
+
+        if (this.correctAnswerIndex !== null && this.correctAnswerIndex !== undefined) {
+            formData.append('correctAnswerIndex', this.correctAnswerIndex.toString());
+        } else {
+          this.snackBar.open('Morate označiti tačan odgovor!', 'OK', {
+            duration: 5000,
+            panelClass: ['light-snackbar'],
+          });
+          return; 
+        }
+
+        this.taskService.addMathTask(formData).subscribe({
+            next: () => {
+              this.resetForm();
+                this.snackBar.open('Zadatak uspešno dodat!', 'OK', {
+                    duration: 5000,
+                    panelClass: ['light-snackbar'],
+                });
+            },
+            error: (err) => console.error('Greška pri dodavanju zadatka:', err),
+        });
     } else {
-      //formData.append('testCases', JSON.stringify(this.testCases)); // Ispravljen način slanja testCases
-      this.testCases.forEach((test, index) => {
-        formData.append(`testCases[${index}][input]`, test.input);
-        formData.append(`testCases[${index}][output]`, test.output);
-      });
+        formData.append('testCases', JSON.stringify(this.testCases));
 
-      this.taskService.addInformaticsTask(formData).subscribe({
-        next: () => alert('Zadatak iz informatike uspešno dodat!'),
-        error: (err) => console.error('Greška pri dodavanju zadatka:', err),
-      });
+        this.taskService.addInformaticsTask(formData).subscribe({
+            next: () => {
+                this.resetForm();
+                this.snackBar.open('Zadatak uspešno dodat!', 'OK', {
+                    duration: 5000,
+                    panelClass: ['light-snackbar'],
+                });
+            },
+            error: (err) => console.error('Greška pri dodavanju zadatka:', err),
+        });
     }
+}
+
+
+  getAvailableClasses(): string[] {
+    return this.selectedSubjectAdmin === 'math' ? this.distinctClassesMath : this.distinctClassesInformatics;
   }
 
+  normalizeClassName(className: string): string {
+    if (className.toLowerCase() === "srednja skola") {
+        return "SrednjaSkola"; 
+    }
+    return className; 
+  }
 
   printFormData(formData: FormData) {
     formData.forEach((value, key) => {
