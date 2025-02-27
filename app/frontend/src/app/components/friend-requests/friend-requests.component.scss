@@ -538,6 +538,27 @@ button img {
 .form-group div {
   text-align: left;
 }
+.popup-subject-admin {
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid #1d4e70;
+  height: 100%;
+  width: 20%;
+  min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: auto;
+}
+
+.subjects-admin {
+  padding: 10px;
+}
+
+.subjects-admin label {
+  padding: 10px;
+}
 
 @media (max-width: 800px) {
   .main-container {

@@ -34,4 +34,27 @@ class TaskController extends Controller
 
         return response()->json($classes);
     }
+
+    public function storeInformaticsTask(Request $request)
+    {
+        $data = $request->validate([
+            'taskText' => 'required|string',
+            'class' => 'required|string',
+            'testCases' => 'required|array',
+            'testCases.*.input' => 'required|string',
+            'testCases.*.output' => 'required|string',
+            'taskPicture' => 'nullable|string', 
+        ]);
+
+        $task = AssignmentInformatics::create([
+            'taskText' => $data['taskText'],
+            'taskPicture' => $data['taskPicture'], 
+            'testCases' => $data['testCases'],
+            'class' => $data['class'],
+        ]);
+
+        return response()->json(['message' => 'Task added successfully', 'task' => $task], 201);
+    }
+
+
 }

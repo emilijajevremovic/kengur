@@ -58,6 +58,17 @@ export class FriendRequestsComponent implements OnInit {
   user: any = {};
   friends: string[] = [];
 
+  selectedSubjectAdmin: string = 'math';
+  taskText: string = '';
+  taskPicture: File | null = null;
+  taskClass: string = '';
+  taskLevel: number = 3;
+  answerType: string = 'text';
+  answersText: string[] = [''];
+  answersPictures: File[] = [];
+  correctAnswerIndex: number | null = 0;
+  testCases: { input: string; output: string }[] = [{ input: '', output: '' }];
+
   ngOnInit(): void {
     this.userService.setUserOnline().subscribe({
       // next: (data) => console.log('Korisnik postavljen kao online:', data),
@@ -362,4 +373,102 @@ export class FriendRequestsComponent implements OnInit {
   isAdmin(): boolean {
     return localStorage.getItem('role') === 'admin';
   }
+
+
+  onSubjectChangeAdmin(subject: string) {
+    this.selectedSubjectAdmin = subject;
+    this.resetForm();
+  }
+
+  onFileSelect(event: any) {
+    this.taskPicture = event.target.files[0];
+  }
+
+  onAnswerImageSelect(event: any, index: number) {
+    this.answersPictures[index] = event.target.files[0];
+  }
+
+  onFileSelected(event: any, index: number) {
+    if (event.target.files.length > 0) {
+      this.answersPictures[index] = event.target.files[0]; 
+    }
+  }
+
+  addTextAnswer() {
+    this.answersText.push('');
+    if (this.correctAnswerIndex === null) {
+      this.correctAnswerIndex = 0;
+    }
+  }
+  
+  addImageAnswer() {
+    this.answersPictures.push(new File([], ''));
+    if (this.correctAnswerIndex === null) {
+      this.correctAnswerIndex = 0;
+    }
+  }
+
+  addTestCase() {
+    this.testCases.push({ input: '', output: '' });
+  }
+
+  resetForm() {
+    this.taskText = '';
+    this.taskPicture = null;
+    this.taskClass = '';
+    this.taskLevel = 3;
+    this.answerType = 'text';
+    this.answersText = [''];
+    this.answersPictures = [];
+    this.correctAnswerIndex = null;
+    this.testCases = [{ input: '', output: '' }];
+  }
+
+  submitTask() {
+    const formData = new FormData();
+    formData.append('taskText', this.taskText);
+    
+    if (this.taskPicture) {
+      formData.append('taskPicture', this.taskPicture.name); // Čuvamo samo naziv slike
+    }
+
+    formData.append('class', this.taskClass);
+
+    if (this.selectedSubjectAdmin === 'math') {
+      formData.append('level', this.taskLevel.toString());
+      formData.append('answerType', this.answerType);
+      if (this.answerType === 'text') {
+        formData.append('answersText', JSON.stringify(this.answersText));
+      } else {
+        const pictureNames = this.answersPictures.map(file => file.name); // Samo nazivi slika
+        formData.append('answersPictures', JSON.stringify(pictureNames));
+      }
+      formData.append('correctAnswerIndex', this.correctAnswerIndex!.toString());
+
+      this.taskService.addMathTask(formData).subscribe({
+        next: () => alert('Matematički zadatak uspešno dodat!'),
+        error: (err) => console.error('Greška pri dodavanju zadatka:', err),
+      });
+    } else {
+      //formData.append('testCases', JSON.stringify(this.testCases)); // Ispravljen način slanja testCases
+      this.testCases.forEach((test, index) => {
+        formData.append(`testCases[${index}][input]`, test.input);
+        formData.append(`testCases[${index}][output]`, test.output);
+      });
+
+      this.taskService.addInformaticsTask(formData).subscribe({
+        next: () => alert('Zadatak iz informatike uspešno dodat!'),
+        error: (err) => console.error('Greška pri dodavanju zadatka:', err),
+      });
+    }
+  }
+
+
+  printFormData(formData: FormData) {
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+  }
+  
+  
 }

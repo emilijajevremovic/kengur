@@ -8,6 +8,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\CodeExecutorController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\TaskController;
 use App\Events\WebSocketDisconnected;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -83,6 +84,8 @@ Route::middleware('auth:sanctum')->post('/ping', [UserController::class, 'pingUs
 Route::middleware('auth:api')->get('/in-game-users', [UserController::class, 'getInGameUsers']);
 
 Route::middleware('auth:sanctum')->get('/friends', [FriendRequestController::class, 'getFriends']);
+
+Route::middleware(['auth:sanctum', 'admin'])->post('/add-informatics-task', [TaskController::class, 'storeInformaticsTask']);
 
 
 

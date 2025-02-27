@@ -75,5 +75,13 @@ export class TaskService {
     const payload = { code, language, duration };
     return this.http.post(`${this.baseUrl}/api/check-informatics-answers/${gameId}`, payload);
   }
+
+  addMathTask(taskData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/add-math-task`, taskData);
+  }
+
+  addInformaticsTask(taskData: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/add-informatics-task`, taskData);
+  }
   
 }
