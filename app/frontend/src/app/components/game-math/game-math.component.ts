@@ -47,6 +47,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
   selectedAnswerIndex: number | null = null;
   tasks: any[] = [];
   taskImagesUrl = environment.taskImagesUrl;
+  baseUrl = environment.apiUrl;
   selectedAnswers: { taskId: string; selectedIndex: number | null }[] = [];
   showPopupYesNo: boolean = false;
   gameId: any = null;
@@ -69,7 +70,6 @@ export class GameMathComponent implements OnInit, OnDestroy {
         this.validateGameAccess(gameId);
         this.taskService.getGameTasks(gameId).subscribe({
           next: (response) => {
-            console.log(response);
             this.tasks = response;
           },
           error: (err) => console.error('Greška pri dohvatanju zadataka:', err),
@@ -82,10 +82,8 @@ export class GameMathComponent implements OnInit, OnDestroy {
     });
 
     if (isPlatformBrowser(this.platformId)) {
-      // 1. Poziv funkcije kada se zatvori tab ili osveži stranica
       window.addEventListener('beforeunload', this.handlePageExit);
 
-      // 2. Poziv funkcije kada korisnik napusti stranicu preko Angular rute
       this.router.events.subscribe((event) => {
         if (event.constructor.name === 'NavigationStart') {
           this.handlePageExit();
@@ -262,9 +260,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
 
   getSafeImageUrl(fileName: string): string {
     if (!fileName) return '';
-
-    return encodeURI(
-      `assets/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`
-    );
+  
+    return encodeURI(`${this.baseUrl}/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`);
   }
 }
