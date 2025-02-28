@@ -109,11 +109,28 @@ export class ProfileComponent implements OnInit {
 
       this.authService.updateUserProfile(formData).subscribe({
         next: (response) => {
+          this.snackBar.open('Profil uspešno ažuriran.', 'OK',
+            {
+              duration: 5000,
+              panelClass: ['light-snackbar'],
+            }
+          );
           //console.log('Profil uspešno ažuriran:', response);
           // Ažuriraj sliku ili nickname na frontu ako je potrebno
         },
         error: (error) => {
-          console.error('Greška prilikom ažuriranja profila:', error);
+          if (error.error?.error === "Nickname već postoji.") {
+            this.errorMessage = "Nickname već postoji.";
+            this.snackBar.open(error.error.error, 'OK', {
+                duration: 5000,
+                panelClass: ['light-snackbar'],
+            });
+        } else {
+            this.snackBar.open('Došlo je do greške prilikom ažuriranja profila.', 'OK', {
+                duration: 5000,
+                panelClass: ['light-snackbar'],
+            });
+        }
         },
       });
     } else {
