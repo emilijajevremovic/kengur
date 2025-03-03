@@ -292,5 +292,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
     player1.image = player1 === winner ? 'king.png' : 'loser.png';
     player2.image = player2 === winner ? 'king.png' : 'loser.png';
+
+    if (this.userId === winner.id) {
+      this.updateUserStats(true); 
+    } else if (this.userId === loser.id) {
+      this.updateUserStats(false); 
+    }
+  }
+
+  updateUserStats(isWin: boolean) {
+    if(isWin) {
+      this.userService.updateStats('win').subscribe();
+    }
+    else {
+      this.userService.updateStats('loss').subscribe();
+    }
   }
 }

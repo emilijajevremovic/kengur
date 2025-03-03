@@ -30,7 +30,9 @@ class User extends Authenticatable
         'online', 
         'role',
         'last_ping',
-        'game'
+        'game',
+        'wins', 
+        'losses'
     ];
 
     /**

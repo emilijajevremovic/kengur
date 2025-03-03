@@ -58,6 +58,7 @@ export class ProfileComponent implements OnInit {
     this.pictureSelected = false;
     this.authService.getUserData().subscribe({
       next: (data) => {
+        console.log(data);
         this.user = data.user;
         this.profileImage = this.user.profile_picture;
 

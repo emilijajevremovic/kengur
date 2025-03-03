@@ -50,6 +50,8 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'nickname' => $request->nickname,
             'profile_picture' => 'storage/profile_images/default_profile_picture.png',
+            'wins' => 0, 
+            'losses' => 0 
         ]);
 
         return response()->json(['user' => $user], 201); 
@@ -272,6 +274,35 @@ class UserController extends Controller
                             ->get();
 
         return response()->json($inGameUsers);
+    }
+
+    public function updateGameResult(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'result' => 'required|in:win,loss', 
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = Auth::user(); 
+
+        if (!$user) {
+            return response()->json(['error' => 'Neautorizovan pristup.'], 401);
+        }
+
+        if ($request->result === 'win') {
+            $user->increment('wins');
+        } elseif ($request->result === 'loss') {
+            $user->increment('losses');
+        }
+
+        return response()->json([
+            'message' => 'Rezultat uspešno ažuriran.',
+            'wins' => $user->wins,
+            'losses' => $user->losses
+        ]);
     }
 
 }

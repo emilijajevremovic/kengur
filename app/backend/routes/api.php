@@ -89,7 +89,7 @@ Route::middleware(['auth:sanctum', 'admin'])->post('/add-informatics-task', [Tas
 
 Route::middleware(['auth:sanctum', 'admin'])->post('/add-math-task', [TaskController::class, 'storeMathTask']);
 
-
+Route::middleware('auth:sanctum')->post('/user/update-result', [UserController::class, 'updateGameResult']);
 
 
 
