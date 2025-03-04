@@ -42,6 +42,8 @@ export class AdminHomeComponent implements OnInit{
   lossesFilter: number = 0; 
 
   ngOnInit(): void {
+    this.loadMathClasses();
+    this.loadInformaticsClasses();
     this.userService.getUsersAdmin().subscribe((response: any) => {
       this.userListAdmin = response; 
     });
@@ -220,5 +222,18 @@ export class AdminHomeComponent implements OnInit{
       this.userListAdmin = users;
     });
   }
+
+  exportUsers() {
+    this.userService.exportUsers(this.nameFilter, this.surnameFilter, this.schoolFilter, this.winsFilter, this.lossesFilter)
+      .subscribe((response: Blob) => {
+        const a = document.createElement('a');
+        const url = window.URL.createObjectURL(response);
+        a.href = url;
+        a.download = 'users_export.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  }
+  
 
 }

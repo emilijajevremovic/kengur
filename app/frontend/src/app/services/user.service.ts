@@ -60,5 +60,15 @@ export class UserService {
     return this.http.get<any>(`${this.baseUrl}/users-admin`, { params });
   }
   
+  exportUsers(nameFilter: string, surnameFilter: string, schoolFilter: string, winsFilter: number, lossesFilter: number): Observable<Blob> {
+    const params = new HttpParams()
+      .set('name', nameFilter)
+      .set('surname', surnameFilter)
+      .set('school', schoolFilter)
+      .set('wins', winsFilter ? winsFilter.toString() : '')
+      .set('losses', lossesFilter ? lossesFilter.toString() : '');
+
+    return this.http.get<Blob>(`${this.baseUrl}/users-export`, { params, responseType: 'blob' as 'json' });
+  }
   
 }
