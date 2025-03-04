@@ -93,8 +93,6 @@ Route::middleware('auth:sanctum')->post('/user/update-result', [UserController::
 
 Route::middleware(['auth:sanctum', 'admin'])->get('/users-admin', [UserController::class, 'getUsersAdmin']);
 
-Route::middleware(['auth:sanctum', 'admin'])->get('/users-export', [UserController::class, 'exportUsersToCsv']);
-
 
 
 

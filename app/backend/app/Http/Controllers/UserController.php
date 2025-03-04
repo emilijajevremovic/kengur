@@ -331,6 +331,10 @@ class UserController extends Controller
             $query->where('surname', 'like', '%' . $request->surname . '%');
         }
 
+        if ($request->has('city')) {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+
         if ($request->has('school')) {
             $query->where('school', 'like', '%' . $request->school . '%');
         }
@@ -347,63 +351,6 @@ class UserController extends Controller
                         ->get();
 
         return response()->json($users);
-    }
-
-    public function exportUsersToCsv(Request $request)
-    {
-        $query = User::where('role', 'user');
-    
-        if ($request->has('name') && $request->name !== '') {
-            $query->where('name', 'like', '%' . $request->name . '%');
-        }
-    
-        if ($request->has('surname') && $request->surname !== '') {
-            $query->where('surname', 'like', '%' . $request->surname . '%');
-        }
-    
-        if ($request->has('school') && $request->school !== '') {
-            $query->where('school', 'like', '%' . $request->school . '%');
-        }
-    
-        if ($request->has('wins') && !is_null($request->wins) && $request->wins !== '') {
-            $query->where('wins', '>=', $request->wins);
-        }
-    
-        if ($request->has('losses') && !is_null($request->losses) && $request->losses !== '') {
-            $query->where('losses', '>=', $request->losses);
-        }
-    
-        $users = $query->select('id', 'name', 'surname', 'school', 'city', 'nickname', 'profile_picture', 'wins', 'losses', 'email')->get();
-    
-        $filename = 'users_export_' . date('Y-m-d_H-i-s') . '.csv';
-    
-        $handle = fopen('php://output', 'w');
-    
-        $headers = ['ID', 'Ime', 'Prezime', 'Email', 'Škola', 'Grad', 'Korisničko ime', 'Pobede', 'Porazi'];
-    
-        fputcsv($handle, $headers);
-    
-        foreach ($users as $user) {
-            fputcsv($handle, [
-                $user->id,
-                $user->name,
-                $user->surname,
-                $user->email,
-                $user->school,
-                $user->city,
-                $user->nickname,
-                $user->wins,
-                $user->losses,
-            ]);
-        }
-    
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Pragma: no-cache');
-        header('Expires: 0');
-    
-        fclose($handle);
-        exit;
     }
 
 }

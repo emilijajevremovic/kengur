@@ -40,6 +40,7 @@ export class AdminHomeComponent implements OnInit{
   nameFilter: string = ''; 
   surnameFilter: string = ''; 
   schoolFilter: string = ''; 
+  cityFilter: string = '';
   winsFilter: number = 0; 
   lossesFilter: number = 0; 
 
@@ -220,7 +221,7 @@ export class AdminHomeComponent implements OnInit{
   }
 
   search() {
-    this.userService.getUsersAdminFilter(this.nameFilter, this.surnameFilter, this.schoolFilter, this.winsFilter, this.lossesFilter).subscribe(users => {
+    this.userService.getUsersAdminFilter(this.nameFilter, this.surnameFilter, this.cityFilter, this.schoolFilter, this.winsFilter, this.lossesFilter).subscribe(users => {
       this.userListAdmin = users;
     });
   }

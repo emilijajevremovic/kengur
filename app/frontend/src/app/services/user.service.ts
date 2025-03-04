@@ -48,12 +48,13 @@ export class UserService {
     return this.http.get<any>(`${this.baseUrl}/users-admin`);
   }
 
-  getUsersAdminFilter(nameFilter: string, surnameFilter: string, schoolFilter: string, winsFilter: number, lossesFilter: number): Observable<any> {
+  getUsersAdminFilter(nameFilter: string, surnameFilter: string, cityFilter: string, schoolFilter: string, winsFilter: number, lossesFilter: number): Observable<any> {
 
     const params = new HttpParams()
       .set('name', nameFilter)
       .set('surname', surnameFilter)
       .set('school', schoolFilter)
+      .set('city', cityFilter)
       .set('wins', winsFilter ? winsFilter.toString() : '')
       .set('losses', lossesFilter ? lossesFilter.toString() : '');
   
