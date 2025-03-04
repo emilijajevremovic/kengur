@@ -91,6 +91,8 @@ Route::middleware(['auth:sanctum', 'admin'])->post('/add-math-task', [TaskContro
 
 Route::middleware('auth:sanctum')->post('/user/update-result', [UserController::class, 'updateGameResult']);
 
+Route::middleware(['auth:sanctum', 'admin'])->get('/users-admin', [UserController::class, 'getUsersAdmin']);
+
 
 
 

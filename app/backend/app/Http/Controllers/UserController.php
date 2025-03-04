@@ -144,7 +144,7 @@ class UserController extends Controller
         ]);
 
         if (User::where('nickname', $request->nickname)->where('id', '!=', $user->id)->exists()) {
-            return response()->json(['error' => 'Nickname već postoji.'], 400);
+            return response()->json(['error' => 'Korisničko ime već postoji.'], 400);
         }
 
         if ($request->hasFile('profile_picture')) {
@@ -304,5 +304,37 @@ class UserController extends Controller
             'losses' => $user->losses
         ]);
     }
+
+    public function getUsersAdmin(Request $request)
+    {
+        $query = User::where('role', 'user'); 
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->has('surname')) {
+            $query->where('surname', 'like', '%' . $request->surname . '%');
+        }
+
+        if ($request->has('school')) {
+            $query->where('school', 'like', '%' . $request->school . '%');
+        }
+
+        if ($request->has('wins') && !is_null($request->wins) && $request->wins !== '') {
+            $query->where('wins', '>=', $request->wins);
+        }
+    
+        if ($request->has('losses') && !is_null($request->losses) && $request->losses !== '') {
+            $query->where('losses', '>=', $request->losses);
+        }
+
+        $users = $query->select('id', 'name', 'surname', 'school', 'city', 'nickname', 'profile_picture', 'wins', 'losses', 'email')
+                        ->get();
+
+        return response()->json($users);
+    }
+
+
 
 }

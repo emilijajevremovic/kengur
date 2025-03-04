@@ -120,8 +120,8 @@ export class ProfileComponent implements OnInit {
           // Ažuriraj sliku ili nickname na frontu ako je potrebno
         },
         error: (error) => {
-          if (error.error?.error === "Nickname već postoji.") {
-            this.errorMessage = "Nickname već postoji.";
+          if (error.error?.error === "Korisničko ime već postoji.") {
+            this.errorMessage = "Korisničko ime već postoji.";
             this.snackBar.open(error.error.error, 'OK', {
                 duration: 5000,
                 panelClass: ['light-snackbar'],

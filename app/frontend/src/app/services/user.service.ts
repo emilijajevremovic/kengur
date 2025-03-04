@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -43,5 +43,22 @@ export class UserService {
   updateStats(result: 'win' | 'loss'): Observable<any> {
     return this.http.post(`${this.baseUrl}/user/update-result`, { result });
   }
+
+  getUsersAdmin(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/users-admin`);
+  }
+
+  getUsersAdminFilter(nameFilter: string, surnameFilter: string, schoolFilter: string, winsFilter: number, lossesFilter: number): Observable<any> {
+
+    const params = new HttpParams()
+      .set('name', nameFilter)
+      .set('surname', surnameFilter)
+      .set('school', schoolFilter)
+      .set('wins', winsFilter ? winsFilter.toString() : '')
+      .set('losses', lossesFilter ? lossesFilter.toString() : '');
+  
+    return this.http.get<any>(`${this.baseUrl}/users-admin`, { params });
+  }
+  
   
 }

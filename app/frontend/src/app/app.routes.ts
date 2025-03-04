@@ -10,11 +10,13 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { authGuard } from './guards/auth.guard';
 import { loggedGuard } from './guards/logged.guard';
 import { NewPasswordComponent } from './components/new-password/new-password.component';
+import { AdminHomeComponent } from './admin-home/admin-home.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [loggedGuard] }, 
     { path: 'register', component: RegisterComponent, canActivate: [loggedGuard] }, 
     { path: 'lobby', component: FriendRequestsComponent, canActivate: [authGuard] }, 
+    { path: 'admin-lobby', component: AdminHomeComponent, canActivate: [authGuard] }, 
     { path: 'game-math/:gameId', component: GameMathComponent, canActivate: [authGuard] }, 
     { path: 'game-informatics/:gameId', component: GameInfComponent, canActivate: [authGuard] }, 
     // { path: 'game-result', component: GameResultComponent,canActivate: [authGuard] }, 
