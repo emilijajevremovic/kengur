@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\FriendRequest;
 use Validator; 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -116,14 +117,26 @@ class UserController extends Controller
         $searchTerm = $request->query('nickname');
 
         $users = User::where('nickname', 'like', '%' . $searchTerm . '%')
-                 ->where('role', '!=', 'admin')
-                 ->where('id', '!=', $userAuth->id) 
-                 ->get();
+                    ->where('role', '!=', 'admin')
+                    ->where('id', '!=', $userAuth->id)
+                    ->get()
+                    ->map(function ($user) use ($userAuth) {
+                        $isFriend = FriendRequest::where(function ($query) use ($userAuth, $user) {
+                            $query->where('sender_id', $userAuth->id)
+                                ->where('receiver_id', $user->id);
+                        })->orWhere(function ($query) use ($userAuth, $user) {
+                            $query->where('sender_id', $user->id)
+                                ->where('receiver_id', $userAuth->id);
+                        })->where('status', 'accepted')->exists();
+
+                        $user->is_friend = $isFriend;
+                        return $user;
+                    });
 
         if ($users->isEmpty()) {
             return response()->json(['error' => 'Korisnik sa tim korisničkim imenom nije pronađen.'], 404);
         }
-    
+
         return response()->json($users);
     }
 

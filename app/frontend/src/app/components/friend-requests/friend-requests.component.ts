@@ -226,6 +226,7 @@ export class FriendRequestsComponent implements OnInit {
     if (this.searchQuery.trim()) {
       this.authService.getUserByNickname(this.searchQuery).subscribe({
         next: (response) => {
+          //console.log(response);
           this.searchedUsers = response;
           this.searchPerformed = true;
         },

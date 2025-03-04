@@ -170,12 +170,22 @@
                   <h5>{{ user.name }} {{ user.surname }}</h5>
                   &nbsp;&nbsp;&nbsp;<span>{{ user.nickname }}</span>
                   <button
+                    *ngIf="!user.is_friend"
                     (click)="addFriend(user); $event.stopPropagation()"
                     matTooltip="Dodaj za prijatelja"
                     matTooltipPosition="above"
                     style="margin-right: 5px"
                   >
                     <img src="../../../assets/images/add-friend.png" alt="" />
+                  </button>
+                  <button
+                    *ngIf="user.is_friend"
+                    matTooltip="Prijatelji"
+                    matTooltipPosition="above"
+                    style="margin-right: 5px"
+                    disabled
+                  >
+                    <img src="../../../assets/images/check.png" alt="" />
                   </button>
                 </div>
               </div>
