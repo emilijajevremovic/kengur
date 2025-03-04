@@ -54,7 +54,12 @@ export class LoginComponent {
             //   error: (error) => console.error('Greška pri postavljanju online statusa:', error)
             // });
           }
-          this.router.navigate(['/lobby']);
+          if(this.isAdmin()) {
+            this.router.navigate(['/admin-lobby']);
+          }
+          else {
+            this.router.navigate(['/lobby']);
+          }
         },
         error: (error) => {
           if (error.status === 401) {
@@ -81,5 +86,9 @@ export class LoginComponent {
 
   navigateToResetPassword() {
     this.router.navigate(['/reset-password']);
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('role') === 'admin';
   }
 }

@@ -366,7 +366,7 @@ class UserController extends Controller
     
         $handle = fopen('php://output', 'w');
     
-        $headers = ['ID', 'Ime', 'Prezime', 'Email', 'Škola', 'Grad', 'Nadimak', 'Pobede', 'Porazi'];
+        $headers = ['ID', 'Ime', 'Prezime', 'Email', 'Škola', 'Grad', 'Korisničko ime', 'Pobede', 'Porazi'];
     
         fputcsv($handle, $headers);
     

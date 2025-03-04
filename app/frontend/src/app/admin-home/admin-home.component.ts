@@ -223,17 +223,32 @@ export class AdminHomeComponent implements OnInit{
     });
   }
 
-  exportUsers() {
-    this.userService.exportUsers(this.nameFilter, this.surnameFilter, this.schoolFilter, this.winsFilter, this.lossesFilter)
-      .subscribe((response: Blob) => {
-        const a = document.createElement('a');
-        const url = window.URL.createObjectURL(response);
-        a.href = url;
-        a.download = 'users_export.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      });
+  exportToCSV() {
+    // Naslovi kolona (preuzima ih direktno iz <th> elemenata)
+    const headers = Array.from(document.querySelectorAll('thead th')).map(th => th.textContent?.trim());
+    
+    // Podaci iz redova tabele (uzima podatke iz <td> i <th> elemenata u svakom redu)
+    const rows = Array.from(document.querySelectorAll('tbody tr')).map(tr => {
+      return Array.from(tr.querySelectorAll('th, td')).map(td => td.textContent?.trim());
+    });
+  
+    // Sastavljanje CSV formata
+    let csvContent = [headers.join(',')];
+    rows.forEach(row => {
+      csvContent.push(row.join(','));
+    });
+  
+    // Pretvara podatke u Blob i pokreće preuzimanje CSV-a
+    const blob = new Blob([csvContent.join('\n')], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Korisnici.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
+  
+  
   
 
 }
