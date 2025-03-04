@@ -4,6 +4,7 @@ import { UserService } from '../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NavbarComponent } from '../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-admin-home',
@@ -11,6 +12,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
+    NavbarComponent
   ],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.scss'
@@ -224,21 +226,17 @@ export class AdminHomeComponent implements OnInit{
   }
 
   exportToCSV() {
-    // Naslovi kolona (preuzima ih direktno iz <th> elemenata)
     const headers = Array.from(document.querySelectorAll('thead th')).map(th => th.textContent?.trim());
     
-    // Podaci iz redova tabele (uzima podatke iz <td> i <th> elemenata u svakom redu)
     const rows = Array.from(document.querySelectorAll('tbody tr')).map(tr => {
       return Array.from(tr.querySelectorAll('th, td')).map(td => td.textContent?.trim());
     });
   
-    // Sastavljanje CSV formata
     let csvContent = [headers.join(',')];
     rows.forEach(row => {
       csvContent.push(row.join(','));
     });
   
-    // Pretvara podatke u Blob i pokreće preuzimanje CSV-a
     const blob = new Blob([csvContent.join('\n')], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');

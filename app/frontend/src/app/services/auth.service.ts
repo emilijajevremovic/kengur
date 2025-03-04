@@ -30,6 +30,16 @@ export class AuthService {
     return false; // Ako localStorage nije dostupan
   }
 
+  isAdmin(): boolean {
+    const role = localStorage.getItem('role');
+    return role === 'admin';
+  }
+  
+  isUser(): boolean {
+    const role = localStorage.getItem('role');
+    return role === 'user';
+  }
+
   logout(): void {
     localStorage.removeItem('auth_token');
     this.router.navigate(['/login']);
