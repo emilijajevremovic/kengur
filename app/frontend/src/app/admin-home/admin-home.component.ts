@@ -246,7 +246,12 @@ export class AdminHomeComponent implements OnInit{
     window.URL.revokeObjectURL(url);
   }
   
-  
-  
+  sortBy(key: string, descending: boolean = false): void {
+    this.userListAdmin.sort((a: any, b: any) => {
+      let aValue = key === 'matches' ? (a.wins || 0) + (a.losses || 0) : a[key] || 0;
+      let bValue = key === 'matches' ? (b.wins || 0) + (b.losses || 0) : b[key] || 0;
+      return descending ? bValue - aValue : aValue - bValue;
+    });
+  }  
 
 }

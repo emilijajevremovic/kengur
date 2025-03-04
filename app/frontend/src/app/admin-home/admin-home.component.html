@@ -144,8 +144,17 @@
             <th scope="col">Email adresa</th>
             <th scope="col">Mesto</th>
             <th scope="col">Škola</th>
-            <th scope="col">Broj pobeda</th>
-            <th scope="col">Broj Poraza</th>
+            <th scope="col">
+              Broj pobeda
+              <button class="sort" (click)="sortBy('wins')">▲</button>
+              <button class="sort" (click)="sortBy('wins', true)">▼</button>
+            </th>
+            <th scope="col">Broj poraza</th>
+            <th scope="col">
+              Ukupno mečeva
+              <button class="sort" (click)="sortBy('matches')">▲</button>
+              <button class="sort" (click)="sortBy('matches', true)">▼</button>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -159,6 +168,7 @@
             <td>{{ user.school }}</td>
             <td>{{ user.wins }}</td>
             <td>{{ user.losses }}</td>
+            <td>{{ user.losses + user.wins }}</td>
           </tr>
         </tbody>
       </table>

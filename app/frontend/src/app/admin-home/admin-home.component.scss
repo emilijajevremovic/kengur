@@ -604,6 +604,11 @@
   .filter-group {
     width: fit-content;
   }
+
+  .sort {
+    border: none;
+    background-color: transparent;
+  }
   
   @media (max-width: 800px) {
     .main-container {
