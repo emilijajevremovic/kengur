@@ -30,6 +30,7 @@ export class AdminHomeComponent implements OnInit{
   taskClass: string = '';
   taskLevel: number = 3;
   answerType: string = 'text';
+  numberOfAnswers: number = 0;
   answersText: string[] = [''];
   answersPictures: File[] = [];
   correctAnswerIndex: number | null = 0;
@@ -109,11 +110,27 @@ export class AdminHomeComponent implements OnInit{
     }
   }
 
+  generateAnswers() {
+    this.answersText = Array(this.numberOfAnswers).fill('');
+    this.correctAnswerIndex = 0; 
+  }
+
   addTextAnswer() {
     this.answersText.push('');
     if (this.correctAnswerIndex === null) {
       this.correctAnswerIndex = 0;
     }
+  }
+
+  removeTextAnswer(index: number) {
+    this.answersText.splice(index, 1); 
+    if (this.correctAnswerIndex || 0 >= this.answersText.length) {
+      this.correctAnswerIndex = null; 
+    }
+  }
+
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
   
   addImageAnswer() {

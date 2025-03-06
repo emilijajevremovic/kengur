@@ -461,13 +461,15 @@ class GameController extends Controller
             $player1Data = User::find($game->player_1);
             $player2Data = User::find($game->player_2);
 
+            $totalQuestions = $game->category === 'info' ? 3 : 9;
+
             $gameData = [
                 'gameId' => $gameId,
                 'category' => $game->category,
                 'player1' => [
                     'id' => $player1->user_id,
                     'correctAnswers' => $player1->correct_answers,
-                    'totalQuestions' => 9,
+                    'totalQuestions' => $totalQuestions,
                     'timeTaken' => $player1->duration,
                     'profilePicture' => $player1Data ? $player1Data->profile_picture : null,
                     'nickname' => $player1Data ? $player1Data->nickname : 'Nepoznat korisnik'
@@ -475,7 +477,7 @@ class GameController extends Controller
                 'player2' => [
                     'id' => $player2->user_id,
                     'correctAnswers' => $player2->correct_answers,
-                    'totalQuestions' => 9,
+                    'totalQuestions' => $totalQuestions,
                     'timeTaken' => $player2->duration,
                     'profilePicture' => $player2Data ? $player2Data->profile_picture : null,
                     'nickname' => $player2Data ? $player2Data->nickname : 'Nepoznat korisnik'

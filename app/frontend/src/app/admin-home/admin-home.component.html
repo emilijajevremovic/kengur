@@ -73,12 +73,24 @@
   
           <div *ngIf="answerType === 'text'">
             <label>Odgovori</label>
-            <div *ngFor="let answer of answersText; let i = index">
-              <input type="text" class="form-control" [(ngModel)]="answersText[i]" name="answersText[i]" />
-              <input type="radio" name="correctAnswer" [value]="i" [(ngModel)]="correctAnswerIndex" [checked]="correctAnswerIndex === null && i === 0" />
+            <div *ngFor="let answer of answersText; let i = index; trackBy: trackByIndex">
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="answersText[i]" 
+                [name]="'answersText' + i" 
+              />
+              <input 
+                type="radio" 
+                name="correctAnswer" 
+                [value]="i" 
+                [(ngModel)]="correctAnswerIndex" 
+                [checked]="correctAnswerIndex === i"
+              />
             </div>
             <button type="button" class="btn btn-sm btn-primary" (click)="addTextAnswer()">+ Dodaj odgovor</button>
           </div>
+          
   
           <div *ngIf="answerType === 'image'">
             <label>Odgovori (slike)</label>
