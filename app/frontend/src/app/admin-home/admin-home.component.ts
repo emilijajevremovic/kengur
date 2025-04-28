@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 
+declare var MathJax: any;
+
 @Component({
   selector: 'app-admin-home',
   standalone: true,
@@ -17,6 +19,7 @@ import { NavbarComponent } from '../components/navbar/navbar.component';
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.scss'
 })
+
 export class AdminHomeComponent implements OnInit{
 
   constructor(private taskService: TaskService, private userService: UserService, private snackBar: MatSnackBar) {}
@@ -52,6 +55,15 @@ export class AdminHomeComponent implements OnInit{
       this.userListAdmin = response; 
     });
   }
+
+  renderMath() {
+    if (typeof MathJax !== 'undefined') {
+      setTimeout(() => {
+        MathJax.typesetPromise();
+      }, 0);
+    }
+  }
+  
 
   loadMathClasses(): void {
     this.taskService.getDistinctClassesMath().subscribe((data) => {

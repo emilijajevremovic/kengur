@@ -38,8 +38,12 @@
       <form (submit)="submitTask()">
         <div class="form-group">
           <label>Tekst zadatka</label>
-          <textarea class="form-control" [(ngModel)]="taskText" name="taskText" rows="3"></textarea>
+          <textarea class="form-control" (input)="renderMath()" [(ngModel)]="taskText" name="taskText" rows="3"></textarea>
         </div>
+
+        <label>Pregled teksta zadatka</label>
+        <div [innerHTML]="taskText"></div>
+
   
         <div class="form-group">
           <label>Slika zadatka (opcionalno)</label>
