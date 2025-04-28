@@ -96,6 +96,56 @@
                             />
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col">
+                          <h5>RAZRED</h5>
+                          <input 
+                            type="number" 
+                            class="form-control" 
+                            placeholder="Razred (1-12)" 
+                            [(ngModel)]="user.class" 
+                            min="1" max="12"
+                            #classRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': classRef.invalid && classRef.touched}"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col">
+                          <h5>OCENA IZ MATEMATIKE</h5>
+                          <input 
+                            type="number" 
+                            class="form-control" 
+                            placeholder="Ocena (1-5)" 
+                            [(ngModel)]="user.math_grade" 
+                            min="1" max="5"
+                            #mathRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': mathRef.invalid && mathRef.touched}"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col">
+                          <h5>OCENA IZ INFORMATIKE</h5>
+                          <input 
+                            type="number" 
+                            class="form-control" 
+                            placeholder="Ocena (1-5)" 
+                            [(ngModel)]="user.info_grade" 
+                            min="1" max="5"
+                            #infoRef="ngModel"
+                            required
+                            [ngClass]="{'invalid': infoRef.invalid && infoRef.touched}"
+                          />
+                        </div>
+                      </div>
+
+                      
                     <div class="row">
                         <div class="col">
                             <h5> BROJ POBEDA </h5>

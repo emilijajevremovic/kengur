@@ -36,7 +36,11 @@ class UserController extends Controller
             'city' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed', 
-            'nickname' => 'required|string|min:4|max:255'
+            'nickname' => 'required|string|min:4|max:255',
+            'class' => 'required|integer|between:1,12',
+            'math_grade' => 'required|integer|between:1,5',
+            'info_grade' => 'required|integer|between:1,5'
+
         ]);
 
         if ($validator->fails()) {
@@ -53,7 +57,10 @@ class UserController extends Controller
             'nickname' => $request->nickname,
             'profile_picture' => 'storage/profile_images/default_profile_picture.png',
             'wins' => 0, 
-            'losses' => 0 
+            'losses' => 0,
+            'class' => $request->class,
+            'math_grade' => $request->math_grade,
+            'info_grade' => $request->info_grade,
         ]);
 
         return response()->json(['user' => $user], 201); 
@@ -155,6 +162,10 @@ class UserController extends Controller
             'surname' => 'required|string|max:255',
             'school' => 'required|string|max:255',
             'city' => 'required|string|max:255',
+            'class' => 'required|integer|between:1,12',
+            'math_grade' => 'required|integer|between:1,5',
+            'info_grade' => 'required|integer|between:1,5',
+
         ]);
 
         if (User::where('nickname', $request->nickname)->where('id', '!=', $user->id)->exists()) {
@@ -179,6 +190,9 @@ class UserController extends Controller
         $user->surname = $request->surname;
         $user->school = $request->school;
         $user->city = $request->city;
+        $user->class = $request->class;
+        $user->math_grade = $request->math_grade;
+        $user->info_grade = $request->info_grade;
 
         $user->save();
 
@@ -339,6 +353,18 @@ class UserController extends Controller
             $query->where('school', 'like', '%' . $request->school . '%');
         }
 
+        if ($request->has('class')) {
+            $query->where('class', $request->class);
+        }
+        
+        if ($request->has('math_grade')) {
+            $query->where('math_grade', $request->math_grade);
+        }
+        
+        if ($request->has('info_grade')) {
+            $query->where('info_grade', $request->info_grade);
+        }
+
         if ($request->has('wins') && !is_null($request->wins) && $request->wins !== '') {
             $query->where('wins', '>=', $request->wins);
         }
@@ -347,7 +373,7 @@ class UserController extends Controller
             $query->where('losses', '>=', $request->losses);
         }
 
-        $users = $query->select('id', 'name', 'surname', 'school', 'city', 'nickname', 'profile_picture', 'wins', 'losses', 'email')
+        $users = $query->select('id', 'name', 'surname', 'school', 'class', 'math_grade', 'info_grade', 'city', 'nickname', 'profile_picture', 'wins', 'losses', 'email')
                         ->get();
 
         return response()->json($users);

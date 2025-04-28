@@ -32,7 +32,10 @@ class User extends Authenticatable
         'last_ping',
         'game',
         'wins', 
-        'losses'
+        'losses',
+        'class',
+        'math_grade',
+        'info_grade',
     ];
 
     /**

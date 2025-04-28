@@ -41,7 +41,10 @@ export class RegisterComponent {
       city: ['', [Validators.required]],
       school: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
+      password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
+      class: [, [Validators.required, Validators.min(1), Validators.max(12)]],
+      math_grade: [, [Validators.required, Validators.min(1), Validators.max(5)]],
+      info_grade: [, [Validators.required, Validators.min(1), Validators.max(5)]]
     }, {
       validators: this.passwordsMatchValidator
     });

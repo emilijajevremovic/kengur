@@ -41,6 +41,9 @@ export class ProfileComponent implements OnInit {
       surname: ['', [Validators.required]],
       school: ['', [Validators.required]],
       city: ['', [Validators.required]],
+      class: [1, [Validators.required, Validators.min(1), Validators.max(12)]],
+      math_grade: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
+      info_grade: [1, [Validators.required, Validators.min(1), Validators.max(5)]]
     });
   }
 
@@ -107,6 +110,10 @@ export class ProfileComponent implements OnInit {
       formData.append('surname', this.user.surname);
       formData.append('school', this.user.school);
       formData.append('city', this.user.city);
+      formData.append('class', this.user.class);
+      formData.append('math_grade', this.user.math_grade);
+      formData.append('info_grade', this.user.info_grade);
+
 
       this.authService.updateUserProfile(formData).subscribe({
         next: (response) => {

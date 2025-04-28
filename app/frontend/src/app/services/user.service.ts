@@ -48,18 +48,22 @@ export class UserService {
     return this.http.get<any>(`${this.baseUrl}/users-admin`);
   }
 
-  getUsersAdminFilter(nameFilter: string, surnameFilter: string, cityFilter: string, schoolFilter: string, winsFilter: number, lossesFilter: number): Observable<any> {
-
-    const params = new HttpParams()
-      .set('name', nameFilter)
-      .set('surname', surnameFilter)
-      .set('school', schoolFilter)
-      .set('city', cityFilter)
-      .set('wins', winsFilter ? winsFilter.toString() : '')
-      .set('losses', lossesFilter ? lossesFilter.toString() : '');
+  getUsersAdminFilter(nameFilter: string, surnameFilter: string, cityFilter: string, schoolFilter: string, winsFilter: number | null, lossesFilter: number | null, classFilter: number | null, mathGradeFilter: number | null, infoGradeFilter: number | null ): Observable<any> {
+    let params = new HttpParams();
+  
+    if (nameFilter) params = params.set('name', nameFilter);
+    if (surnameFilter) params = params.set('surname', surnameFilter);
+    if (cityFilter) params = params.set('city', cityFilter);
+    if (schoolFilter) params = params.set('school', schoolFilter);
+    if (winsFilter !== null && winsFilter !== undefined) params = params.set('wins', winsFilter.toString());
+    if (lossesFilter !== null && lossesFilter !== undefined) params = params.set('losses', lossesFilter.toString());
+    if (classFilter !== null && classFilter !== undefined) params = params.set('class', classFilter.toString());
+    if (mathGradeFilter !== null && mathGradeFilter !== undefined) params = params.set('math_grade', mathGradeFilter.toString());
+    if (infoGradeFilter !== null && infoGradeFilter !== undefined) params = params.set('info_grade', infoGradeFilter.toString());
   
     return this.http.get<any>(`${this.baseUrl}/users-admin`, { params });
   }
+  
   
   exportUsers(nameFilter: string, surnameFilter: string, schoolFilter: string, winsFilter: number, lossesFilter: number): Observable<Blob> {
     const params = new HttpParams()

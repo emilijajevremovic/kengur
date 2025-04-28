@@ -113,6 +113,48 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <input 
+          type="number"
+          formControlName="class"
+          placeholder="Razred"
+          min="1" max="12"
+          [ngClass]="{ 'error-input': registerForm.get('class')?.invalid && (registerForm.get('class')?.touched || submitted) }"
+        />
+        <span matTooltip="Obavezno. Dozvoljene vrednosti su od 1 do 12." class="info-icon">
+          <i class="fa fa-info-circle"></i>
+        </span>
+      </div>
+
+      <div class="inner-group">
+        <div class="form-group">
+          <input 
+            type="number"
+            formControlName="math_grade"
+            placeholder="Ocena iz matematike (1-5)"
+            min="1" max="5"
+            [ngClass]="{ 'error-input': registerForm.get('math_grade')?.invalid && (registerForm.get('math_grade')?.touched || submitted) }"
+          />
+          <span matTooltip="Obavezno. Ocena iz matematike od 1 do 5." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
+      
+        <div class="form-group">
+          <input 
+            type="number"
+            formControlName="info_grade"
+            placeholder="Ocena iz informatike (1-5)"
+            min="1" max="5"
+            [ngClass]="{ 'error-input': registerForm.get('info_grade')?.invalid && (registerForm.get('info_grade')?.touched || submitted) }"
+          />
+          <span matTooltip="Obavezno. Ocena iz informatike od 1 do 5." class="info-icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </div>
+      </div>
+      
+
       <div *ngIf="message" class="form-group" style="color: rgb(177, 16, 16);">
         <small>{{ message }}</small>
       </div>

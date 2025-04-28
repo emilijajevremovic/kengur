@@ -142,6 +142,22 @@
               <label for="schoolFilter">Škola</label>
               <input type="text" id="schoolFilter" [(ngModel)]="schoolFilter" placeholder="Pretraži po školi" class="form-control" />
             </div>
+
+            <div class="filter-group">
+              <label for="classFilter">Razred (1–12)</label>
+              <input type="number" id="classFilter" [(ngModel)]="classFilter" min="1" max="12" placeholder="Razred" class="form-control" />
+            </div>
+            
+            <div class="filter-group">
+              <label for="mathGradeFilter">Ocena iz matematike (1–5)</label>
+              <input type="number" id="mathGradeFilter" [(ngModel)]="mathGradeFilter" min="1" max="5" placeholder="Matematika" class="form-control" />
+            </div>
+            
+            <div class="filter-group">
+              <label for="infoGradeFilter">Ocena iz informatike (1–5)</label>
+              <input type="number" id="infoGradeFilter" [(ngModel)]="infoGradeFilter" min="1" max="5" placeholder="Informatika" class="form-control" />
+            </div>
+            
         
             <div class="filter-group">
               <label for="winsFilter">Broj pobeda (više ili jednako od)</label>
@@ -162,15 +178,18 @@
             <th scope="col">Ime</th>
             <th scope="col">Prezime</th>
             <th scope="col">Korisničko ime</th>
-            <th scope="col">Email adresa</th>
+            <th scope="col">Email</th>
             <th scope="col">Mesto</th>
             <th scope="col">Škola</th>
+            <th scope="col">Razred</th>
+            <th scope="col">Ocena M</th>
+            <th scope="col">Ocena I</th>
             <th scope="col">
-              Broj pobeda
+              Pobede
               <button class="sort" (click)="sortBy('wins')">▲</button>
               <button class="sort" (click)="sortBy('wins', true)">▼</button>
             </th>
-            <th scope="col">Broj poraza</th>
+            <th scope="col">Porazi</th>
             <th scope="col">
               Ukupno mečeva
               <button class="sort" (click)="sortBy('matches')">▲</button>
@@ -187,6 +206,9 @@
             <td>{{ user.email }}</td>
             <td>{{ user.city }}</td>
             <td>{{ user.school }}</td>
+            <td>{{ user.class }}</td>
+            <td>{{ user.math_grade }}</td>
+            <td>{{ user.info_grade }}</td>
             <td>{{ user.wins }}</td>
             <td>{{ user.losses }}</td>
             <td>{{ user.losses + user.wins }}</td>
