@@ -209,7 +209,7 @@ class UserController extends Controller
 
         $users = User::where('id', '!=', $userAuth->id)
                     ->where('role', '!=', 'admin')
-                     ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'email', 'game') 
+                     ->select('id', 'name', 'nickname', 'profile_picture', 'surname', 'school', 'city', 'email', 'game', 'class', 'math_grade', 'info_grade') 
                      ->get()
                      ->map(function ($user) {
                         $user->is_online = $user->is_online; 

@@ -57,6 +57,7 @@ export class FriendRequestsComponent implements OnInit {
   classSelected: string = '';
   user: any = {};
   friends: string[] = [];
+  currentUserClass: number | null = null;
 
 
   ngOnInit(): void {
@@ -102,6 +103,8 @@ export class FriendRequestsComponent implements OnInit {
     this.authService.getUserData().subscribe({
       next: (data) => {
         this.user = data.user.nickname;
+        this.currentUserClass = data.user.class;
+        this.updateUserLists();
       },
       error: (error) => {
         //console.error('Error fetching user data:', error);
@@ -194,17 +197,22 @@ export class FriendRequestsComponent implements OnInit {
     this.users.forEach((user) => {
       user.is_online = this.onlineUsers.includes(user.id.toString());
       user.is_friend = this.friends.includes(user.id.toString());
+      user.same_class = user.class === this.currentUserClass;
     });
-
+  
     this.users.sort((a, b) => {
-      return (
-        Number(b.is_online) - Number(a.is_online) ||
-        Number(b.is_friend) - Number(a.is_friend)
-      );
+      // Dodaj log pre sortiranja da vidiš redosled
+      const compareOnline = Number(b.is_online) - Number(a.is_online);
+      const compareFriend = Number(b.is_friend) - Number(a.is_friend);
+      const compareClass = Number(b.same_class) - Number(a.same_class);
+  
+      if (compareOnline !== 0) return compareOnline;
+      if (compareFriend !== 0) return compareFriend;
+      return compareClass;
     });
-
+  
     this.updateInGameUsers();
-  }
+  }  
 
   updateInGameUsers() {
     this.userService.getInGameUsers().subscribe({
