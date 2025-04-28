@@ -21,6 +21,24 @@
       box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.2), -20px -20px 60px rgba(255, 255, 255, 0.7);
     }
 
+    .timer-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    .clock-icon {
+      width: 30px; 
+      height: 30px;
+      margin-right: 10px;
+    }
+    
+    .timer {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
     .text-field {
       text-align: left;
       border-radius: 15px;

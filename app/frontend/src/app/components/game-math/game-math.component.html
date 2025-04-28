@@ -1,5 +1,11 @@
 <div class="background">
   <div class="quiz-container" *ngIf="tasks.length > 0">
+    <div class="timer-container">
+      <img src="../../../assets/images/chronometer.png" alt="Sat" class="clock-icon">
+      <div class="timer">
+        {{ timerMinutes < 10 ? "0" + timerMinutes : timerMinutes }}:{{ timerSeconds < 10 ? "0" + timerSeconds : timerSeconds }}
+      </div>
+    </div>    
     <div class="question-counter">
       <div class="radio-input">
         <label *ngFor="let task of tasks; let i = index">

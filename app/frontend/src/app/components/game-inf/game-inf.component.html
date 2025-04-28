@@ -1,5 +1,12 @@
 <div class="background">
     <div class="quiz-container">
+
+      <div class="timer-container">
+        <img src="../../../assets/images/chronometer.png" alt="Sat" class="clock-icon">
+        <div class="timer">
+          {{ timerMinutes < 10 ? "0" + timerMinutes : timerMinutes }}:{{ timerSeconds < 10 ? "0" + timerSeconds : timerSeconds }}
+        </div>
+      </div>  
   
       <!-- Task Text -->
       <div class="task-text" *ngIf="task">

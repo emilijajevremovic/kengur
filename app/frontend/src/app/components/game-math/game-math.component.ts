@@ -58,9 +58,13 @@ export class GameMathComponent implements OnInit, OnDestroy {
   startDate: Date | null = null;
   endDate: Date | null = null;
   duration: string = '';
+  timerMinutes: number = 30;
+  timerSeconds: number = 0;
+  private timerInterval: any;
 
   ngOnInit() {
     this.startDate = new Date();
+    this.startTimer();
 
     this.route.params.subscribe((params) => {
       const gameId = params['gameId'];
@@ -96,6 +100,22 @@ export class GameMathComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       window.removeEventListener('beforeunload', this.handlePageExit);
     }
+  }
+
+  startTimer() {
+    this.timerInterval = setInterval(() => {
+      if (this.timerSeconds === 0) {
+        if (this.timerMinutes === 0) {
+          clearInterval(this.timerInterval);
+          this.endQuiz(); // Kada istekne vreme
+        } else {
+          this.timerMinutes--;
+          this.timerSeconds = 59;
+        }
+      } else {
+        this.timerSeconds--;
+      }
+    }, 1000);
   }
 
   handlePageExit = () => {
@@ -195,6 +215,9 @@ export class GameMathComponent implements OnInit, OnDestroy {
   endQuiz() {
     this.endDate = new Date();
     this.calculateDuration();
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
 
     const gameId = localStorage.getItem('gameId');
     if (!gameId) return;
@@ -260,7 +283,9 @@ export class GameMathComponent implements OnInit, OnDestroy {
 
   getSafeImageUrl(fileName: string): string {
     if (!fileName) return '';
-  
-    return encodeURI(`${this.baseUrl}/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`);
+
+    return encodeURI(
+      `${this.baseUrl}/TaskImages/${this.currentTask.class}/${this.currentTask.level}/${fileName}`
+    );
   }
 }

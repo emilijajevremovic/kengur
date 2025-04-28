@@ -55,9 +55,13 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   popupYesNoMessage: string = '';
   task: any = null;
   baseUrl = environment.apiUrl;
+  timerMinutes: number = 30;
+  timerSeconds: number = 0;
+  private timerInterval: any;
 
   ngOnInit() {
     this.startDate = new Date();
+    this.startTimer();
 
     this.route.params.subscribe((params) => {
       const gameId = params['gameId'];
@@ -84,6 +88,22 @@ export class GameInfComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  startTimer() {
+    this.timerInterval = setInterval(() => {
+      if (this.timerSeconds === 0) {
+        if (this.timerMinutes === 0) {
+          clearInterval(this.timerInterval);
+          this.endQuiz(); // Kada istekne vreme
+        } else {
+          this.timerMinutes--;
+          this.timerSeconds = 59;
+        }
+      } else {
+        this.timerSeconds--;
+      }
+    }, 1000);
   }
 
   validateGameAccess(gameId: string) {
@@ -196,6 +216,11 @@ export class GameInfComponent implements OnInit, AfterViewInit {
     this.showPopupYesNo = true;
     this.endDate = new Date();
     this.calculateDuration();
+
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+
   
     if (!this.gameId) return;
   
