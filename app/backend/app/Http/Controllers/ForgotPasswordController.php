@@ -29,13 +29,11 @@ class ForgotPasswordController extends Controller
         $hashedToken = Hash::make($token);
         $email = $request->email;
 
-        // Sačuvaj token u bazi
         DB::table('password_reset')->updateOrInsert(
             ['email' => $email],
-            ['token' => $token, 'created_at' => now()] // Čuvamo nehaširani token
+            ['token' => $token, 'created_at' => now()] 
         );
 
-        // Pošalji email koristeći PHP Mailer
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
@@ -46,7 +44,7 @@ class ForgotPasswordController extends Controller
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
-            $mail->setFrom('bezgranicakengur@gmail.com', 'Kengur bez granica');
+            $mail->setFrom('bezgranicakengur@gmail.com', 'IMI MathCode Duel');
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = 'Resetovanje lozinke';
