@@ -39,12 +39,12 @@ class ForgotPasswordController extends Controller
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; // SMTP server
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'bezgranicakengur@gmail.com'; // SMTP korisnik
-            $mail->Password   = 'duqv cwoo logk ftoo'; // SMTP lozinka
+            $mail->Username   = 'imimathcodeduel@gmail.com'; // SMTP korisnik
+            $mail->Password   = 'mwrp rbhc time owjm'; // SMTP lozinka
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
-            $mail->setFrom('bezgranicakengur@gmail.com', 'IMI MathCode Duel');
+            $mail->setFrom('imimathcodeduel@gmail.com', 'IMI MathCode Duel');
             $mail->addAddress($email);
             $mail->isHTML(true);
             $mail->Subject = 'Resetovanje lozinke';
