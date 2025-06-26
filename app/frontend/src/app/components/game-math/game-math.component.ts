@@ -81,7 +81,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
       }
 
       this.websocketService.subscribeToPlayerDisconnect(gameId, (data: any) => {
-        alert(`Igrač sa ID ${data.userId} je napustio meč!`);
+        //alert(`Igrač sa ID ${data.userId} je napustio meč!`);
       });
     });
 

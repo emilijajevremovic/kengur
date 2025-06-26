@@ -78,9 +78,9 @@ export class AppComponent implements OnInit, OnDestroy {
         next: async (response) => {
           this.userId = response.user.id;
           this.myNickname = response.user.nickname;
-          console.log('✅ Dobijen userId iz API-ja:', this.userId, 'tip:', typeof this.userId);
+          //console.log('Dobijen userId iz API-ja:', this.userId, 'tip:', typeof this.userId);
           if (typeof this.userId !== 'number' || isNaN(this.userId)) {
-            console.error('❌ Nevalidan userId – WebSocket pretplata se neće izvršiti.');
+            //console.error('Nevalidan userId – WebSocket pretplata se neće izvršiti.');
             return;
           }
           this.subscribeToChallenges(this.userId);

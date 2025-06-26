@@ -89,15 +89,24 @@ export class FriendRequestsComponent implements OnInit {
       this.updateUserLists();
     });
 
-    const userId = this.authService.getUserId();
-    const privateChannel = this.pusherService.subscribeToChannel(
-      `user.${userId}`
-    );
+    this.authService.getUserId().subscribe({
+      next: (res) => {
+        const userId = res.id;
 
-    privateChannel.bind('ChallengeReceived', (data: any) => {
-      alert(
-        `${data.challengerName} izaziva te na meč iz ${data.category} za razred ${data.class}`
-      );
+        if (typeof userId !== 'number' || isNaN(userId)) {
+          //console.error('Nevalidan userId WebSocket pretplata se neće izvršiti.');
+          return;
+        }
+
+        const privateChannel = this.pusherService.subscribeToChannel(`user.${userId}`);
+
+        privateChannel.bind('ChallengeReceived', (data: any) => {
+          //alert(`${data.challengerName} izaziva te na meč iz ${data.category} za razred ${data.class}`);
+        });
+      },
+      error: (err) => {
+        //console.error('Greška pri dobijanju userId:', err);
+      }
     });
 
     this.authService.getUserData().subscribe({

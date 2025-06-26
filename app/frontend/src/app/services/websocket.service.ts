@@ -26,7 +26,7 @@ export class WebsocketService {
     }
 
     //console.log(`Pretplaćujem korisnika na izazove: user.${userId}`);
-    const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
+    const channel = this.pusherService.subscribeToChannel(`user.${String(userId)}`);
 
     channel.bind('ChallengeReceived', (data: any) => {
       //console.log(`Izazov primljen za user.${userId}:`, data);
@@ -42,7 +42,7 @@ export class WebsocketService {
       return;
     }
 
-    const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
+    const channel = this.pusherService.subscribeToChannel(`user.${String(userId)}`);
     //console.log(`Pretplaćen na kanal: private-user.${userId}`);
 
     channel.bind('ChallengeRejected', (data: any) => {
@@ -52,7 +52,7 @@ export class WebsocketService {
   }
 
   subscribeToGameStart(userId: number, callback: (data: any) => void) {
-    const channel = this.pusherService.subscribeToChannel(`user.${userId}`);
+    const channel = this.pusherService.subscribeToChannel(`user.${String(userId)}`);
 
     //console.log(`Pretplaćen na kanal za pokretanje igre: user.${userId}`);
 
