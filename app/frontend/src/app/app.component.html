@@ -3,7 +3,7 @@
 <div class="popup-overlay" *ngIf="isPopupOpen">
   <div class="popup-content" (click)="$event.stopPropagation()">
     <!-- <div id="close-popup" (click)="closePopup()">
-            <img src="../../../assets/images/close-popup.png" alt="">
+            <img src="assets/images/close-popup.png" alt="">
         </div> -->
 
     <div class="popup-request">
@@ -25,7 +25,7 @@
               <span
                 ><img
                   style="margin-top: 15px"
-                  src="../../../assets/images/maths.png"
+                  src="assets/images/maths.png"
                   alt=""
               /></span>
             </label>
@@ -36,7 +36,7 @@
               <span
                 ><img
                   style="margin-top: 15px"
-                  src="../../../assets/images/programming.png"
+                  src="assets/images/programming.png"
                   alt=""
               /></span>
             </label>
@@ -63,7 +63,7 @@
         matTooltipPosition="above"
         (click)="acceptChallenge()"
       >
-        <img src="../../../assets/images/check.png" alt="" />
+        <img src="assets/images/check.png" alt="" />
       </button>
       <button
         matTooltip="Odbij"
@@ -71,7 +71,7 @@
         id="red"
         (click)="rejectChallenge()"
       >
-        <img src="../../../assets/images/cross.png" alt="" />
+        <img src="assets/images/cross.png" alt="" />
       </button>
     </div>
   </div>
@@ -83,7 +83,7 @@
       <img
         (click)="closeResultPopup()"
         style="width: 15px; height: 15px"
-        src="../../../assets/images/cross.png"
+        src="assets/images/cross.png"
         alt=""
       />
     </div>
@@ -91,7 +91,7 @@
       <div class="popup-opponent-result">
         <img
           style="width: 100px"
-          [src]="'../assets/images/' + gameResultData?.player1?.image"
+          [src]="'assets/images/' + gameResultData?.player1?.image"
           alt=""
         />
         <div class="profile-picture-result">
@@ -115,7 +115,7 @@
       <div class="popup-opponent-result">
         <img
           style="width: 100px"
-          [src]="'../assets/images/' + gameResultData?.player2?.image"
+          [src]="'assets/images/' + gameResultData?.player2?.image"
           alt=""
         />
         <div class="profile-picture-result">

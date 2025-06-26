@@ -94,7 +94,7 @@ export class FriendRequestsComponent implements OnInit {
       `user.${userId}`
     );
 
-    privateChannel.bind('ChallengeUser', (data: any) => {
+    privateChannel.bind('ChallengeReceived', (data: any) => {
       alert(
         `${data.challengerName} izaziva te na meč iz ${data.category} za razred ${data.class}`
       );

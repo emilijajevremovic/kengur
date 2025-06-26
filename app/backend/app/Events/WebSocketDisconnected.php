@@ -33,4 +33,12 @@ class WebSocketDisconnected implements ShouldBroadcast
     {
         return 'PlayerDisconnected';
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'userId' => $this->userId,
+            'gameId' => $this->gameId,
+        ];
+    }
 }

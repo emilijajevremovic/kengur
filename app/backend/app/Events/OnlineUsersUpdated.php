@@ -30,4 +30,11 @@ class OnlineUsersUpdated implements ShouldBroadcast
     {
         return 'OnlineUsersUpdated';
     }
+    
+    public function broadcastWith()
+    {
+        return [
+            'onlineUsers' => $this->onlineUsers
+        ];
+    }
 }

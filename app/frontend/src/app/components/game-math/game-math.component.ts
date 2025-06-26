@@ -74,7 +74,7 @@ export class GameMathComponent implements OnInit, OnDestroy {
         this.validateGameAccess(gameId);
         this.taskService.getGameTasks(gameId).subscribe({
           next: (response) => {
-            this.tasks = response;
+            this.tasks = response.slice(0, 9);
           },
           error: (err) => console.error('Greška pri dohvatanju zadataka:', err),
         });

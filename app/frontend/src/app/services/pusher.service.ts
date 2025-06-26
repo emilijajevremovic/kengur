@@ -26,9 +26,9 @@ export class PusherService {
       enabledTransports: ['ws', 'wss'],
       authEndpoint: `${this.baseUrl}/api/broadcasting/auth`, // Omogućava autentifikaciju
       auth: {
-        headers: {
-          Authorization: this.authToken ? `Bearer ${this.authToken}` : ''
-        }
+        headers: () => ({
+          Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`
+        })
       }
     });
   }

@@ -1,11 +1,11 @@
 <div class="navbar">
     <div>
         <ul class="navbar-nav bd-navbar-nav flex-row" *ngIf="!isAdmin()">
-            <div [routerLink]="'/lobby'" style="cursor: pointer;"><li><img src="../../../assets/images/LOGO-IMI-math-code-duel.png" alt=""></li></div>
+            <div [routerLink]="'/lobby'" style="cursor: pointer;"><li><img src="assets/images/LOGO-IMI-math-code-duel.png" alt=""></li></div>
             <!-- <li class="nav-item"></li> -->
         </ul>
         <ul class="navbar-nav bd-navbar-nav flex-row" *ngIf="isAdmin()">
-            <div [routerLink]="'/admin-lobby'" style="cursor: pointer;"><li><img src="../../../assets/images/LOGO-IMI-math-code-duel.png" alt=""></li></div>
+            <div [routerLink]="'/admin-lobby'" style="cursor: pointer;"><li><img src="assets/images/LOGO-IMI-math-code-duel.png" alt=""></li></div>
             <!-- <li class="nav-item"></li> -->
         </ul>
     </div>

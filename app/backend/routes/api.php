@@ -11,9 +11,9 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\TaskController;
 use App\Events\WebSocketDisconnected;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::post('/create-user', [UserController::class, 'create']);
 

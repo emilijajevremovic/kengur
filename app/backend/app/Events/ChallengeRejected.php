@@ -35,4 +35,13 @@ class ChallengeRejected implements ShouldBroadcast
     {
         return 'ChallengeRejected'; 
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'challengerId'      => $this->challengerId,
+            'opponentNickname'  => $this->opponentNickname,
+        ];
+    }
+
 }

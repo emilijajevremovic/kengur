@@ -174,7 +174,9 @@ class UserController extends Controller
 
         if ($request->hasFile('profile_picture')) {
             if ($user->profile_picture && basename($user->profile_picture) !== 'default_profile_picture.png') {
-                $oldImagePath = public_path($user->profile_picture);
+                $relativePath = str_replace('storage/', '', $user->profile_picture);
+                $oldImagePath = storage_path('app/public/' . $relativePath);
+
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }

@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "beyondcode/laravel-websockets": "^2.0@beta",
+        "beyondcode/laravel-websockets": "*",
         "doctrine/dbal": "^3.9",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.0.1",

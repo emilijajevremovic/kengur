@@ -34,4 +34,15 @@ class GameFinished implements ShouldBroadcast
     {
         return 'GameFinished';
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'gameId' => $this->gameId,
+            'category' => $this->category,
+            'player1' => $this->player1,
+            'player2' => $this->player2,
+        ];
+    }
+
 }

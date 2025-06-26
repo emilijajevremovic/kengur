@@ -5,7 +5,6 @@ use App\Http\Controllers\CodeExecutorController;
 use Illuminate\Support\Facades\DB;
 use App\Models\Assignment;
 use App\Http\Controllers\TaskController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,9 +16,9 @@ use App\Http\Controllers\TaskController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
 Route::post('/execute-code', [CodeExecutorController::class, 'executeCode']);
 

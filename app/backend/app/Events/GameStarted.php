@@ -39,4 +39,15 @@ class GameStarted implements ShouldBroadcast
     {
         return 'GameStarted';
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'gameId' => $this->gameId,
+            'category' => $this->category,
+            'class' => $this->class,
+            'players' => $this->players
+        ];
+    }
+
 }

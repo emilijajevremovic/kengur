@@ -146,30 +146,31 @@ export class GameInfComponent implements OnInit, AfterViewInit {
   };
 
   ngAfterViewInit(): void {
-    if (typeof window !== 'undefined') {
-      Promise.all([
-        import('codemirror'),
-        import('codemirror/addon/edit/closebrackets'),
-        // @ts-ignore
-        import('codemirror/mode/clike/clike'),
-        // @ts-ignore
-        import('codemirror/mode/python/python'),
-      ]).then(([CodeMirror]) => {
-        this.editor = CodeMirror.fromTextArea(
-          this.editorElement.nativeElement,
-          {
-            lineNumbers: true,
-            mode: 'text/x-csrc',
-            theme: 'default',
-            autoCloseBrackets: true,
-          } as any
-        );
+  if (typeof window !== 'undefined') {
+    Promise.all([
+      import('codemirror'),
+      import('codemirror/addon/edit/closebrackets'),
+      import('codemirror/mode/clike/clike'),
+      import('codemirror/mode/python/python'),
+    ]).then(([codemirrorModule]) => {
+      const CodeMirror = codemirrorModule.default ?? codemirrorModule;
 
-        const width = window.innerWidth;
-        this.editor.setSize(0.7 * width + 'px', '500px');
-      });
-    }
+      this.editor = CodeMirror.fromTextArea(
+        this.editorElement.nativeElement,
+        {
+          lineNumbers: true,
+          mode: 'text/x-csrc',
+          theme: 'default',
+          autoCloseBrackets: true,
+        }
+      );
+
+      const width = window.innerWidth;
+      this.editor.setSize(0.7 * width + 'px', '500px');
+    });
   }
+}
+
 
   changeLanguage(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;

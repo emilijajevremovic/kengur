@@ -41,4 +41,17 @@ class ChallengeUser implements ShouldBroadcast
     {
         return 'ChallengeReceived';
     }
+
+    public function broadcastWith()
+    {
+        return [
+            'challengerName'   => $this->challengerName,
+            'challengerId'     => $this->challengerId,
+            'category'         => $this->category,
+            'class'            => $this->class,
+            'opponentId'       => $this->opponentId,
+            'profilePicture'   => $this->profilePicture,
+        ];
+    }
+
 }

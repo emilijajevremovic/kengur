@@ -99,8 +99,8 @@ return [
             'database' => env('MONGO_DATABASE', 'Kengur'),
             // 'username' => env('MONGO_USERNAME', 'admin'),
             // 'password' => env('MONGO_PASSWORD', 'pass'),
-            'username' => env('MONGO_USERNAME', 'admin'),
-            'password' => env('MONGO_PASSWORD', 'pass'),
+            'username' => env('MONGO_USERNAME'),
+    	    'password' => env('MONGO_PASSWORD'),
             'options'  => [
                 //'authSource' => 'admin',
             ],

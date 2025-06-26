@@ -3,6 +3,8 @@
 use BeyondCode\LaravelWebSockets\Facades\WebSocketRouter;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
+use App\WebSockets\CustomHandler;
 
 WebSocketRouter::webSocket('/app/{appKey}', function ($connection, $appKey) {
 
