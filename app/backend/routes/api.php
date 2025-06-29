@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->get('/friend-requests', [FriendRequestController::class, 'getFriendRequests']);
 
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetCode']);
 
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 

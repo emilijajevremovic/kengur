@@ -15,44 +15,36 @@ use PHPMailer\PHPMailer\Exception;
 
 class ForgotPasswordController extends Controller
 {
-    public function sendResetLink(Request $request)
+
+    public function sendResetCode(Request $request)
     {
-        $frontendUrl = env('FRONTEND_URL', 'http://localhost:4200');
-        $user = DB::table('users')->where('email', $request->email)->first();
+        $email = $request->email;
+        $code = $request->code;
+
+        $user = DB::table('users')->where('email', $email)->first();
 
         if (!$user) {
             return response()->json(['error' => 'Ne postoji korisnik sa unetim emailom.'], 404);
         }
-        //$request->validate(['email' => 'required|email|exists:users,email']);
-
-        $token = Str::random(60);
-        $hashedToken = Hash::make($token);
-        $email = $request->email;
-
-        DB::table('password_reset')->updateOrInsert(
-            ['email' => $email],
-            ['token' => $token, 'created_at' => now()] 
-        );
 
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com'; // SMTP server
+            $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'imimathcodeduel@gmail.com'; // SMTP korisnik
-            $mail->Password   = 'mwrp rbhc time owjm'; // SMTP lozinka
+            $mail->Username   = 'imimathcodeduel@gmail.com';
+            $mail->Password   = 'mwrp rbhc time owjm';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
             $mail->setFrom('imimathcodeduel@gmail.com', 'IMI MathCode Duel');
             $mail->addAddress($email);
             $mail->isHTML(true);
-            $mail->Subject = 'Resetovanje lozinke';
-            $mail->Body = "Kliknite na link da resetujete lozinku: <a href='{$frontendUrl}/new-password/$token?email=$email'>Resetuj lozinku</a>";
-
+            $mail->Subject = 'Verifikacioni kod za reset lozinke';
+            $mail->Body = "Vaš verifikacioni kod za resetovanje lozinke je: <b>{$code}</b>";
 
             $mail->send();
-            return response()->json(['message' => 'Link za resetovanje lozinke je poslat na email.']);
+            return response()->json(['message' => 'Verifikacioni kod je poslat na email.']);
         } catch (Exception $e) {
             return response()->json(['error' => 'Greška prilikom slanja emaila: ' . $mail->ErrorInfo], 500);
         }
@@ -61,22 +53,12 @@ class ForgotPasswordController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'email' => 'required',
-            'token' => 'required',
+            'email' => 'required|email',
             'password' => 'required|min:6|confirmed',
         ]);
 
-        $record = DB::table('password_reset')->where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        if (!$record || $request->token !== $record->token) {
-            return response()->json(['error' => 'Nevažeći token!'], 400);
-        }
-
-        if (!$record) {
-            return response()->json(['error' => 'Nevažeći token!'], 400);
-        }
-
-        $user = User::where('email', $record->email)->first();
         if (!$user) {
             return response()->json(['error' => 'Korisnik nije pronađen!'], 404);
         }
@@ -84,8 +66,7 @@ class ForgotPasswordController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        DB::table('password_reset')->where('email', $record->email)->delete();
-
         return response()->json(['message' => 'Lozinka uspešno resetovana.']);
     }
+
 }

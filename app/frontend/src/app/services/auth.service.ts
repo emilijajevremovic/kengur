@@ -81,8 +81,8 @@ export class AuthService {
   }
   //
 
-  sendResetEmail(email: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/forgot-password`, { email });
+  sendResetEmail(email: string, code: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/forgot-password`, { email, code });
   }
 
   resetPassword(data: any): Observable<any> {

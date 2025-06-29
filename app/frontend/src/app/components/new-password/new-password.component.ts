@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './new-password.component.html',
   styleUrl: './new-password.component.scss'
 })
-export class NewPasswordComponent {
+export class NewPasswordComponent implements OnInit {
   resetForm: FormGroup;
   token: any;
   email = '';
@@ -39,6 +39,11 @@ export class NewPasswordComponent {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'];
     });
+  }
+
+  ngOnInit(): void {
+    console.log('Ušao u new-password komponentu');
+    localStorage.removeItem('auth_token');
   }
 
   onSubmit() {

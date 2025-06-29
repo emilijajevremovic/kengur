@@ -20,6 +20,8 @@ import { environment } from '../environments/environment';
 import { PusherService } from './services/pusher.service';
 import { PopupOkComponent } from './components/popup-ok/popup-ok.component';
 import { HttpClient } from '@angular/common/http';
+import {NewPasswordComponent} from './components/new-password/new-password.component';
+
 
 @Component({
   selector: 'app-root',
@@ -66,9 +68,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const currentUrl = this.router.url;
+
     if (
       isPlatformBrowser(this.platformId) &&
-      localStorage.getItem('auth_token')
+      localStorage.getItem('auth_token') &&
+      !currentUrl.includes('/new-password')
     ) {
       this.userService.setUserOnline().subscribe();
 
@@ -78,21 +83,15 @@ export class AppComponent implements OnInit, OnDestroy {
         next: async (response) => {
           this.userId = response.user.id;
           this.myNickname = response.user.nickname;
-          //console.log('Dobijen userId iz API-ja:', this.userId, 'tip:', typeof this.userId);
-          if (typeof this.userId !== 'number' || isNaN(this.userId)) {
-            //console.error('Nevalidan userId – WebSocket pretplata se neće izvršiti.');
-            return;
-          }
+          if (typeof this.userId !== 'number' || isNaN(this.userId)) return;
+
           this.subscribeToChallenges(this.userId);
-
           await this.webSocketService.initPusherService();
-
           this.subscribeToRejections(this.userId);
           this.subscribeToGameStart(this.userId);
 
           this.gameId = localStorage.getItem('game_id');
-          // window.addEventListener('beforeunload', this.handleTabClose.bind(this));
-          // document.addEventListener('visibilitychange', this.handleTabClose.bind(this));
+
           setInterval(() => {
             if (localStorage.getItem('auth_token')) {
               this.pingServer();
@@ -104,6 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
     }
   }
+
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {

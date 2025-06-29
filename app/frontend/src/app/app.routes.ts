@@ -25,5 +25,5 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }, 
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [loggedGuard] }, 
     { path: 'new-password/:token', component: NewPasswordComponent },
-    { path: '**', redirectTo: 'lobby', pathMatch: 'full' },
+    // { path: '**', redirectTo: 'lobby', pathMatch: 'full' },
 ];
