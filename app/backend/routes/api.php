@@ -93,6 +93,10 @@ Route::middleware('auth:sanctum')->post('/user/update-result', [UserController::
 
 Route::middleware(['auth:sanctum', 'admin'])->get('/users-admin', [UserController::class, 'getUsersAdmin']);
 
+Route::middleware(['auth:sanctum', 'admin'])->put('/make-admin/{id}', [UserController::class, 'makeAdmin']);
+
+Route::middleware(['auth:sanctum', 'admin'])->delete('/deleteUser/{id}', [UserController::class, 'deleteUser']);
+
 
 
 

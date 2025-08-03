@@ -49,7 +49,7 @@ export class ResetPasswordComponent {
       this.authService.sendResetEmail(this.resetForm.value.email, this.generatedCode).subscribe(
         () => {
           this.step = 2;
-          this.snackBar.open('Verifikacioni kod je poslat na email.', 'OK', {
+          this.snackBar.open('Verifikacioni kod je poslat na unetu email adresu. Proverite Spam folder ukoliko poruka nije u prijemnom sandučetu.', 'OK', {
             duration: 5000,
             panelClass: ['light-snackbar']
           });

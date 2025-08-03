@@ -4,7 +4,9 @@ import { UserService } from '../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavbarComponent } from '../components/navbar/navbar.component';
+import { PopupYesNoComponent } from '../popup-yes-no/popup-yes-no.component';
 
 declare var MathJax: any;
 
@@ -14,7 +16,9 @@ declare var MathJax: any;
   imports: [
     CommonModule,
     FormsModule,
-    NavbarComponent
+    NavbarComponent,
+    MatTooltipModule,
+    PopupYesNoComponent
   ],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.scss'
@@ -50,6 +54,11 @@ export class AdminHomeComponent implements OnInit{
   infoGradeFilter: number | null = null;
   winsFilter: number = 0; 
   lossesFilter: number = 0; 
+  userType: string = 'student';
+  setUserType: string = 'student';
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  popupAction: (() => void) | null = null;
 
   ngOnInit(): void {
     this.loadMathClasses();
@@ -253,7 +262,8 @@ export class AdminHomeComponent implements OnInit{
   }
 
   search() {
-    this.userService.getUsersAdminFilter(this.nameFilter, this.surnameFilter, this.cityFilter, this.schoolFilter, this.winsFilter, this.lossesFilter, this.classFilter, this.mathGradeFilter, this.infoGradeFilter).subscribe(users => {
+    this.setUserType = this.userType;
+    this.userService.getUsersAdminFilter(this.nameFilter, this.surnameFilter, this.cityFilter, this.schoolFilter, this.winsFilter, this.lossesFilter, this.classFilter, this.mathGradeFilter, this.infoGradeFilter, this.userType).subscribe(users => {
       this.userListAdmin = users;
     });
   }
@@ -286,5 +296,54 @@ export class AdminHomeComponent implements OnInit{
       return descending ? bValue - aValue : aValue - bValue;
     });
   }  
+
+  makeAdmin(user: any) {
+    this.popupMessage = `Da li želite da korisnik ${user.name} ${user.surname} postane admin?`;
+    this.popupAction = () => {
+      this.userService.makeAdmin(user.id).subscribe({
+        next: () => {
+          this.snackBar.open(`Korisnik ${user.name} ${user.surname} je sada admin.`, 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar'],
+          });
+          this.search();
+        },
+        error: (err) => {
+          console.error('Greška prilikom promene u admina:', err);
+        }
+      });
+    };
+    this.showPopup = true;
+  }
+
+  deleteUser(user: any) {
+    this.popupMessage = `Da li ste sigurni da želite da obrišete korisnika ${user.name} ${user.surname}?`;
+    this.popupAction = () => {
+      this.userService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.snackBar.open(`Korisnik ${user.name} ${user.surname} je obrisan.`, 'OK', {
+          duration: 5000,
+          panelClass: ['light-snackbar'],
+          });
+          this.search();
+        },
+        error: (err) => {
+          console.error('Greška prilikom brisanja korisnika:', err);
+        }
+      });
+    };
+    this.showPopup = true;
+  }
+
+  onPopupClose() {
+    this.showPopup = false;
+  }
+
+  onPopupConfirm() {
+    if (this.popupAction) {
+      this.popupAction();
+    }
+    this.showPopup = false;
+  }
 
 }

@@ -48,7 +48,7 @@ export class UserService {
     return this.http.get<any>(`${this.baseUrl}/users-admin`);
   }
 
-  getUsersAdminFilter(nameFilter: string, surnameFilter: string, cityFilter: string, schoolFilter: string, winsFilter: number | null, lossesFilter: number | null, classFilter: number | null, mathGradeFilter: number | null, infoGradeFilter: number | null ): Observable<any> {
+  getUsersAdminFilter(nameFilter: string, surnameFilter: string, cityFilter: string, schoolFilter: string, winsFilter: number | null, lossesFilter: number | null, classFilter: number | null, mathGradeFilter: number | null, infoGradeFilter: number | null, userType: string ): Observable<any> {
     let params = new HttpParams();
   
     if (nameFilter) params = params.set('name', nameFilter);
@@ -60,6 +60,7 @@ export class UserService {
     if (classFilter !== null && classFilter !== undefined) params = params.set('class', classFilter.toString());
     if (mathGradeFilter !== null && mathGradeFilter !== undefined) params = params.set('math_grade', mathGradeFilter.toString());
     if (infoGradeFilter !== null && infoGradeFilter !== undefined) params = params.set('info_grade', infoGradeFilter.toString());
+    if (userType) params = params.set('user_type', userType);
   
     return this.http.get<any>(`${this.baseUrl}/users-admin`, { params });
   }
@@ -74,6 +75,14 @@ export class UserService {
       .set('losses', lossesFilter ? lossesFilter.toString() : '');
 
     return this.http.get<Blob>(`${this.baseUrl}/users-export`, { params, responseType: 'blob' as 'json' });
+  }
+
+  makeAdmin(userId: number): Observable<any> {
+  return this.http.put(`${this.baseUrl}/make-admin/${userId}`, {});
+  }
+
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/deleteUser/${userId}`);
   }
   
 }

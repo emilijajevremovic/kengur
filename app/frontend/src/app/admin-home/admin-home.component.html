@@ -168,6 +168,23 @@
               <label for="lossesFilter">Broj poraza (više ili jednako od)</label>
               <input type="number" id="lossesFilter" [(ngModel)]="lossesFilter" placeholder="Više od" class="form-control" />
             </div>
+
+            <div class="filter-group">
+              <label>Tip korisnika</label>
+              <div>
+                <label style="padding-right: 20px;">
+                  <input type="radio" name="userType" [(ngModel)]="userType" value="student" checked style="width: fit-content;"/>
+                  Učenici
+                </label>
+              </div>
+              <div>
+                <label style="padding-right: 20px;">
+                  <input type="radio" name="userType" [(ngModel)]="userType" value="admin" style="width: fit-content;" />
+                  Admin korisnici
+                </label>
+              </div>
+            </div>
+
             <button class="button-tab" style="height: fit-content; align-self: anchor-center;" (click)="search()">Pretraži</button>
         </div>
 
@@ -179,22 +196,23 @@
             <th scope="col">Prezime</th>
             <th scope="col">Korisničko ime</th>
             <th scope="col">Email</th>
-            <th scope="col">Mesto</th>
-            <th scope="col">Škola</th>
-            <th scope="col">Razred</th>
-            <th scope="col">Ocena M</th>
-            <th scope="col">Ocena I</th>
-            <th scope="col">
+            <th scope="col" *ngIf="setUserType === 'student'">Mesto</th>
+            <th scope="col" *ngIf="setUserType === 'student'">Škola</th>
+            <th scope="col" *ngIf="setUserType === 'student'">Razred</th>
+            <th scope="col" *ngIf="setUserType === 'student'">Ocena M</th>
+            <th scope="col" *ngIf="setUserType === 'student'">Ocena I</th>
+            <th scope="col" *ngIf="setUserType === 'student'">
               Pobede
               <button class="sort" (click)="sortBy('wins')">▲</button>
               <button class="sort" (click)="sortBy('wins', true)">▼</button>
             </th>
-            <th scope="col">Porazi</th>
-            <th scope="col">
+            <th scope="col" *ngIf="setUserType === 'student'">Porazi</th>
+            <th scope="col" *ngIf="setUserType === 'student'">
               Ukupno mečeva
               <button class="sort" (click)="sortBy('matches')">▲</button>
               <button class="sort" (click)="sortBy('matches', true)">▼</button>
             </th>
+            <th scope="col" *ngIf="setUserType === 'student'"></th>
           </tr>
         </thead>
         <tbody>
@@ -204,14 +222,29 @@
             <td>{{ user.surname }}</td>
             <td>{{ user.nickname }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ user.city }}</td>
-            <td>{{ user.school }}</td>
-            <td>{{ user.class }}</td>
-            <td>{{ user.math_grade }}</td>
-            <td>{{ user.info_grade }}</td>
-            <td>{{ user.wins }}</td>
-            <td>{{ user.losses }}</td>
-            <td>{{ user.losses + user.wins }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.city }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.school }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.class }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.math_grade }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.info_grade }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.wins }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.losses }}</td>
+            <td *ngIf="setUserType === 'student'">{{ user.losses + user.wins }}</td>
+            <td *ngIf="setUserType === 'student'">
+              <button 
+                (click)="makeAdmin(user)"
+                matTooltip="Promeni u admina"
+                matTooltipPosition="above"
+                style=" width: fit-content; height: fit-content; margin-right: 5px; border-radius: 50%; border: none; background-color: #134275; color: white; cursor: pointer; padding: 7px;">
+                <img src="assets/images/add-friend.png" alt="" style="width: 25px; height: 25px;" />
+              </button>
+              <button
+                (click)="deleteUser(user)"
+                matTooltip="Obriši korisnika"
+                matTooltipPosition="above"
+                style="width: fit-content; height: fit-content; margin-right: 5px; border-radius: 50%; border: none; background-color: #ad1026; color: white; cursor: pointer; padding: 7px;">
+                <img src="assets/images/cross.png" alt="" style="width: 25px; height: 25px;" />
+              </button></td>
           </tr>
         </tbody>
       </table>
@@ -222,3 +255,10 @@
   
   
   </div>
+
+<app-popup-yes-no
+  *ngIf="showPopup"
+  [message]="popupMessage"
+  (close)="onPopupClose()"
+  (confirm)="onPopupConfirm()">
+</app-popup-yes-no>

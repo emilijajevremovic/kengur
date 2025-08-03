@@ -337,7 +337,15 @@ class UserController extends Controller
 
     public function getUsersAdmin(Request $request)
     {
-        $query = User::where('role', 'user'); 
+        $query = User::query();
+
+        if ($request->has('user_type')) {
+            if ($request->user_type === 'student') {
+                $query->where('role', 'user');
+            } elseif ($request->user_type === 'admin') {
+                $query->where('role', 'admin');
+            }
+        } 
 
         if ($request->has('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
@@ -379,6 +387,41 @@ class UserController extends Controller
                         ->get();
 
         return response()->json($users);
+    }
+
+    public function makeAdmin($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Korisnik nije pronađen'], 404);
+        }
+
+        if ($user->role === 'admin') {
+            return response()->json(['message' => 'Korisnik je već admin'], 400);
+        }
+
+        $user->role = 'admin';
+        $user->save();
+
+        return response()->json(['message' => 'Korisnik je uspešno postao admin']);
+    }
+
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Korisnik nije pronađen'], 404);
+        }
+
+        if ($user->role === 'admin') {
+            return response()->json(['error' => 'Admin korisnici se ne mogu obrisati'], 403);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'Korisnik je uspešno obrisan']);
     }
 
 }
