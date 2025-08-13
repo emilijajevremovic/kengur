@@ -97,6 +97,11 @@ Route::middleware(['auth:sanctum', 'admin'])->put('/make-admin/{id}', [UserContr
 
 Route::middleware(['auth:sanctum', 'admin'])->delete('/deleteUser/{id}', [UserController::class, 'deleteUser']);
 
+Route::post('/test-check-informatics', [CodeExecutorController::class, 'testCheckInformatics']);
+
+Route::post('/test-code-execution', [CodeExecutorController::class, 'testCodeRun']);
+
+
 
 
 
